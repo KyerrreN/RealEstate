@@ -8,5 +8,8 @@ namespace RealEstate.DAL.Entities
         public Guid RealEstateId { get; set; } // FK
         public string Proposal { get; set; } = null!;
         public EstateAction EstateAction { get; set; }
+
+        // nav props
+        public RealEstate RealEstate { get; set; } = null!;
     }
-}
+}   

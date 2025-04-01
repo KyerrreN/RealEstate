@@ -7,5 +7,8 @@
         public string Comment { get; set; } = null!;
         public Guid AuthorId { get; set; } // FK
         public Guid RecipientId { get; set; } // FK
+
+        // nav props
+        public User User { get; set; } = null!;
     }
 }
