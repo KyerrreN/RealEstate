@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RealEstate.DAL.Entities;
 
-namespace RealEstate.DAL.Repositories.Configurations
+namespace RealEstate.DAL.Configurations
 {
     public class ReviewEntityConfiguration : IEntityTypeConfiguration<ReviewEntity>
     {

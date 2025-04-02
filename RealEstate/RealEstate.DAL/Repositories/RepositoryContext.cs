@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RealEstate.DAL.Entities;
-using RealEstate.DAL.Repositories.Configurations;
+using RealEstate.DAL.Configurations;
 
 namespace RealEstate.DAL.Repositories
 {

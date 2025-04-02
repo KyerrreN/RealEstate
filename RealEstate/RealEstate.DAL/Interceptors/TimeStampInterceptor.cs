@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using RealEstate.DAL.Interfaces;
 
-namespace RealEstate.DAL.Repositories.Interceptors
+namespace RealEstate.DAL.Interceptors
 {
     public class TimeStampInterceptor : SaveChangesInterceptor
     {

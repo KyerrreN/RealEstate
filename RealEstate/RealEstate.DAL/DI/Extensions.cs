@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using RealEstate.DAL.Enums;
 using RealEstate.DAL.Repositories;
-using RealEstate.DAL.Repositories.Interceptors;
+using RealEstate.DAL.Interceptors;
 
 namespace RealEstate.DAL.DI
 {
