@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using RealEstate.DAL.Entities;
+using RealEstate.DAL.Interfaces;
 
 namespace RealEstate.DAL.Repositories.Interceptors
 {
@@ -20,7 +20,7 @@ namespace RealEstate.DAL.Repositories.Interceptors
         {
             var utcNow = DateTime.UtcNow;
 
-            foreach (var entry in eventData.Context.ChangeTracker.Entries<BaseEntity>())
+            foreach (var entry in eventData.Context.ChangeTracker.Entries<IAuditableEntity>())
             {
                 if (entry.State == EntityState.Added)
                 {
