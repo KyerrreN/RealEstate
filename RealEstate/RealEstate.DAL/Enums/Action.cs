@@ -2,6 +2,7 @@
 {
     public enum EstateAction
     {
+        None,
         Sell,
         Rent
     }

@@ -2,6 +2,7 @@
 {
     public enum EstateStatus
     {
+        None,
         Available,
         Sold,
         Rented,

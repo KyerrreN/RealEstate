@@ -2,6 +2,7 @@
 {
     public enum EstateType
     {
+        None,
         House,
         Apartment,
         Office
