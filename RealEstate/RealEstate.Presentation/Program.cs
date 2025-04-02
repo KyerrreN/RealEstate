@@ -1,3 +1,5 @@
+using RealEstate.BLL.DI;
+
 namespace RealEstate.Presentation
 {
     public class Program
@@ -8,6 +10,9 @@ namespace RealEstate.Presentation
 
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
+
+            builder.Services.RegisterBLL(builder.Configuration.GetConnectionString("PostgreSQL")
+                ?? throw new ArgumentException("Failed to connect to DB - no connection string found"));
 
             var app = builder.Build();
 
