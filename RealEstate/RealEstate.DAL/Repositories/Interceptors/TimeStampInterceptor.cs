@@ -18,16 +18,18 @@ namespace RealEstate.DAL.Repositories.Interceptors
         }
         private static void UpdateTimestamps(DbContextEventData eventData)
         {
+            var utcNow = DateTime.UtcNow;
+
             foreach (var entry in eventData.Context.ChangeTracker.Entries<BaseEntity>())
             {
                 if (entry.State == EntityState.Added)
                 {
-                    entry.Entity.CreatedAt = DateTime.UtcNow;
-                    entry.Entity.UpdatedAt = DateTime.UtcNow;
+                    entry.Entity.CreatedAt = utcNow;
+                    entry.Entity.UpdatedAt = utcNow;
                 }
                 else if (entry.State == EntityState.Modified)
                 {
-                    entry.Entity.UpdatedAt = DateTime.UtcNow;
+                    entry.Entity.UpdatedAt = utcNow;
                 }
             }
         }
