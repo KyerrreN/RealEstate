@@ -12,7 +12,7 @@ namespace RealEstate.DAL.Entities
         public EstateStatus EstateStatus { get; set; }
         public Guid OwnerId { get; set; }
 
-        public UserEntity User { get; set; } = null!;
+        public UserEntity Owner { get; set; } = null!;
         public ICollection<BookingEntity> Bookings { get; } = [];
         public ICollection<HistoryEntity> Histories { get; } = [];
     }

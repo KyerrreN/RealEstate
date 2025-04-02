@@ -7,6 +7,7 @@
         public Guid AuthorId { get; set; }
         public Guid RecipientId { get; set; }
 
-        public UserEntity User { get; set; } = null!;
+        public UserEntity Author { get; set; } = null!;
+        public UserEntity Recipient { get; set; } = null!;
     }
 }
