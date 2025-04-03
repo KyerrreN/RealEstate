@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RealEstate.DAL.Interfaces;
+using RealEstate.DAL.Models;
 using System.Linq.Expressions;
 
 namespace RealEstate.DAL.Repositories
@@ -48,13 +49,22 @@ namespace RealEstate.DAL.Repositories
             Query.Remove(entity);
             await _context.SaveChangesAsync(ct);
         }
-        public virtual Task<List<T>> FindPagingAsync(int pageNumber, int pageSize, CancellationToken ct)
+        public virtual async Task<PagedEntityModel<T>> FindPagingAsync(int pageNumber, int pageSize, CancellationToken ct)
         {
-            return Query
-                .AsNoTracking()
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync(ct);
+            return new PagedEntityModel<T>
+            {
+                TotalCount = await Query.CountAsync(ct),
+                Items = await Query
+                    .AsNoTracking()
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync(ct),
+            };
+        }
+
+        public virtual async Task<T>? FindById(Guid id, CancellationToken ct)
+        {
+            return await Query.FindAsync([id], cancellationToken: ct);
         }
     }
 }
