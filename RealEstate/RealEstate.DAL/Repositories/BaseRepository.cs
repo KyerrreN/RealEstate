@@ -48,5 +48,13 @@ namespace RealEstate.DAL.Repositories
             Query.Remove(entity);
             await _context.SaveChangesAsync(ct);
         }
+        public virtual Task<List<T>> FindPagingAsync(int pageNumber, int pageSize, CancellationToken ct)
+        {
+            return Query
+                .AsNoTracking()
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(ct);
+        }
     }
 }

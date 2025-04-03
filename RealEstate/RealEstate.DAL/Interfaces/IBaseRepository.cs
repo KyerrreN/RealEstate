@@ -9,5 +9,6 @@ namespace RealEstate.DAL.Interfaces
         Task<T> CreateAsync(T entity, CancellationToken ct);
         Task<T> UpdateAsync(T entity, CancellationToken ct);
         Task DeleteAsync(T entity, CancellationToken ct);
+        Task<List<T>> FindPagingAsync(int pageNumber, int pageSize, CancellationToken ct);
     }
 }
