@@ -8,11 +8,14 @@ namespace RealEstate.DAL.Repositories
     public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         protected readonly AppDbContext _context;
+
         protected DbSet<T> Query => _context.Set<T>();
+
         public BaseRepository(AppDbContext context)
         {
             _context = context;
         }
+
         public virtual Task<List<T>> GetAllAsync(CancellationToken ct)
         {
             return Query
@@ -49,6 +52,7 @@ namespace RealEstate.DAL.Repositories
             Query.Remove(entity);
             await _context.SaveChangesAsync(ct);
         }
+
         public virtual async Task<PagedEntityModel<T>> GetPagedAsync(int pageNumber, int pageSize, CancellationToken ct)
         {
             var entities = await Query
