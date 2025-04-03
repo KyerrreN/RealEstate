@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using RealEstate.DAL.Enums;
 using RealEstate.DAL.Interceptors;
+using RealEstate.DAL.Interfaces;
 using RealEstate.DAL.Options;
 using RealEstate.DAL.Repositories;
 
@@ -32,6 +33,12 @@ namespace RealEstate.DAL.DI
                 })
                 .AddInterceptors(new TimeStampInterceptor());
             });
+
+            services.AddScoped<IBookingRepository, BookingRepository>();
+            services.AddScoped<IHistoryRepository, HistoryRepository>();
+            services.AddScoped<IRealEstateRepository, RealEstateRepository>();
+            services.AddScoped<IReviewRepository, ReviewRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
         }
     }
 }
