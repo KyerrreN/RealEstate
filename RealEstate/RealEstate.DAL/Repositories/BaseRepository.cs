@@ -30,7 +30,7 @@ namespace RealEstate.DAL.Repositories
 
         public virtual async Task<T> CreateAsync(T entity, CancellationToken ct)
         {
-            var newEntity = await Query.AddAsync(entity);
+            var newEntity = await Query.AddAsync(entity, ct);
             await _context.SaveChangesAsync(ct);
 
             return newEntity.Entity;
