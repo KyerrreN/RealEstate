@@ -11,11 +11,13 @@ namespace RealEstate.DAL.Interceptors
             UpdateTimestamps(eventData);
             return base.SavingChanges(eventData, result);
         }
+
         public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
         {
             UpdateTimestamps(eventData);
             return base.SavingChangesAsync(eventData, result, cancellationToken);
         }
+
         private static void UpdateTimestamps(DbContextEventData eventData)
         {
             var utcNow = DateTime.UtcNow;
