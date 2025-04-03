@@ -2,7 +2,9 @@
 {
     public class PagedEntityModel<T> where T : class
     {
-        public int TotalCount { get; set; } = 0;
-        public List<T> Items { get; set; }
+        public required int TotalCount { get; set; } = 0;
+        public required List<T> Items { get; set; }
+        public required int CurrentPage { get; set; }
+        public required int TotalPages { get; set; }
     }
 }

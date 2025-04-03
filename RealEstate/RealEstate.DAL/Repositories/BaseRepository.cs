@@ -13,7 +13,7 @@ namespace RealEstate.DAL.Repositories
         {
             _context = context;
         }
-        public virtual Task<List<T>> FindAllAsync(CancellationToken ct)
+        public virtual Task<List<T>> GetAllAsync(CancellationToken ct)
         {
             return Query
                 .AsNoTracking()
@@ -49,20 +49,28 @@ namespace RealEstate.DAL.Repositories
             Query.Remove(entity);
             await _context.SaveChangesAsync(ct);
         }
-        public virtual async Task<PagedEntityModel<T>> FindPagingAsync(int pageNumber, int pageSize, CancellationToken ct)
+        public virtual async Task<PagedEntityModel<T>> GetPagedAsync(int pageNumber, int pageSize, CancellationToken ct)
         {
+            var entities = await Query
+                .AsNoTracking()
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(ct);
+
+            var totalCount = await Query.CountAsync(ct);
+
+            var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
             return new PagedEntityModel<T>
             {
-                TotalCount = await Query.CountAsync(ct),
-                Items = await Query
-                    .AsNoTracking()
-                    .Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync(ct),
+                TotalCount = totalCount,
+                Items = entities,
+                CurrentPage = pageNumber,
+                TotalPages = totalPages
             };
         }
 
-        public virtual async Task<T>? FindById(Guid id, CancellationToken ct)
+        public virtual async Task<T>? FindByIdAsync(Guid id, CancellationToken ct)
         {
             return await Query.FindAsync([id], cancellationToken: ct);
         }
