@@ -1,3 +1,5 @@
+using RealEstate.BLL.DI;
+
 namespace RealEstate.Presentation
 {
     public class Program
@@ -8,6 +10,8 @@ namespace RealEstate.Presentation
 
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
+
+            builder.Services.RegisterBLL(builder.Configuration);
 
             var app = builder.Build();
 

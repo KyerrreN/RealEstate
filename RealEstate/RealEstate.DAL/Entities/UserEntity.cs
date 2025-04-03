@@ -7,7 +7,8 @@
         public string Email { get; set; } = null!;
         public string? Phone { get; set; }
 
-        public ICollection<ReviewEntity> Reviews { get; } = [];
+        public ICollection<ReviewEntity> AuthoredReviews { get; } = [];
+        public ICollection<ReviewEntity> ReceivedReviews { get; } = [];
         public ICollection<HistoryEntity> Histories { get; } = [];
         public ICollection<RealEstateEntity> RealEstates { get; } = [];
     }
