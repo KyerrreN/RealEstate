@@ -10,7 +10,7 @@ namespace RealEstate.DAL.DI
     {
         public static void RegisterDataAccess(this IServiceCollection services, string connectionString)
         {
-            services.AddDbContext<RepositoryContext>(opt =>
+            services.AddDbContext<AppDbContext>(opt =>
                 opt.UseNpgsql(connectionString, o =>
                 {
                     o.MapEnum<EstateAction>(nameof(EstateAction))

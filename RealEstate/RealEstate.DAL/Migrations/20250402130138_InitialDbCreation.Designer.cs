@@ -12,7 +12,7 @@ using RealEstate.DAL.Repositories;
 
 namespace RealEstate.DAL.Migrations
 {
-    [DbContext(typeof(RepositoryContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20250402130138_InitialDbCreation")]
     partial class InitialDbCreation
     {

@@ -11,7 +11,7 @@ using RealEstate.DAL.Repositories;
 
 namespace RealEstate.DAL.Migrations
 {
-    [DbContext(typeof(RepositoryContext))]
+    [DbContext(typeof(AppDbContext))]
     partial class RepositoryContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

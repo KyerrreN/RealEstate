@@ -4,9 +4,9 @@ using RealEstate.DAL.Configurations;
 
 namespace RealEstate.DAL.Repositories
 {
-    public class RepositoryContext : DbContext
+    public class AppDbContext : DbContext
     {
-        public RepositoryContext(DbContextOptions options) : base(options)
+        public AppDbContext(DbContextOptions options) : base(options)
         {
         }
 
