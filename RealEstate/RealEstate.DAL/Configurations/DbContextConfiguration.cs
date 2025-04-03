@@ -1,4 +1,4 @@
-﻿namespace RealEstate.Presentation.Configurations
+﻿namespace RealEstate.DAL.Configurations
 {
     public record DbContextConfiguration
     {

@@ -1,4 +1,4 @@
-using RealEstate.Presentation.Extensions;
+using RealEstate.BLL.DI;
 
 namespace RealEstate.Presentation
 {
@@ -11,7 +11,7 @@ namespace RealEstate.Presentation
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
 
-            builder.Services.RegisterBLLAndDbContext(builder.Configuration);
+            builder.Services.RegisterBLL(builder.Configuration);
 
             var app = builder.Build();
 
