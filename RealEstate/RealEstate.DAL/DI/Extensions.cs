@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using RealEstate.DAL.Configurations;
+using Microsoft.Extensions.Options;
 using RealEstate.DAL.Enums;
 using RealEstate.DAL.Interceptors;
+using RealEstate.DAL.Options;
 using RealEstate.DAL.Repositories;
 
 namespace RealEstate.DAL.DI
@@ -12,25 +13,25 @@ namespace RealEstate.DAL.DI
     {
         public static void RegisterDataAccess(this IServiceCollection services, IConfiguration configuration)
         {
-            var dbContextConfig = new DbContextConfiguration
-            {
-                ConnectionString = configuration.GetSection("PostgreSQL").Get<DbContextConfiguration>()?.ConnectionString
-            };
+            services.Configure<AppDbContextOptions>(configuration.GetSection(AppDbContextOptions.Option).Bind);
 
-            if (dbContextConfig.ConnectionString is null)
+            services.AddDbContext<AppDbContext>((serviceProvider, opt) =>
             {
-                throw new ArgumentException("Connection String is not configured");
-            }
-            else
-            {
-                services.AddDbContext<AppDbContext>(opt =>
-                    opt.UseNpgsql(dbContextConfig.ConnectionString, o =>
-                    {
-                        o.MapEnum<EstateAction>(nameof(EstateAction))
-                        .MapEnum<EstateStatus>(nameof(EstateStatus))
-                        .MapEnum<EstateType>(nameof(EstateType));
-                    }).AddInterceptors(new TimeStampInterceptor()));
-            }
+                var dbContextOptions = serviceProvider.GetRequiredService<IOptions<AppDbContextOptions>>().Value;
+
+                if (string.IsNullOrWhiteSpace(dbContextOptions.ConnectionString))
+                {
+                    throw new ArgumentException("Connection String is not configured");
+                }
+
+                opt.UseNpgsql(dbContextOptions.ConnectionString, o =>
+                {
+                    o.MapEnum<EstateAction>(nameof(EstateAction))
+                     .MapEnum<EstateStatus>(nameof(EstateStatus))
+                     .MapEnum<EstateType>(nameof(EstateType));
+                })
+                .AddInterceptors(new TimeStampInterceptor());
+            });
         }
     }
 }
