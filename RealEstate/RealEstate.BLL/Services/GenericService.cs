@@ -29,7 +29,7 @@ namespace RealEstate.BLL.Services
         public virtual async Task<TModel> GetByIdAsync(Guid id, CancellationToken ct)
         {
             var entity = await _repository.FindByIdAsync(id, ct)
-                ?? throw new NotFoundException(nameof(TEntity));
+                ?? throw new NotFoundException(nameof(TEntity), id);
 
             var entityModel = entity.Adapt<TModel>();
 
@@ -48,7 +48,7 @@ namespace RealEstate.BLL.Services
         public async Task DeleteAsync(Guid id, CancellationToken ct)
         {
             var entity = await _repository.FindByIdAsync(id, ct)
-                ?? throw new NotFoundException(nameof(TEntity));
+                ?? throw new NotFoundException(nameof(TEntity), id);
 
             await _repository.DeleteAsync(entity, ct);
         }
@@ -56,7 +56,7 @@ namespace RealEstate.BLL.Services
         public async Task<TModel> UpdateAsync(Guid id, TModel model, CancellationToken ct)
         {
             var entityToUpdate = await _repository.FindByIdAsync(id, ct)
-                ?? throw new NotFoundException(nameof(TEntity));
+                ?? throw new NotFoundException(nameof(TEntity), id);
 
             model.Adapt(entityToUpdate);
 
