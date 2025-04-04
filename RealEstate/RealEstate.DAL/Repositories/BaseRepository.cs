@@ -74,7 +74,7 @@ namespace RealEstate.DAL.Repositories
             };
         }
 
-        public virtual async Task<T>? FindByIdAsync(Guid id, CancellationToken ct)
+        public virtual async Task<T?> FindByIdAsync(Guid id, CancellationToken ct)
         {
             return await Query.FindAsync([id], cancellationToken: ct);
         }

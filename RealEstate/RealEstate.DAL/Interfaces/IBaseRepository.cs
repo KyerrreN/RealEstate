@@ -11,6 +11,6 @@ namespace RealEstate.DAL.Interfaces
         Task<T> UpdateAsync(T entity, CancellationToken ct);
         Task DeleteAsync(T entity, CancellationToken ct);
         Task<PagedEntityModel<T>> GetPagedAsync(int pageNumber, int pageSize, CancellationToken ct);
-        Task<T>? FindByIdAsync(Guid id, CancellationToken ct);
+        Task<T?> FindByIdAsync(Guid id, CancellationToken ct);
     }
 }
