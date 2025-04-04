@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
-using RealEstate.BLL.Exceptions;
-using System.Net;
+﻿using RealEstate.BLL.Exceptions;
+using RealEstate.BLL.Models;
 using System.Text.Json;
 
 namespace RealEstate.Presentation.Middleware
@@ -15,31 +14,32 @@ namespace RealEstate.Presentation.Middleware
             {
                 await _next.Invoke(context);
             }
-            catch
+            catch (NotFoundException ex)
             {
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                context.Response.ContentType = "application/json";
-
-                var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
-
-                if (contextFeature != null)
-                {
-                    context.Response.StatusCode = contextFeature.Error switch
-                    {
-                        NotFoundException => StatusCodes.Status404NotFound,
-                        BadRequestException => StatusCodes.Status400BadRequest,
-                        _ => StatusCodes.Status500InternalServerError
-                    };
-                }
-
-                var response = new
-                {
-                    contextFeature?.Error.Message,
-                };
-
-                var jsonResponse = JsonSerializer.Serialize(response);
-                await context.Response.WriteAsJsonAsync(jsonResponse);
+                await HandleException(context, ex, StatusCodes.Status404NotFound);
             }
+            catch (BadRequestException ex)
+            {
+                await HandleException(context, ex, StatusCodes.Status400BadRequest);
+            }
+            catch (Exception ex)
+            {
+                await HandleException(context, ex, StatusCodes.Status500InternalServerError);
+            }
+        }
+        private static async Task HandleException(HttpContext context, Exception ex, int statusCode)
+        {
+            context.Response.StatusCode = statusCode;
+            context.Response.ContentType = "application/json";
+
+            var errorModel = new ErrorModel
+            { 
+                StatusCode = statusCode, 
+                Message = ex.Message 
+            };
+
+            var jsonResponse = JsonSerializer.Serialize(errorModel);
+            await context.Response.WriteAsync(jsonResponse);
         }
     }
 }
