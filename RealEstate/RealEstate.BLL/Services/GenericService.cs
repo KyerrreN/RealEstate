@@ -46,10 +46,12 @@ namespace RealEstate.BLL.Services
 
         public async Task DeleteAsync(Guid id, CancellationToken ct)
         {
-            var entity = await _repository.FindByIdAsync(id, ct)
-                ?? throw new Exception($"{typeof(TEntity)} does not exist");
+            var entity = await _repository.FindByIdAsync(id, ct);
 
-            await _repository.DeleteAsync(entity, ct);
+            if (entity is not null)
+            {
+                await _repository.DeleteAsync(entity, ct);
+            }
         }
 
         public async Task<TModel> UpdateAsync(Guid id, TModel model, CancellationToken ct)
