@@ -1,5 +1,6 @@
 ﻿using RealEstate.BLL.Exceptions;
 using RealEstate.BLL.Models;
+using RealEstate.Presentation.Constants;
 using System.Text.Json;
 
 namespace RealEstate.Presentation.Middleware
@@ -31,7 +32,7 @@ namespace RealEstate.Presentation.Middleware
         private static async Task HandleException(HttpContext context, Exception ex, int statusCode)
         {
             context.Response.StatusCode = statusCode;
-            context.Response.ContentType = "application/json";
+            context.Response.ContentType = ApiConstants.JsonContentType;
 
             var errorModel = new ErrorModel
             { 
