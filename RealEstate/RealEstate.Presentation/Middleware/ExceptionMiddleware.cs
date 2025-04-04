@@ -27,6 +27,7 @@ namespace RealEstate.Presentation.Middleware
                 await HandleException(context, ex, StatusCodes.Status500InternalServerError);
             }
         }
+
         private static async Task HandleException(HttpContext context, Exception ex, int statusCode)
         {
             context.Response.StatusCode = statusCode;
