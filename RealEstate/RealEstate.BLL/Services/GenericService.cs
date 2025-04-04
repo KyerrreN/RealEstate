@@ -1,13 +1,16 @@
 ﻿using Mapster;
 using MapsterMapper;
 using RealEstate.BLL.Interfaces;
+using RealEstate.DAL.Entities;
 using RealEstate.DAL.Interfaces;
+using RealEstate.DAL.Models;
+using System.Linq.Expressions;
 
 namespace RealEstate.BLL.Services
 {
     public class GenericService<TEntity, TModel>(IBaseRepository<TEntity> repository, IMapper mapper) 
         : IGenericService<TEntity, TModel>
-        where TEntity : class
+        where TEntity : BaseEntity
         where TModel : class
     {
         protected readonly IBaseRepository<TEntity> _repository = repository;
@@ -59,6 +62,24 @@ namespace RealEstate.BLL.Services
             await _repository.UpdateAsync(entityToUpdate, ct);
 
             return entityToUpdate.Adapt<TModel>();
+        }
+
+        public async Task<PagedEntityModel<TModel>> GetPagingAsync(int pageNumber, int pageSize, CancellationToken ct)
+        {
+            var entities = await _repository.GetPagedAsync(pageNumber, pageSize, ct);
+
+            var entitiesModel = entities.Adapt<PagedEntityModel<TModel>>();
+
+            return entitiesModel;
+        }
+
+        public async Task<List<TModel>> GetByExpression(Expression<Func<TEntity, bool>> expression, CancellationToken ct)
+        {
+            var entities = await _repository.FindByConditionAsync(expression, ct);
+
+            var entitiesModel = entities.Adapt<List<TModel>>();
+
+            return entitiesModel;
         }
     }
 }
