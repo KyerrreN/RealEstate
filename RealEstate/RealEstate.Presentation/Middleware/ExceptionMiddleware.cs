@@ -1,38 +1,45 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using RealEstate.BLL.Exceptions;
 using System.Net;
+using System.Text.Json;
 
 namespace RealEstate.Presentation.Middleware
 {
-    public static class ExceptionMiddleware
+    public class ExceptionMiddleware(RequestDelegate next)
     {
-        public static void ConfigureExceptionHandler(this WebApplication app)
+        private readonly RequestDelegate _next = next;
+
+        public async Task InvokeAsync(HttpContext context)
         {
-            app.UseExceptionHandler(appError =>
+            try
             {
-                appError.Run(async context =>
+                await _next.Invoke(context);
+            }
+            catch
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                context.Response.ContentType = "application/json";
+
+                var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
+
+                if (contextFeature != null)
                 {
-                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    context.Response.ContentType = "application/json";
-
-                    var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
-
-                    if (contextFeature != null)
+                    context.Response.StatusCode = contextFeature.Error switch
                     {
-                        context.Response.StatusCode = contextFeature.Error switch
-                        {
-                            NotFoundException => StatusCodes.Status404NotFound,
-                            BadRequestException => StatusCodes.Status400BadRequest,
-                            _ => StatusCodes.Status500InternalServerError
-                        };
-                    }
+                        NotFoundException => StatusCodes.Status404NotFound,
+                        BadRequestException => StatusCodes.Status400BadRequest,
+                        _ => StatusCodes.Status500InternalServerError
+                    };
+                }
 
-                    await context.Response.WriteAsJsonAsync(new
-                    {
-                        contextFeature?.Error.Message,
-                    });
-                });
-            });
+                var response = new
+                {
+                    contextFeature?.Error.Message,
+                };
+
+                var jsonResponse = JsonSerializer.Serialize(response);
+                await context.Response.WriteAsJsonAsync(jsonResponse);
+            }
         }
     }
 }

@@ -16,7 +16,7 @@ namespace RealEstate.Presentation
 
             var app = builder.Build();
 
-            app.ConfigureExceptionHandler();
+            app.UseMiddleware<ExceptionMiddleware>();
 
             if (app.Environment.IsDevelopment())
             {
