@@ -1,4 +1,5 @@
 using RealEstate.BLL.DI;
+using RealEstate.Presentation.Middleware;
 
 namespace RealEstate.Presentation
 {
@@ -14,6 +15,8 @@ namespace RealEstate.Presentation
             builder.Services.RegisterBLL(builder.Configuration);
 
             var app = builder.Build();
+
+            app.UseMiddleware<ExceptionMiddleware>();
 
             if (app.Environment.IsDevelopment())
             {

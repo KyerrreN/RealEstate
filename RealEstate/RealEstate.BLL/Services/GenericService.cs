@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using MapsterMapper;
+using RealEstate.BLL.Exceptions;
 using RealEstate.BLL.Interfaces;
 using RealEstate.DAL.Entities;
 using RealEstate.DAL.Interfaces;
@@ -28,7 +29,7 @@ namespace RealEstate.BLL.Services
         public virtual async Task<TModel> GetByIdAsync(Guid id, CancellationToken ct)
         {
             var entity = await _repository.FindByIdAsync(id, ct)
-                ?? throw new Exception($"{typeof(TEntity)} does not exist");
+                ?? throw new NotFoundException(nameof(TEntity), id);
 
             var entityModel = entity.Adapt<TModel>();
 
@@ -47,7 +48,7 @@ namespace RealEstate.BLL.Services
         public async Task DeleteAsync(Guid id, CancellationToken ct)
         {
             var entity = await _repository.FindByIdAsync(id, ct)
-                ?? throw new Exception($"{typeof(TEntity)} does not exist");
+                ?? throw new NotFoundException(nameof(TEntity), id);
 
             await _repository.DeleteAsync(entity, ct);
         }
@@ -55,7 +56,7 @@ namespace RealEstate.BLL.Services
         public async Task<TModel> UpdateAsync(Guid id, TModel model, CancellationToken ct)
         {
             var entityToUpdate = await _repository.FindByIdAsync(id, ct)
-                ?? throw new Exception($"{typeof(TEntity)} does not exist");
+                ?? throw new NotFoundException(nameof(TEntity), id);
 
             model.Adapt(entityToUpdate);
 
