@@ -38,6 +38,9 @@ namespace RealEstate.BLL.Services
 
         public virtual async Task<TModel> CreateAsync(TModel model, CancellationToken ct)
         {
+            if (model is null)
+                throw new BadRequestException();
+
             var entity = model.Adapt<TEntity>();
 
             var createdEntity = await _repository.CreateAsync(entity, ct);
@@ -57,6 +60,9 @@ namespace RealEstate.BLL.Services
         {
             var entityToUpdate = await _repository.FindByIdAsync(id, ct)
                 ?? throw new NotFoundException(nameof(TEntity), id);
+
+            if (model is null)
+                throw new BadRequestException();
 
             model.Adapt(entityToUpdate);
 

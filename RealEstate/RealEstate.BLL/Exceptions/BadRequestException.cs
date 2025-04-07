@@ -1,7 +1,11 @@
 ﻿namespace RealEstate.BLL.Exceptions
 {
-    public class BadRequestException(string message)
-        : Exception(message)
+    public class BadRequestException : Exception
     {
+        public BadRequestException()
+            : base("The model is null or invalid")
+        {
+            
+        }
     }
 }
