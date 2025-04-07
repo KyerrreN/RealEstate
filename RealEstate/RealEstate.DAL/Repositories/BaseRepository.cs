@@ -55,11 +55,10 @@ namespace RealEstate.DAL.Repositories
 
         public virtual async Task<PagedEntityModel<T>> GetPagedAsync(int pageNumber, int pageSize, CancellationToken ct)
         {
-            var entities = await Query
+            var entities = Query
                 .AsNoTracking()
                 .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync(ct);
+                .Take(pageSize);
 
             var totalCount = await Query.CountAsync(ct);
 
@@ -68,7 +67,7 @@ namespace RealEstate.DAL.Repositories
             return new PagedEntityModel<T>
             {
                 TotalCount = totalCount,
-                Items = entities,
+                Items = await entities.ToListAsync(ct),
                 CurrentPage = pageNumber,
                 TotalPages = totalPages
             };

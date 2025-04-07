@@ -2,7 +2,8 @@
 {
     public class ApiRoutes
     {
-        public const string UsersEndpoint = "api/users";
-        public const string RealEstateEndpoint = "api/estate";
+        private const string Api = "api";
+        public const string UsersEndpoint = $"{Api}/users";
+        public const string RealEstateEndpoint = $"{Api}/estates";
     }
 }

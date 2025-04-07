@@ -1,10 +1,38 @@
-﻿using RealEstate.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using RealEstate.DAL.Entities;
 using RealEstate.DAL.Interfaces;
+using RealEstate.DAL.Models;
+using RealEstate.DAL.Repositories.Extensions;
+using RealEstate.DAL.RequestParameters;
 
 namespace RealEstate.DAL.Repositories
 {
-    public class RealEstateRepository : BaseRepository<RealEstateEntity>, IRealEstateRepository
+    public class RealEstateRepository(AppDbContext context) : BaseRepository<RealEstateEntity>(context), IRealEstateRepository
     {
-        public RealEstateRepository(AppDbContext context) : base(context) { }
+        public async Task<PagedEntityModel<RealEstateEntity>> GetAllWithRequestParameters(RealEstateFilterParameters filters, CancellationToken ct)
+        {
+            var realEstateQueryable = Query
+                .AsNoTracking()
+                .FilterByPrice(filters.MinPrice, filters.MaxPrice)
+                .FilterByEstateStatus(filters.EstateStatus)
+                .FilterByEstateType(filters.EstateType)
+                .FilterByOwner(filters.OwnerId);
+
+            var totalCount = await realEstateQueryable.CountAsync(ct);
+
+            realEstateQueryable.ApplyPaging(filters.PageNumber, filters.PageSize);
+
+            var totalPages = (int)Math.Ceiling((double)totalCount / filters.PageSize);
+
+            var pagedEntity = new PagedEntityModel<RealEstateEntity>
+            {
+                Items = await realEstateQueryable.ToListAsync(ct),
+                CurrentPage = filters.PageNumber,
+                TotalCount = totalCount,
+                TotalPages = totalPages
+            };
+
+            return pagedEntity;
+        }
     }
 }
