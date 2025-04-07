@@ -39,6 +39,8 @@ namespace RealEstate.DAL.DI
             services.AddScoped<IRealEstateRepository, RealEstateRepository>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+
+            services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
         }
     }
 }

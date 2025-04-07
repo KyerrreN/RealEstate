@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace RealEstate.DAL.Repositories
 {
-    public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
+    public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         protected readonly AppDbContext _context;
 

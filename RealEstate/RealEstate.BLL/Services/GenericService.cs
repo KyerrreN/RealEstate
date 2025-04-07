@@ -36,7 +36,7 @@ namespace RealEstate.BLL.Services
             return entityModel;
         }
 
-        public async Task<TModel> CreateAsync(TModel model, CancellationToken ct)
+        public virtual async Task<TModel> CreateAsync(TModel model, CancellationToken ct)
         {
             var entity = model.Adapt<TEntity>();
 
@@ -45,7 +45,7 @@ namespace RealEstate.BLL.Services
             return createdEntity.Adapt<TModel>();
         }
 
-        public async Task DeleteAsync(Guid id, CancellationToken ct)
+        public virtual async Task DeleteAsync(Guid id, CancellationToken ct)
         {
             var entity = await _repository.FindByIdAsync(id, ct)
                 ?? throw new NotFoundException(nameof(TEntity), id);
@@ -53,7 +53,7 @@ namespace RealEstate.BLL.Services
             await _repository.DeleteAsync(entity, ct);
         }
 
-        public async Task<TModel> UpdateAsync(Guid id, TModel model, CancellationToken ct)
+        public virtual async Task<TModel> UpdateAsync(Guid id, TModel model, CancellationToken ct)
         {
             var entityToUpdate = await _repository.FindByIdAsync(id, ct)
                 ?? throw new NotFoundException(nameof(TEntity), id);
@@ -65,7 +65,7 @@ namespace RealEstate.BLL.Services
             return entityToUpdate.Adapt<TModel>();
         }
 
-        public async Task<PagedEntityModel<TModel>> GetPagingAsync(int pageNumber, int pageSize, CancellationToken ct)
+        public virtual async Task<PagedEntityModel<TModel>> GetPagingAsync(int pageNumber, int pageSize, CancellationToken ct)
         {
             var entities = await _repository.GetPagedAsync(pageNumber, pageSize, ct);
 
@@ -74,7 +74,7 @@ namespace RealEstate.BLL.Services
             return entitiesModel;
         }
 
-        public async Task<List<TModel>> GetByExpression(Expression<Func<TEntity, bool>> expression, CancellationToken ct)
+        public virtual async Task<List<TModel>> GetByExpression(Expression<Func<TEntity, bool>> expression, CancellationToken ct)
         {
             var entities = await _repository.FindByConditionAsync(expression, ct);
 
