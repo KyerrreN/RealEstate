@@ -17,15 +17,22 @@ namespace RealEstate.Presentation.Controllers
         private readonly IUserService _userService = userService;
 
         [HttpGet]
-        public async Task<PagedEntityDto<UserDto>> GetPaged([FromQuery] PagingParameters pgParams, CancellationToken ct)
+        public async Task<List<UserDto>> GetAll(CancellationToken ct)
         {
-            var pagedEntityModel = await _userService.GetPagingAsync(pgParams.PageNumber, pgParams.PageSize, ct);
-
-            var pagedEntityDto = pagedEntityModel.Adapt<PagedEntityDto<UserDto>>();
-
-            return pagedEntityDto;
+            var userModels = await _userService.GetAllAsync(ct);
+            var userDtos = userModels.Adapt<List<UserDto>>();
+            return userDtos;
         }
 
+        [HttpGet("{userId:guid}")]
+        public async Task<UserDto> GetOne(Guid userId, CancellationToken ct)
+        {
+            var userModels = await _userService.GetByIdAsync(userId, ct);
+
+            var userDto = userModels.Adapt<UserDto>();
+
+            return userDto;
+        }
 
         [HttpPost]
         public async Task<UserDto> CreateUser([FromBody] UserForCreationDto userForCreationDto, CancellationToken ct)

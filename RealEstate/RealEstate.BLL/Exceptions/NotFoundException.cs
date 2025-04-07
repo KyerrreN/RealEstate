@@ -5,7 +5,7 @@
         public NotFoundException(string resourceName)
             : base($"Requested resource {resourceName} does not exist") { }
 
-        public NotFoundException(string resourceName, Guid id)
-            : base($"Requested resource: {resourceName} with id: {id} does not exist") { }
+        public NotFoundException(Guid id)
+            : base($"Requested resource with id: {id} does not exist") { }
     }
 }
