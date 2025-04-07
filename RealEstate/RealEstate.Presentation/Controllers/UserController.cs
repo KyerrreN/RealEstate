@@ -1,12 +1,9 @@
 ﻿using Mapster;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using RealEstate.BLL.Exceptions;
 using RealEstate.BLL.Interfaces;
 using RealEstate.BLL.Models;
 using RealEstate.Presentation.Constants;
 using RealEstate.Presentation.DTOs;
-using RealEstate.Presentation.RequestParameters;
 
 namespace RealEstate.Presentation.Controllers
 {
@@ -44,6 +41,14 @@ namespace RealEstate.Presentation.Controllers
             var createdUserDto = createdUserModel.Adapt<UserDto>();
 
             return createdUserDto;
+        }
+
+        [HttpDelete("{userId:guid}")]
+        public async Task<StatusCodeResult> CreateUser(Guid userId, CancellationToken ct)
+        {
+            await _userService.DeleteAsync(userId, ct);
+
+            return StatusCode(204);
         }
     }
 }
