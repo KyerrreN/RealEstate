@@ -1,4 +1,5 @@
-﻿using RealEstate.DAL.Enums;
+﻿using RealEstate.DAL.Entities;
+using RealEstate.DAL.Enums;
 
 namespace RealEstate.BLL.Models
 {
@@ -11,5 +12,6 @@ namespace RealEstate.BLL.Models
         public EstateType EstateType { get; set; }
         public EstateStatus EstateStatus { get; set; }
         public Guid OwnerId { get; set; }
+        public UserEntity? Owner { get; set; }
     }
 }

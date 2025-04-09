@@ -13,6 +13,7 @@ namespace RealEstate.DAL.Repositories
         {
             var realEstateItems = await Query
                 .AsNoTracking()
+                .Include(re => re.Owner)
                 .FilterByPrice(filters.MinPrice, filters.MaxPrice)
                 .FilterByEstateStatus(filters.EstateStatus)
                 .FilterByEstateType(filters.EstateType)
