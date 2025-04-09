@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RealEstate.BLL.Interfaces;
 using RealEstate.BLL.Models;
 using RealEstate.Presentation.Constants;
-using RealEstate.Presentation.DTOs;
+using RealEstate.Presentation.DTOs.User;
 
 namespace RealEstate.Presentation.Controllers
 {

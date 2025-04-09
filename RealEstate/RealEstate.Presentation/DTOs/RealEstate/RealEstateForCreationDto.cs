@@ -1,6 +1,6 @@
 ﻿using RealEstate.DAL.Enums;
 
-namespace RealEstate.Presentation.DTOs
+namespace RealEstate.Presentation.DTOs.RealEstate
 {
     public record RealEstateForCreationDto
     {

@@ -37,7 +37,7 @@ namespace RealEstate.DAL.Repositories.Extensions
         {
             return entity.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
         }
-        public static IQueryable<RealEstateEntity> Sort(this IQueryable<RealEstateEntity> benchmarks, string orderByQueryString)
+        public static IQueryable<RealEstateEntity> Sort(this IQueryable<RealEstateEntity> benchmarks, string? orderByQueryString)
         {
             if (string.IsNullOrWhiteSpace(orderByQueryString))
                 return benchmarks.OrderBy(x => x.Id);

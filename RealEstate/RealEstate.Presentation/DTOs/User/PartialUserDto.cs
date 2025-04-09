@@ -1,4 +1,4 @@
-﻿namespace RealEstate.Presentation.DTOs
+﻿namespace RealEstate.Presentation.DTOs.User
 {
     public class PartialUserDto
     {

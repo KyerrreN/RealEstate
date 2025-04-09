@@ -1,6 +1,7 @@
 ﻿using RealEstate.DAL.Entities;
+using RealEstate.Presentation.DTOs.User;
 
-namespace RealEstate.Presentation.DTOs
+namespace RealEstate.Presentation.DTOs.RealEstate
 {
     public record RealEstateDto : BaseDto
     {

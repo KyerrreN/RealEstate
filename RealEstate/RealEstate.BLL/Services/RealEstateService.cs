@@ -25,6 +25,27 @@ namespace RealEstate.BLL.Services
 
             return await base.CreateAsync(model, ct);
         }
+        public override async Task<RealEstateModel> UpdateAsync(Guid id, RealEstateModel model, CancellationToken ct)
+        {
+            var entityToUpdate = await _realEstateRepository.FindByIdAsync(id, ct)
+                ?? throw new NotFoundException(id);
+
+            //_ = await _userRepository.FindByIdAsync(model.OwnerId, ct)
+            //    ?? throw new NotFoundException(model.OwnerId);
+
+            if (model is null)
+                throw new BadRequestException();
+
+            CheckOwnerEqualityAndThrow(model.OwnerId, entityToUpdate.OwnerId);
+
+            model.Id = id;
+
+            model.Adapt(entityToUpdate);
+
+            await _repository.UpdateAsync(entityToUpdate, ct);
+
+            return entityToUpdate.Adapt<RealEstateModel>();
+        }
 
         public async Task<PagedEntityModel<RealEstateModel>> GetAllWithRequestParameters(RealEstateFilterParameters filters, CancellationToken ct)
         {
@@ -44,6 +65,11 @@ namespace RealEstate.BLL.Services
 
             if (filters.MinPrice > filters.MaxPrice)
                 throw new BadRequestException("Max price must be greater than min price");
+        }
+        private static void CheckOwnerEqualityAndThrow(Guid ownerModelId, Guid ownerEntityId)
+        {
+            if (ownerModelId != ownerEntityId)
+                throw new BadRequestException("Owner id in model and entity are not equal");
         }
     }
 }

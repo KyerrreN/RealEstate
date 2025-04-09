@@ -5,6 +5,7 @@ using RealEstate.BLL.Models;
 using RealEstate.DAL.RequestParameters;
 using RealEstate.Presentation.Constants;
 using RealEstate.Presentation.DTOs;
+using RealEstate.Presentation.DTOs.RealEstate;
 
 namespace RealEstate.Presentation.Controllers
 {
@@ -52,6 +53,18 @@ namespace RealEstate.Presentation.Controllers
             await _realEstateService.DeleteAsync(id, ct);
 
             return NoContent();
+        }
+
+        [HttpPut("{id:guid}")]
+        public async Task<RealEstateDto> Update(Guid id, [FromBody] RealEstateForUpdateDto dto, CancellationToken ct)
+        {
+            var realEstateModel = dto.Adapt<RealEstateModel>();
+
+            var updatedRealEstateModel = await _realEstateService.UpdateAsync(id, realEstateModel, ct);
+
+            var resultDto = updatedRealEstateModel.Adapt<RealEstateDto>();
+
+            return resultDto;
         }
     }
 }

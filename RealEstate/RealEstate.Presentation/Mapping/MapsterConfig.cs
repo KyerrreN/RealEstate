@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using RealEstate.DAL.Entities;
-using RealEstate.Presentation.DTOs;
+using RealEstate.Presentation.DTOs.RealEstate;
+using RealEstate.Presentation.DTOs.User;
 
 namespace RealEstate.Presentation.Mapping
 {
