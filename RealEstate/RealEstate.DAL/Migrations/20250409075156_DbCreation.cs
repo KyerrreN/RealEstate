@@ -7,14 +7,14 @@ using RealEstate.DAL.Enums;
 namespace RealEstate.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialDbCreation : Migration
+    public partial class DbCreation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
                 .Annotation("Npgsql:Enum:EstateAction", "none,rent,sell")
-                .Annotation("Npgsql:Enum:EstateStatus", "available,none,rented,sold")
+                .Annotation("Npgsql:Enum:EstateStatus", "for_rent,for_sale,none")
                 .Annotation("Npgsql:Enum:EstateType", "apartment,house,none,office");
 
             migrationBuilder.CreateTable(

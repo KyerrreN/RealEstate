@@ -2,13 +2,14 @@
 
 namespace RealEstate.Presentation.DTOs
 {
-    public class RealEstateForCreationDto
+    public record RealEstateForCreationDto
     {
-        public string Title { get; set; } = null!;
-        public string Description { get; set; } = null!;
-        public decimal Price { get; set; }
-        public string Address { get; set; } = null!;
-        public EstateType EstateType { get; set; }
-        public Guid OwnerId { get; set; }
+        public string Title { get; init; } = null!;
+        public string Description { get; init; } = null!;
+        public decimal Price { get; init; }
+        public string Address { get; init; } = null!;
+        public EstateType EstateType { get; init; }
+        public EstateStatus EstateStatus { get; init; }
+        public Guid OwnerId { get; init; }
     }
 }

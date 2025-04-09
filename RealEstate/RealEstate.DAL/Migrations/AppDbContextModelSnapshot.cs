@@ -12,7 +12,7 @@ using RealEstate.DAL.Repositories;
 namespace RealEstate.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    partial class AppDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -22,7 +22,7 @@ namespace RealEstate.DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "EstateAction", new[] { "none", "rent", "sell" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "EstateStatus", new[] { "available", "none", "rented", "sold" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "EstateStatus", new[] { "for_rent", "for_sale", "none" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "EstateType", new[] { "apartment", "house", "none", "office" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 

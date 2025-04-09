@@ -3,8 +3,7 @@
     public enum EstateStatus
     {
         None,
-        Available,
-        Sold,
-        Rented,
+        ForRent,
+        ForSale
     }
 }

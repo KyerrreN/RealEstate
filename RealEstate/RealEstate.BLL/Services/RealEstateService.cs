@@ -10,13 +10,18 @@ using RealEstate.DAL.RequestParameters;
 
 namespace RealEstate.BLL.Services
 {
-    public class RealEstateService(IBaseRepository<RealEstateEntity> repository, IMapper mapper, IRealEstateRepository realEstateRepository) : GenericService<RealEstateEntity, RealEstateModel>(repository, mapper), IRealEstateService
+    public class RealEstateService(IBaseRepository<RealEstateEntity> repository, IMapper mapper, IRealEstateRepository realEstateRepository, IUserRepository userRepository) : GenericService<RealEstateEntity, RealEstateModel>(repository, mapper), IRealEstateService
     {
         private readonly IRealEstateRepository _realEstateRepository = realEstateRepository;
+        private readonly IUserRepository _userRepository = userRepository;
 
         public override async Task<RealEstateModel> CreateAsync(RealEstateModel model, CancellationToken ct)
         {
-            model.EstateStatus = DAL.Enums.EstateStatus.Available;
+            if (model is null)
+                throw new BadRequestException();
+
+            _ = await _userRepository.FindByIdAsync(model.OwnerId, ct)
+                ?? throw new NotFoundException(model.OwnerId);
 
             return await base.CreateAsync(model, ct);
         }

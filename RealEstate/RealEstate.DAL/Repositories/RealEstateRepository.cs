@@ -11,22 +11,21 @@ namespace RealEstate.DAL.Repositories
     {
         public async Task<PagedEntityModel<RealEstateEntity>> GetAllWithRequestParameters(RealEstateFilterParameters filters, CancellationToken ct)
         {
-            var realEstateQueryable = Query
+            var realEstateItems = await Query
                 .AsNoTracking()
                 .FilterByPrice(filters.MinPrice, filters.MaxPrice)
                 .FilterByEstateStatus(filters.EstateStatus)
                 .FilterByEstateType(filters.EstateType)
-                .FilterByOwner(filters.OwnerId);
+                .FilterByOwner(filters.OwnerId)
+                .ToListAsync(ct);
 
-            var totalCount = await realEstateQueryable.CountAsync(ct);
-
-            realEstateQueryable.ApplyPaging(filters.PageNumber, filters.PageSize);
+            var totalCount = realEstateItems.Count;
 
             var totalPages = (int)Math.Ceiling((double)totalCount / filters.PageSize);
 
             var pagedEntity = new PagedEntityModel<RealEstateEntity>
             {
-                Items = await realEstateQueryable.ToListAsync(ct),
+                Items = realEstateItems.ApplyPaging(filters.PageNumber, filters.PageSize),
                 CurrentPage = filters.PageNumber,
                 TotalCount = totalCount,
                 TotalPages = totalPages

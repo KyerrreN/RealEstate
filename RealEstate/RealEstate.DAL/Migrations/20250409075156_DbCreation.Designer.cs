@@ -13,8 +13,8 @@ using RealEstate.DAL.Repositories;
 namespace RealEstate.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250402130138_InitialDbCreation")]
-    partial class InitialDbCreation
+    [Migration("20250409075156_DbCreation")]
+    partial class DbCreation
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace RealEstate.DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "EstateAction", new[] { "none", "rent", "sell" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "EstateStatus", new[] { "available", "none", "rented", "sold" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "EstateStatus", new[] { "for_rent", "for_sale", "none" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "EstateType", new[] { "apartment", "house", "none", "office" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 

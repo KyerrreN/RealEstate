@@ -30,9 +30,9 @@ namespace RealEstate.DAL.Repositories.Extensions
         {
             return entity.Where(re => re.Price >= minPrice && re.Price <= maxPrice);            
         }
-        public static IQueryable<RealEstateEntity> ApplyPaging(this IQueryable<RealEstateEntity> entity, int pageNumber, int pageSize)
+        public static List<RealEstateEntity> ApplyPaging(this List<RealEstateEntity> entity, int pageNumber, int pageSize)
         {
-            return entity.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            return entity.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
         }
     }
 }

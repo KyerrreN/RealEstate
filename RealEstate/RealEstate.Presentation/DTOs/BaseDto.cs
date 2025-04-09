@@ -1,7 +1,7 @@
 ﻿namespace RealEstate.Presentation.DTOs
 {
-    public abstract class BaseDto
+    public abstract record BaseDto
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; init; }
     }
 }
