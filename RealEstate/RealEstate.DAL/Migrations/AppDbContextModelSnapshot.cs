@@ -67,11 +67,17 @@ namespace RealEstate.DAL.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
                     b.Property<EstateAction>("EstateAction")
                         .HasColumnType("\"EstateAction\"");
 
-                    b.Property<Guid>("RealEstateId")
+                    b.Property<Guid?>("RealEstateId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -95,6 +101,10 @@ namespace RealEstate.DAL.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -213,8 +223,7 @@ namespace RealEstate.DAL.Migrations
                     b.HasOne("RealEstate.DAL.Entities.RealEstateEntity", "RealEstate")
                         .WithMany("Histories")
                         .HasForeignKey("RealEstateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("RealEstate.DAL.Entities.UserEntity", "User")
                         .WithMany("Histories")
