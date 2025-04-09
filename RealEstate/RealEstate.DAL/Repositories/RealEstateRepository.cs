@@ -17,6 +17,7 @@ namespace RealEstate.DAL.Repositories
                 .FilterByPrice(filters.MinPrice, filters.MaxPrice)
                 .FilterByEstateStatus(filters.EstateStatus)
                 .FilterByEstateType(filters.EstateType)
+                .FilterByCity(filters.City)
                 .FilterByOwner(filters.OwnerId)
                 .Sort(filters.OrderBy)
                 .ToListAsync(ct);

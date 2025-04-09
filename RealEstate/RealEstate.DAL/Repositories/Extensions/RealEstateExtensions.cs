@@ -29,6 +29,14 @@ namespace RealEstate.DAL.Repositories.Extensions
 
             return entity;
         }
+
+        public static IQueryable<RealEstateEntity> FilterByCity(this IQueryable<RealEstateEntity> entity, string? city)
+        {
+            if (string.IsNullOrWhiteSpace(city))
+                return entity;
+
+            return entity.Where(re => re.City == city);
+        }
         public static IQueryable<RealEstateEntity> FilterByPrice(this IQueryable<RealEstateEntity> entity, decimal? minPrice, decimal? maxPrice)
         {
             return entity.Where(re => re.Price >= minPrice && re.Price <= maxPrice);            

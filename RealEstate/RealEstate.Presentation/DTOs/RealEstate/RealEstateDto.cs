@@ -11,6 +11,7 @@ namespace RealEstate.Presentation.DTOs.RealEstate
         public string Address { get; init; } = null!;
         public string EstateType { get; init; } = null!;
         public string EstateStatus { get; init; } = null!;
+        public string City { get; set; } = null!;
         public Guid OwnerId { get; init; }
         public PartialUserDto? Owner { get; set; }
     }
