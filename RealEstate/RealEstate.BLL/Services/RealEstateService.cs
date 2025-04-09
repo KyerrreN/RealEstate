@@ -71,6 +71,8 @@ namespace RealEstate.BLL.Services
                 UserId = entityToDelete.OwnerId,
                 CompletedAt = DateTime.UtcNow,
                 EstateAction = EstateAction.None,
+                Title = entityToDelete.Title,
+                Description = entityToDelete.Description
             };
 
             var historyEntity = historyModel.Adapt<HistoryEntity>();
