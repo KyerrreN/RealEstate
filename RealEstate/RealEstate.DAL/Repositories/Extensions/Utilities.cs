@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using RealEstate.DAL.Entities;
+using System.Reflection;
 using System.Text;
 
 namespace RealEstate.DAL.Repositories.Extensions
@@ -35,6 +36,10 @@ namespace RealEstate.DAL.Repositories.Extensions
             var orderQuery = orderQueryBuilder.ToString().TrimEnd(',', ' ');
 
             return orderQuery;
+        }
+        public static List<T> ApplyPaging<T>(this List<T> entity, int pageNumber, int pageSize)
+        {
+            return entity.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
         }
     }
 }

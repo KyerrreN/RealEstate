@@ -33,10 +33,6 @@ namespace RealEstate.DAL.Repositories.Extensions
         {
             return entity.Where(re => re.Price >= minPrice && re.Price <= maxPrice);            
         }
-        public static List<RealEstateEntity> ApplyPaging(this List<RealEstateEntity> entity, int pageNumber, int pageSize)
-        {
-            return entity.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-        }
         public static IQueryable<RealEstateEntity> Sort(this IQueryable<RealEstateEntity> benchmarks, string? orderByQueryString)
         {
             if (string.IsNullOrWhiteSpace(orderByQueryString))

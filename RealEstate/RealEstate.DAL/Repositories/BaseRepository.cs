@@ -77,5 +77,12 @@ namespace RealEstate.DAL.Repositories
         {
             return await Query.FindAsync([id], cancellationToken: ct);
         }
+
+        public Task<T?> FindOneByConditionAsync(Expression<Func<T, bool>> expression, CancellationToken ct)
+        {
+            return Query
+                .AsNoTracking()
+                .FirstOrDefaultAsync(expression, ct);
+        }
     }
 }
