@@ -17,6 +17,7 @@ namespace RealEstate.DAL.Repositories
                 .FilterByEstateStatus(filters.EstateStatus)
                 .FilterByEstateType(filters.EstateType)
                 .FilterByOwner(filters.OwnerId)
+                .Sort(filters.OrderBy)
                 .ToListAsync(ct);
 
             var totalCount = realEstateItems.Count;
