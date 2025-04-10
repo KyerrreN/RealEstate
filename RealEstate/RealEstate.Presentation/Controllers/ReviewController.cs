@@ -26,7 +26,7 @@ namespace RealEstate.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<ReviewDto> PostReview([FromBody] ReviewForCreationDto reviewDto, CancellationToken ct)
+        public async Task<ReviewDto> PostReview([FromBody] CreateReviewDto reviewDto, CancellationToken ct)
         {
             var reviewModel = reviewDto.Adapt<ReviewModel>();
 

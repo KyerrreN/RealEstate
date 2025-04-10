@@ -1,6 +1,6 @@
 ﻿namespace RealEstate.Presentation.DTOs.User
 {
-    public record UserForCreationDto
+    public record CreateUserDto
     {
         public string FirstName { get; init; } = null!;
         public string LastName { get; init; } = null!;

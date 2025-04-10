@@ -14,7 +14,7 @@ namespace RealEstate.Presentation.Controllers
         private readonly IBookingService _bookingService = bookingService;
 
         [HttpPost]
-        public async Task<BookingDto> CreateBookingFromClient([FromBody] BookingForCreationDto bookingForCreationDto, CancellationToken ct)
+        public async Task<BookingDto> CreateBookingFromClient([FromBody] CreateBookingDto bookingForCreationDto, CancellationToken ct)
         {
             var bookingModel = bookingForCreationDto.Adapt<BookingModel>();
 

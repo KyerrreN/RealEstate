@@ -2,7 +2,7 @@
 
 namespace RealEstate.Presentation.DTOs.Booking
 {
-    public record BookingForCreationDto
+    public record CreateBookingDto
     {
         public Guid RealEstateId { get; set; }
         public string Proposal { get; set; } = null!;

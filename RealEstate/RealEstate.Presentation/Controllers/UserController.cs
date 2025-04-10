@@ -32,7 +32,7 @@ namespace RealEstate.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<UserDto> CreateUser([FromBody] UserForCreationDto userForCreationDto, CancellationToken ct)
+        public async Task<UserDto> CreateUser([FromBody] CreateUserDto userForCreationDto, CancellationToken ct)
         {
             var userModel = userForCreationDto.Adapt<UserModel>();
 

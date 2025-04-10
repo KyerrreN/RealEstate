@@ -36,7 +36,7 @@ namespace RealEstate.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<RealEstateDto> Create([FromBody] RealEstateForCreationDto realEstateForCreationDto, CancellationToken ct)
+        public async Task<RealEstateDto> Create([FromBody] CreateRealEstateDto realEstateForCreationDto, CancellationToken ct)
         {
             var realEstateModel = realEstateForCreationDto.Adapt<RealEstateModel>();
 
@@ -56,7 +56,7 @@ namespace RealEstate.Presentation.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<RealEstateDto> Update(Guid id, [FromBody] RealEstateForUpdateDto dto, CancellationToken ct)
+        public async Task<RealEstateDto> Update(Guid id, [FromBody] UpdateRealEstateDto dto, CancellationToken ct)
         {
             var realEstateModel = dto.Adapt<RealEstateModel>();
 

@@ -2,7 +2,7 @@
 
 namespace RealEstate.Presentation.DTOs.RealEstate
 {
-    public class RealEstateForUpdateDto
+    public class UpdateRealEstateDto
     {
         public string Title { get; init; } = null!;
         public string Description { get; init; } = null!;

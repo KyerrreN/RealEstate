@@ -2,7 +2,7 @@
 
 namespace RealEstate.Presentation.DTOs.Review
 {
-    public record ReviewForCreationDto
+    public record CreateReviewDto
     {
         public short Rating { get; set; }
         public string Comment { get; set; } = null!;
