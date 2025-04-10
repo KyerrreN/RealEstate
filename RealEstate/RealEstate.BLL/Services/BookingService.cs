@@ -10,19 +10,14 @@ using RealEstate.DAL.Repositories;
 namespace RealEstate.BLL.Services
 {
     public class BookingService
-        (IBaseRepository<BookingEntity> repository, 
-        IMapper mapper, IRealEstateRepository realEstateRepository, 
-        IBookingRepository bookingRepository, 
-        IUserRepository userRepository, AppDbContext context, 
-        IHistoryRepository historyRepository) 
-        : GenericService<BookingEntity, BookingModel>(repository, mapper), IBookingService
+        (IBaseRepository<BookingEntity> _repository, 
+        IMapper _mapper, 
+        IRealEstateRepository _realEstateRepository, 
+        IBookingRepository _bookingRepository, 
+        IUserRepository _userRepository, AppDbContext _context, 
+        IHistoryRepository _historyRepository) 
+        : GenericService<BookingEntity, BookingModel>(_repository, _mapper), IBookingService
     {
-        private readonly IRealEstateRepository _realEstateRepository = realEstateRepository;
-        private readonly IBookingRepository _bookingRepository = bookingRepository;
-        private readonly IUserRepository _userRepository = userRepository;
-        private readonly AppDbContext _context = context;
-        private readonly IHistoryRepository _historyRepository = historyRepository;
-
         public override async Task<BookingModel> CreateAsync(BookingModel model, CancellationToken ct)
         {
             if (model is null)

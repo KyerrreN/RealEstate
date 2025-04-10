@@ -9,14 +9,11 @@ using System.Linq.Expressions;
 
 namespace RealEstate.BLL.Services
 {
-    public class GenericService<TEntity, TModel>(IBaseRepository<TEntity> repository, IMapper mapper) 
+    public class GenericService<TEntity, TModel>(IBaseRepository<TEntity> _repository, IMapper _mapper) 
         : IGenericService<TEntity, TModel>
         where TEntity : BaseEntity
         where TModel : class
     {
-        protected readonly IBaseRepository<TEntity> _repository = repository;
-        protected readonly IMapper _mapper = mapper;
-
         public virtual async Task<List<TModel>> GetAllAsync(CancellationToken ct)
         {
             var entities = await _repository.GetAllAsync(ct);

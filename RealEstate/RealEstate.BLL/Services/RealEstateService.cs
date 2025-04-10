@@ -13,17 +13,14 @@ using RealEstate.DAL.RequestParameters;
 namespace RealEstate.BLL.Services
 {
     public class RealEstateService
-        (IBaseRepository<RealEstateEntity> repository, 
-        IMapper mapper, IRealEstateRepository realEstateRepository, 
-        IUserRepository userRepository, IHistoryRepository historyRepository, 
-        AppDbContext context) 
-        : GenericService<RealEstateEntity, RealEstateModel>(repository, mapper), IRealEstateService
+        (IBaseRepository<RealEstateEntity> _repository, 
+        IMapper _mapper, 
+        IRealEstateRepository _realEstateRepository, 
+        IUserRepository _userRepository, 
+        IHistoryRepository _historyRepository,
+        AppDbContext _context)
+        : GenericService<RealEstateEntity, RealEstateModel>(_repository, _mapper), IRealEstateService
     {
-        private readonly IRealEstateRepository _realEstateRepository = realEstateRepository;
-        private readonly IUserRepository _userRepository = userRepository;
-        private readonly IHistoryRepository _historyRepository = historyRepository;
-        private readonly AppDbContext _context = context;
-
         public override async Task<RealEstateModel> CreateAsync(RealEstateModel model, CancellationToken ct)
         {
             if (model is null)
@@ -104,6 +101,7 @@ namespace RealEstate.BLL.Services
             if (filters.MinPrice > filters.MaxPrice)
                 throw new BadRequestException("Max price must be greater than min price");
         }
+
         private static void CheckOwnerEqualityAndThrow(Guid ownerModelId, Guid ownerEntityId)
         {
             if (ownerModelId != ownerEntityId)

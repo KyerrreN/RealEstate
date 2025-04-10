@@ -12,15 +12,12 @@ using RealEstate.DAL.RequestParameters;
 namespace RealEstate.BLL.Services
 {
     public class HistoryService
-        (IBaseRepository<HistoryEntity> repository, 
-        IMapper mapper, 
-        IHistoryRepository historyRepository, 
-        IUserRepository userRepository) 
-        : GenericService<HistoryEntity, HistoryModel>(repository, mapper), IHistoryService
+        (IBaseRepository<HistoryEntity> _repository, 
+        IMapper _mapper, 
+        IHistoryRepository _historyRepository, 
+        IUserRepository _userRepository) 
+        : GenericService<HistoryEntity, HistoryModel>(_repository, _mapper), IHistoryService
     {
-        private readonly IHistoryRepository _historyRepository = historyRepository;
-        private readonly IUserRepository _userRepository = userRepository;
-
         public async Task DeleteFromHistoryAsync(Guid historyId, Guid ownerId, CancellationToken ct)
         {
             var historyModel = await GetOneByOwnerIdAsync(historyId, ownerId, ct);

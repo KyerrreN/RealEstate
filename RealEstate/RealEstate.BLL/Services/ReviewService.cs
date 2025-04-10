@@ -10,14 +10,13 @@ using RealEstate.DAL.RequestParameters;
 
 namespace RealEstate.BLL.Services
 {
-    public class ReviewService(IBaseRepository<ReviewEntity> repository, 
-        IMapper mapper, IUserRepository userRepository, 
-        IReviewRepository reviewRepository) 
-        : GenericService<ReviewEntity, ReviewModel>(repository, mapper), IReviewService
+    public class ReviewService
+        (IBaseRepository<ReviewEntity> _repository, 
+        IMapper _mapper, 
+        IUserRepository _userRepository, 
+        IReviewRepository _reviewRepository) 
+        : GenericService<ReviewEntity, ReviewModel>(_repository, _mapper), IReviewService
     {
-        private readonly IUserRepository _userRepository = userRepository;
-        private readonly IReviewRepository _reviewRepository = reviewRepository;
-
         public async Task<PagedEntityModel<ReviewModel>> GetReviewsOfUserAsync(PagingParameters paging, Guid userId, CancellationToken ct)
         {
             _ = await _userRepository.FindByIdAsync(userId, ct)
