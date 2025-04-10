@@ -1,14 +1,12 @@
-﻿using RealEstate.DAL.Entities;
-using RealEstate.DAL.Enums;
+﻿using RealEstate.DAL.Enums;
 
-namespace RealEstate.BLL.Models
+namespace RealEstate.Presentation.DTOs.Booking
 {
-    public class BookingModel : BaseModel
+    public record BookingForCreationDto
     {
         public Guid RealEstateId { get; set; }
         public string Proposal { get; set; } = null!;
         public EstateAction EstateAction { get; set; }
         public Guid UserId { get; set; }
-        public PartialRealEstateModel? RealEstate { get; set; }
     }
 }

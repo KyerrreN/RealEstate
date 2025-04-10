@@ -11,5 +11,6 @@
         public ICollection<ReviewEntity> ReceivedReviews { get; } = [];
         public ICollection<HistoryEntity> Histories { get; } = [];
         public ICollection<RealEstateEntity> RealEstates { get; } = [];
+        public ICollection<BookingEntity> Bookings { get; set; } = [];
     }
 }
