@@ -49,5 +49,11 @@ namespace RealEstate.Presentation.Controllers
             var closeDealModel = closeDealDto.Adapt<CloseDealModel>();
             await _bookingService.CloseDeal(closeDealModel, ct);
         }
+
+        [HttpDelete("{id:guid}")]
+        public async Task Delete(Guid id, CancellationToken ct)
+        {
+            await _bookingService.DeleteAsync(id, ct);
+        }
     }
 }
