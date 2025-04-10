@@ -10,7 +10,10 @@ using RealEstate.DAL.RequestParameters;
 
 namespace RealEstate.BLL.Services
 {
-    public class ReviewService(IBaseRepository<ReviewEntity> repository, IMapper mapper, IUserRepository userRepository, IReviewRepository reviewRepository) : GenericService<ReviewEntity, ReviewModel>(repository, mapper), IReviewService
+    public class ReviewService(IBaseRepository<ReviewEntity> repository, 
+        IMapper mapper, IUserRepository userRepository, 
+        IReviewRepository reviewRepository) 
+        : GenericService<ReviewEntity, ReviewModel>(repository, mapper), IReviewService
     {
         private readonly IUserRepository _userRepository = userRepository;
         private readonly IReviewRepository _reviewRepository = reviewRepository;

@@ -9,7 +9,13 @@ using RealEstate.DAL.Repositories;
 
 namespace RealEstate.BLL.Services
 {
-    public class BookingService(IBaseRepository<BookingEntity> repository, IMapper mapper, IRealEstateRepository realEstateRepository, IBookingRepository bookingRepository, IUserRepository userRepository, AppDbContext context, IHistoryRepository historyRepository) : GenericService<BookingEntity, BookingModel>(repository, mapper), IBookingService
+    public class BookingService
+        (IBaseRepository<BookingEntity> repository, 
+        IMapper mapper, IRealEstateRepository realEstateRepository, 
+        IBookingRepository bookingRepository, 
+        IUserRepository userRepository, AppDbContext context, 
+        IHistoryRepository historyRepository) 
+        : GenericService<BookingEntity, BookingModel>(repository, mapper), IBookingService
     {
         private readonly IRealEstateRepository _realEstateRepository = realEstateRepository;
         private readonly IBookingRepository _bookingRepository = bookingRepository;

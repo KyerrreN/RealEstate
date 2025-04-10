@@ -11,7 +11,12 @@ using RealEstate.DAL.RequestParameters;
 
 namespace RealEstate.BLL.Services
 {
-    public class HistoryService(IBaseRepository<HistoryEntity> repository, IMapper mapper, IHistoryRepository historyRepository, IUserRepository userRepository) : GenericService<HistoryEntity, HistoryModel>(repository, mapper), IHistoryService
+    public class HistoryService
+        (IBaseRepository<HistoryEntity> repository, 
+        IMapper mapper, 
+        IHistoryRepository historyRepository, 
+        IUserRepository userRepository) 
+        : GenericService<HistoryEntity, HistoryModel>(repository, mapper), IHistoryService
     {
         private readonly IHistoryRepository _historyRepository = historyRepository;
         private readonly IUserRepository _userRepository = userRepository;

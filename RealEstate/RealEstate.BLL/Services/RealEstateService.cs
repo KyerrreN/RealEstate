@@ -12,7 +12,12 @@ using RealEstate.DAL.RequestParameters;
 
 namespace RealEstate.BLL.Services
 {
-    public class RealEstateService(IBaseRepository<RealEstateEntity> repository, IMapper mapper, IRealEstateRepository realEstateRepository, IUserRepository userRepository, IHistoryRepository historyRepository, AppDbContext context) : GenericService<RealEstateEntity, RealEstateModel>(repository, mapper), IRealEstateService
+    public class RealEstateService
+        (IBaseRepository<RealEstateEntity> repository, 
+        IMapper mapper, IRealEstateRepository realEstateRepository, 
+        IUserRepository userRepository, IHistoryRepository historyRepository, 
+        AppDbContext context) 
+        : GenericService<RealEstateEntity, RealEstateModel>(repository, mapper), IRealEstateService
     {
         private readonly IRealEstateRepository _realEstateRepository = realEstateRepository;
         private readonly IUserRepository _userRepository = userRepository;
