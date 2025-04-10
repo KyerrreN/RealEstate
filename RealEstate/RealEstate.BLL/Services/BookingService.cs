@@ -70,21 +70,19 @@ namespace RealEstate.BLL.Services
 
             var historyEntity = historyModel.Adapt<HistoryEntity>();
 
-            using (var transaction = await _context.Database.BeginTransactionAsync(ct))
+            using var transaction = await _context.Database.BeginTransactionAsync(ct);
+            try
             {
-                try
-                {
-                    await _bookingRepository.DeleteAsync(bookingEntity, ct);
-                    await _historyRepository.CreateAsync(historyEntity, ct);
-                    await _realEstateRepository.DeleteAsync(realEstateEntities[0], ct);
+                await _bookingRepository.DeleteAsync(bookingEntity, ct);
+                await _historyRepository.CreateAsync(historyEntity, ct);
+                await _realEstateRepository.DeleteAsync(realEstateEntities[0], ct);
 
-                    await transaction.CommitAsync(ct);
-                }
-                catch (Exception)
-                {
-                    await transaction.RollbackAsync(ct);
-                    throw;
-                }
+                await transaction.CommitAsync(ct);
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync(ct);
+                throw;
             }
         }
     }
