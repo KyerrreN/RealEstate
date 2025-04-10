@@ -22,5 +22,25 @@ namespace RealEstate.Presentation.Controllers
 
             return createdModel.Adapt<BookingDto>();
         }
+
+        [HttpGet("owner/{ownerId:guid}")]
+        public async Task<List<BookingDto>> GetAllOwner(Guid ownerId, CancellationToken ct)
+        {
+            var bookings = await _bookingService.GetByExpression(b => b.RealEstate.OwnerId == ownerId, ct);
+
+            var bookingsDto = bookings.Adapt<List<BookingDto>>();
+
+            return bookingsDto;
+        }
+
+        [HttpGet("client/{clientId:guid}")]
+        public async Task<List<BookingDto>> GetAllClient(Guid clientId, CancellationToken ct)
+        {
+            var bookings = await _bookingService.GetByExpression(b => b.UserId == clientId, ct);
+
+            var bookingsDto = bookings.Adapt<List<BookingDto>>();
+
+            return bookingsDto;
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using RealEstate.DAL.Enums;
-using RealEstate.Presentation.DTOs.RealEstate;
+﻿using RealEstate.Presentation.DTOs.RealEstate;
 
 namespace RealEstate.Presentation.DTOs.Booking
 {
