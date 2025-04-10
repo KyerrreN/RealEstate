@@ -42,5 +42,12 @@ namespace RealEstate.Presentation.Controllers
 
             return bookingsDto;
         }
+
+        [HttpPost("close")]
+        public async Task CloseDeal([FromBody] CloseDealDto closeDealDto, CancellationToken ct)
+        {
+            var closeDealModel = closeDealDto.Adapt<CloseDealModel>();
+            await _bookingService.CloseDeal(closeDealModel, ct);
+        }
     }
 }

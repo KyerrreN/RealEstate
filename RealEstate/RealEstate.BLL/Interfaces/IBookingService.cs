@@ -5,5 +5,6 @@ namespace RealEstate.BLL.Interfaces
 {
     public interface IBookingService : IGenericService<BookingEntity, BookingModel>
     {
+        Task CloseDeal(CloseDealModel model, CancellationToken ct);
     }
 }
