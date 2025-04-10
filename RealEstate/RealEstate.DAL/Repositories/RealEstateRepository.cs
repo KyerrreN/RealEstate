@@ -22,17 +22,7 @@ namespace RealEstate.DAL.Repositories
                 .Sort(filters.OrderBy)
                 .ToListAsync(ct);
 
-            var totalCount = realEstateItems.Count;
-
-            var totalPages = (int)Math.Ceiling((double)totalCount / filters.PageSize);
-
-            var pagedEntity = new PagedEntityModel<RealEstateEntity>
-            {
-                Items = realEstateItems.ApplyPaging(filters.PageNumber, filters.PageSize),
-                CurrentPage = filters.PageNumber,
-                TotalCount = totalCount,
-                TotalPages = totalPages
-            };
+            var pagedEntity = PagedEntityModel<RealEstateEntity>.ToPagedEntityModel(filters.PageNumber, filters.PageSize, realEstateItems);
 
             return pagedEntity;
         }
