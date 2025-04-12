@@ -1,7 +1,5 @@
 ﻿using RealEstate.DAL.Entities;
 using RealEstate.DAL.Enums;
-using System.Reflection;
-using System.Text;
 using System.Linq.Dynamic.Core;
 
 namespace RealEstate.DAL.Repositories.Extensions

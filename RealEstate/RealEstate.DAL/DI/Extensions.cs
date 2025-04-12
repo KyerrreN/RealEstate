@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using RealEstate.DAL.Builders;
 using RealEstate.DAL.Enums;
 using RealEstate.DAL.Interceptors;
 using RealEstate.DAL.Interfaces;
@@ -41,6 +42,8 @@ namespace RealEstate.DAL.DI
             services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+
+            services.AddScoped<IRealEstateFilterBuilder, RealEstateFilterBuilder>();
         }
     }
 }
