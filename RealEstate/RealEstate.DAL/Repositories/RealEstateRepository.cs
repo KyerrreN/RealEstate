@@ -34,8 +34,11 @@ namespace RealEstate.DAL.Repositories
 
             filterBuilder
                 .SetEstateStatus(filters.EstateStatus)
-                .SetCity(filters.City);
-
+                .SetEstateType(filters.EstateType)
+                .SetOwner(filters.OwnerId)
+                .SetCity(filters.City)
+                .SetPrice(filters.MinPrice, filters.MaxPrice);
+            
             realEstateQuery = filterBuilder.Build(realEstateQuery, ct);
 
             var count = await realEstateQuery.CountAsync(ct);

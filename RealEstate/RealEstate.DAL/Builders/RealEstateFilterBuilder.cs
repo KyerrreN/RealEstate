@@ -6,10 +6,10 @@ namespace RealEstate.DAL.Builders
     public interface IRealEstateFilterBuilder
     {
         RealEstateFilterBuilder SetEstateStatus(List<EstateStatus>? estateStatuses);
-        RealEstateFilterBuilder SetEstateType();
-        RealEstateFilterBuilder SetOwner();
+        RealEstateFilterBuilder SetEstateType(List<EstateType>? estateTypes);
+        RealEstateFilterBuilder SetOwner(Guid? ownerId);
         RealEstateFilterBuilder SetCity(string? city);
-        RealEstateFilterBuilder SetPrice();
+        RealEstateFilterBuilder SetPrice(decimal? minPrice, decimal? maxPrice);
         IQueryable<RealEstateEntity> Build(IQueryable<RealEstateEntity> realEstateQuery, CancellationToken ct);
     }
 
@@ -17,8 +17,13 @@ namespace RealEstate.DAL.Builders
     {
         private string? _city;
         private List<EstateStatus>? _estateStatuses;
-        //private IQueryable<EstateType> _estateType;
-       
+        private List<EstateType>? _estateTypes;
+        private Guid? _ownerId;
+        private decimal? _minPrice;
+        private decimal? _maxPrice;
+
+        private bool _validPriceRange = false;
+
         public RealEstateFilterBuilder SetCity(string? city)
         {
             if (string.IsNullOrEmpty(city))
@@ -39,27 +44,57 @@ namespace RealEstate.DAL.Builders
             return this;
         }
 
-        public RealEstateFilterBuilder SetEstateType()
+        public RealEstateFilterBuilder SetEstateType(List<EstateType>? estateTypes)
         {
-            throw new NotImplementedException();
+            if (estateTypes is null || estateTypes.Count == 0)
+                return this;
+
+            _estateTypes = estateTypes;
+
+            return this;
         }
 
-        public RealEstateFilterBuilder SetOwner()
+        public RealEstateFilterBuilder SetOwner(Guid? ownerId)
         {
-            throw new NotImplementedException();
+            if (!ownerId.HasValue || ownerId.Value == Guid.Empty)
+                return this;
+
+            _ownerId = ownerId;
+
+            return this;
         }
 
-        public RealEstateFilterBuilder SetPrice()
+        public RealEstateFilterBuilder SetPrice(decimal? minPrice, decimal? maxPrice)
         {
-            throw new NotImplementedException();
+            if (minPrice.HasValue && minPrice > 0)
+            {
+                _minPrice = minPrice;
+            }
+
+            if (maxPrice.HasValue && maxPrice > 0)
+            {
+                _maxPrice = maxPrice;
+            }
+
+            if (minPrice.HasValue && maxPrice.HasValue && minPrice <= maxPrice)
+            {
+                _validPriceRange = true;
+            }
+
+            return this;
         }
 
         public IQueryable<RealEstateEntity> Build(IQueryable<RealEstateEntity> realEstateQuery, CancellationToken ct)
         {
             return realEstateQuery.Where(re =>
-                (!string.IsNullOrEmpty(_city) || re.City == _city) &&
-                (_estateStatuses != null || _estateStatuses.Count == 0 || _estateStatuses.Contains(re.EstateStatus))
-            );  
+                (string.IsNullOrEmpty(_city) || re.City.ToLower().Trim() == _city.ToLower().Trim()) &&
+                (_estateStatuses == null || _estateStatuses.Contains(re.EstateStatus)) &&
+                (_ownerId == null || re.OwnerId == _ownerId) &&
+                (_estateTypes == null || _estateTypes.Contains(re.EstateType)) &&
+                (_validPriceRange == false || _minPrice == null || _maxPrice != null || (re.Price >= _minPrice && re.Price <= _maxPrice)) &&
+                (_minPrice == null || re.Price >= _minPrice) &&
+                (_maxPrice == null || re.Price <= _maxPrice)
+            );
         }
     }
 }
