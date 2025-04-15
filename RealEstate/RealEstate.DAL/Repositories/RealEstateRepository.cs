@@ -16,17 +16,6 @@ namespace RealEstate.DAL.Repositories
             RealEstateFilterParameters filters,
             CancellationToken ct)
         {
-            //var realEstateItems = await Query
-            //    .AsNoTracking()
-            //    .Include(re => re.Owner)
-            //    .FilterByPrice(filters.MinPrice, filters.MaxPrice)
-            //    .FilterByEstateStatus(filters.EstateStatus)
-            //    .FilterByEstateType(filters.EstateType)
-            //    .FilterByCity(filters.City)
-            //    .FilterByOwner(filters.OwnerId)
-            //    .Sort(filters.OrderBy)
-            //    .ToListAsync(ct);
-
             var realEstateQuery = Query
                 .AsNoTracking()
                 .Include(re => re.Owner)
