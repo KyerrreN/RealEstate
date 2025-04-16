@@ -1,3 +1,4 @@
+using FluentValidation;
 using RealEstate.BLL.DI;
 using RealEstate.Presentation.Mapping;
 using RealEstate.Presentation.Middleware;
@@ -14,6 +15,7 @@ namespace RealEstate.Presentation
             builder.Services.AddOpenApi();
 
             MapsterConfig.RegisterMappings();
+            builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
             builder.Services.RegisterBLL(builder.Configuration);
 
