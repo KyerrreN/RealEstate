@@ -1,4 +1,5 @@
-﻿using RealEstate.Domain.Exceptions;
+﻿using FluentValidation;
+using RealEstate.Domain.Exceptions;
 using RealEstate.Domain.Models;
 using RealEstate.Presentation.Constants;
 using System.Text.Json;
@@ -20,6 +21,10 @@ namespace RealEstate.Presentation.Middleware
                 await HandleException(context, ex, StatusCodes.Status404NotFound);
             }
             catch (BadRequestException ex)
+            {
+                await HandleException(context, ex, StatusCodes.Status400BadRequest);
+            }
+            catch (ValidationException ex)
             {
                 await HandleException(context, ex, StatusCodes.Status400BadRequest);
             }

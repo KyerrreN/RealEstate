@@ -1,4 +1,5 @@
-﻿using Mapster;
+﻿using FluentValidation;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using RealEstate.BLL.Interfaces;
 using RealEstate.BLL.Models;
@@ -9,13 +10,14 @@ namespace RealEstate.Presentation.Controllers
 {
     [Route(ApiRoutes.BookingEndpoint)]
     [ApiController]
-    public class BookingController(IBookingService bookingService) : ControllerBase
+    public class BookingController(IBookingService _bookingService, IValidator<CreateBookingDto> _createBookingValidator) 
+        : ControllerBase
     {
-        private readonly IBookingService _bookingService = bookingService;
-
         [HttpPost]
         public async Task<BookingDto> CreateBookingFromClient([FromBody] CreateBookingDto bookingForCreationDto, CancellationToken ct)
         {
+            await _createBookingValidator.ValidateAndThrowAsync(bookingForCreationDto, ct);
+
             var bookingModel = bookingForCreationDto.Adapt<BookingModel>();
 
             var createdModel = await _bookingService.CreateAsync(bookingModel, ct);
