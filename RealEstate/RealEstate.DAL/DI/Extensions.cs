@@ -7,6 +7,7 @@ using RealEstate.DAL.Interceptors;
 using RealEstate.DAL.Interfaces;
 using RealEstate.DAL.Options;
 using RealEstate.DAL.Repositories;
+using RealEstate.DAL.Transactions;
 using RealEstate.Domain.Enums;
 
 namespace RealEstate.DAL.DI
@@ -44,6 +45,8 @@ namespace RealEstate.DAL.DI
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 
             services.AddScoped<IRealEstateFilterBuilder, RealEstateFilterBuilder>();
+
+            services.AddScoped<ITransactionManager, TransactionManager>();
         }
     }
 }
