@@ -11,13 +11,13 @@ namespace RealEstate.Presentation.Validators
         {
             RuleFor(x => x.Id)
                 .NotEmpty()
-                .WithMessage(ValidatorConstants.PropertyNameRequired);
+                .WithMessage(ValidatorConstants.NotEmpty);
 
             RuleFor(x => x.EstateAction)
                 .NotEmpty()
-                .WithMessage(ValidatorConstants.PropertyNameRequired)
+                .WithMessage(ValidatorConstants.NotEmpty)
                 .NotEqual(EstateAction.None)
-                .WithMessage("{PropertyName} cannot equal to {ComparisonValue}");
+                .WithMessage(ValidatorConstants.NotEqual);
         }
     }
 }

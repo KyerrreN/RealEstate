@@ -11,23 +11,23 @@ namespace RealEstate.Presentation.Validators
         {
             RuleFor(x => x.RealEstateId)
                 .NotEmpty()
-                .WithMessage(ValidatorConstants.PropertyNameRequired);
+                .WithMessage(ValidatorConstants.NotEmpty);
 
             RuleFor(x => x.Proposal)
                 .NotEmpty()
-                .WithMessage(ValidatorConstants.PropertyNameRequired)
+                .WithMessage(ValidatorConstants.NotEmpty)
                 .MaximumLength(2000)
-                .WithMessage("{PropertyName} cannot exceed {MaxLength} characters.");
+                .WithMessage(ValidatorConstants.MaximumLength);
 
             RuleFor(x => x.EstateAction)
                 .NotEmpty()
-                .WithMessage(ValidatorConstants.PropertyNameRequired)
+                .WithMessage(ValidatorConstants.NotEmpty)
                 .NotEqual(EstateAction.None)
-                .WithMessage("{PropertyName} cannot equal to {ComparisonValue}");
+                .WithMessage(ValidatorConstants.NotEqual);
 
             RuleFor(x => x.UserId)
                 .NotEmpty()
-                .WithMessage(ValidatorConstants.PropertyNameRequired);
+                .WithMessage(ValidatorConstants.NotEmpty);
         }
     }
 }

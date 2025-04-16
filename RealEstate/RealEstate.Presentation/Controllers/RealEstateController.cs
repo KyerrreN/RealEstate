@@ -1,4 +1,5 @@
-﻿using Mapster;
+﻿using FluentValidation;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using RealEstate.BLL.Interfaces;
 using RealEstate.BLL.Models;
@@ -11,7 +12,10 @@ namespace RealEstate.Presentation.Controllers
 {
     [Route(ApiRoutes.RealEstateEndpoint)]
     [ApiController]
-    public class RealEstateController(IRealEstateService _realEstateService) : ControllerBase
+    public class RealEstateController(IRealEstateService _realEstateService,
+        IValidator<CreateRealEstateDto> _createRealEstateValidator,
+        IValidator<UpdateRealEstateDto> _updateRealEstateValidator) 
+        : ControllerBase
     {
         [HttpGet]
         public async Task<PagedEntityDto<RealEstateDto>> GetAll([FromQuery] RealEstateFilterParameters filters, [FromQuery] SortingParameters sorting, CancellationToken ct)
@@ -36,6 +40,8 @@ namespace RealEstate.Presentation.Controllers
         [HttpPost]
         public async Task<RealEstateDto> Create([FromBody] CreateRealEstateDto realEstateForCreationDto, CancellationToken ct)
         {
+            await _createRealEstateValidator.ValidateAndThrowAsync(realEstateForCreationDto, ct);
+
             var realEstateModel = realEstateForCreationDto.Adapt<RealEstateModel>();
 
             var createdRealEstateModel = await _realEstateService.CreateAsync(realEstateModel, ct);
@@ -56,6 +62,8 @@ namespace RealEstate.Presentation.Controllers
         [HttpPut("{id:guid}")]
         public async Task<RealEstateDto> Update(Guid id, [FromBody] UpdateRealEstateDto dto, CancellationToken ct)
         {
+            await _updateRealEstateValidator.ValidateAndThrowAsync(dto, ct);
+
             var realEstateModel = dto.Adapt<RealEstateModel>();
 
             var updatedRealEstateModel = await _realEstateService.UpdateAsync(id, realEstateModel, ct);
