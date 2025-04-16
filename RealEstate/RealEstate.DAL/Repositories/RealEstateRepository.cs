@@ -3,6 +3,7 @@ using RealEstate.DAL.Builders;
 using RealEstate.DAL.Entities;
 using RealEstate.DAL.Interfaces;
 using RealEstate.DAL.Models;
+using RealEstate.DAL.Repositories.Extensions;
 using RealEstate.DAL.RequestParameters;
 
 namespace RealEstate.DAL.Repositories
@@ -29,6 +30,7 @@ namespace RealEstate.DAL.Repositories
                 .SetPrice(filters.MinPrice, filters.MaxPrice);
             
             realEstateQuery = filterBuilder.Build(realEstateQuery, ct);
+            realEstateQuery.Sort(filters.OrderBy);
 
             var count = await realEstateQuery.CountAsync(ct);
             var totalPages = (int)Math.Ceiling((double)count / filters.PageSize);
