@@ -10,7 +10,9 @@ namespace RealEstate.Presentation.Controllers
 {
     [Route(ApiRoutes.BookingEndpoint)]
     [ApiController]
-    public class BookingController(IBookingService _bookingService, IValidator<CreateBookingDto> _createBookingValidator) 
+    public class BookingController(IBookingService _bookingService,
+        IValidator<CreateBookingDto> _createBookingValidator,
+        IValidator<CloseDealDto> _closeDealValidator) 
         : ControllerBase
     {
         [HttpPost]
@@ -48,6 +50,8 @@ namespace RealEstate.Presentation.Controllers
         [HttpPost("close")]
         public async Task CloseDeal([FromBody] CloseDealDto closeDealDto, CancellationToken ct)
         {
+            await _closeDealValidator.ValidateAndThrowAsync(closeDealDto, ct);
+
             var closeDealModel = closeDealDto.Adapt<CloseDealModel>();
             await _bookingService.CloseDeal(closeDealModel, ct);
         }
