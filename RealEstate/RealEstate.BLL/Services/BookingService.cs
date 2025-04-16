@@ -5,6 +5,7 @@ using RealEstate.BLL.Models;
 using RealEstate.DAL.Entities;
 using RealEstate.DAL.Interfaces;
 using RealEstate.DAL.Repositories;
+using RealEstate.DAL.Transactions;
 using RealEstate.Domain.Exceptions;
 
 namespace RealEstate.BLL.Services
@@ -14,7 +15,8 @@ namespace RealEstate.BLL.Services
         IMapper _mapper, 
         IRealEstateRepository _realEstateRepository, 
         IBookingRepository _bookingRepository, 
-        IUserRepository _userRepository, AppDbContext _context, 
+        IUserRepository _userRepository,
+        ITransactionManager _transactionManager,
         IHistoryRepository _historyRepository) 
         : GenericService<BookingEntity, BookingModel>(_repository, _mapper), IBookingService
     {
@@ -65,7 +67,8 @@ namespace RealEstate.BLL.Services
 
             var historyEntity = historyModel.Adapt<HistoryEntity>();
 
-            using var transaction = await _context.Database.BeginTransactionAsync(ct);
+            await using var transaction = await _transactionManager.BeginTransactionAsync(ct);
+
             try
             {
                 await _bookingRepository.DeleteAsync(bookingEntity, ct);

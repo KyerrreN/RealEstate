@@ -9,6 +9,7 @@ using RealEstate.DAL.Repositories;
 using RealEstate.Domain.Exceptions;
 using RealEstate.Domain.Models;
 using RealEstate.Domain.QueryParameters;
+using RealEstate.DAL.Transactions;
 
 namespace RealEstate.BLL.Services
 {
@@ -18,7 +19,7 @@ namespace RealEstate.BLL.Services
         IRealEstateRepository _realEstateRepository, 
         IUserRepository _userRepository, 
         IHistoryRepository _historyRepository,
-        AppDbContext _context)
+        ITransactionManager transactionManager)
         : GenericService<RealEstateEntity, RealEstateModel>(_repository, _mapper), IRealEstateService
     {
         public override async Task<RealEstateModel> CreateAsync(RealEstateModel model, CancellationToken ct)
@@ -79,7 +80,8 @@ namespace RealEstate.BLL.Services
 
             var historyEntity = historyModel.Adapt<HistoryEntity>();
 
-            using var transaction = await _context.Database.BeginTransactionAsync(ct);
+            await using var transaction = await transactionManager.BeginTransactionAsync(ct);
+
             try
             {
                 await _historyRepository.CreateAsync(historyEntity, ct);
