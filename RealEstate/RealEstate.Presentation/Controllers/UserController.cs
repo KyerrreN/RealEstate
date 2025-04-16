@@ -9,10 +9,8 @@ namespace RealEstate.Presentation.Controllers
 {
     [Route(ApiRoutes.UsersEndpoint)]
     [ApiController]
-    public class UserController(IUserService userService) : ControllerBase
+    public class UserController(IUserService _userService) : ControllerBase
     {
-        private readonly IUserService _userService = userService;
-
         [HttpGet]
         public async Task<List<UserDto>> GetAll(CancellationToken ct)
         {

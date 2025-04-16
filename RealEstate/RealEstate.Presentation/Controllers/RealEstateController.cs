@@ -11,10 +11,8 @@ namespace RealEstate.Presentation.Controllers
 {
     [Route(ApiRoutes.RealEstateEndpoint)]
     [ApiController]
-    public class RealEstateController(IRealEstateService realEstateService) : ControllerBase
+    public class RealEstateController(IRealEstateService _realEstateService) : ControllerBase
     {
-        private readonly IRealEstateService _realEstateService = realEstateService;
-
         [HttpGet]
         public async Task<PagedEntityDto<RealEstateDto>> GetAll([FromQuery] RealEstateFilterParameters filters, [FromQuery] SortingParameters sorting, CancellationToken ct)
         {

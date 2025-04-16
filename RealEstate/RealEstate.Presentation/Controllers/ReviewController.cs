@@ -11,10 +11,8 @@ namespace RealEstate.Presentation.Controllers
 {
     [Route(ApiRoutes.ReviewEndpoint)]
     [ApiController]
-    public class ReviewController(IReviewService reviewService) : ControllerBase
+    public class ReviewController(IReviewService _reviewService) : ControllerBase
     {
-        private readonly IReviewService _reviewService = reviewService;
-
         [HttpGet("{userId:guid}")]
         public async Task<PagedEntityDto<ReviewDto>> GetAll([FromQuery] PagingParameters paging, Guid userId, CancellationToken ct)
         {

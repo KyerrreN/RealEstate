@@ -10,10 +10,8 @@ namespace RealEstate.Presentation.Controllers
 {
     [Route(ApiRoutes.HistoryEndpoint)]
     [ApiController]
-    public class HistoryController(IHistoryService historyService) : ControllerBase
+    public class HistoryController(IHistoryService _historyService) : ControllerBase
     {
-        private readonly IHistoryService _historyService = historyService;
-
         [HttpGet]
         public async Task<PagedEntityDto<HistoryDto>> GetAll([FromQuery] PagingParameters paging, Guid userId, CancellationToken ct)
         {
