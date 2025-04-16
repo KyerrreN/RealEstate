@@ -1,4 +1,4 @@
-﻿namespace RealEstate.BLL.Exceptions
+﻿namespace RealEstate.Domain.Exceptions
 {
     public class NotFoundException : Exception
     {

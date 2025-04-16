@@ -1,6 +1,6 @@
 ﻿using RealEstate.DAL.Entities;
-using RealEstate.DAL.Models;
-using RealEstate.DAL.RequestParameters;
+using RealEstate.Domain.Models;
+using RealEstate.Domain.QueryParameters;
 
 namespace RealEstate.DAL.Interfaces
 {

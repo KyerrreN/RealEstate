@@ -1,14 +1,14 @@
 ﻿using Mapster;
 using MapsterMapper;
-using RealEstate.BLL.Exceptions;
 using RealEstate.BLL.Interfaces;
 using RealEstate.BLL.Models;
 using RealEstate.DAL.Entities;
-using RealEstate.DAL.Enums;
+using RealEstate.Domain.Enums;
 using RealEstate.DAL.Interfaces;
-using RealEstate.DAL.Models;
 using RealEstate.DAL.Repositories;
-using RealEstate.DAL.RequestParameters;
+using RealEstate.Domain.Exceptions;
+using RealEstate.Domain.Models;
+using RealEstate.Domain.QueryParameters;
 
 namespace RealEstate.BLL.Services
 {

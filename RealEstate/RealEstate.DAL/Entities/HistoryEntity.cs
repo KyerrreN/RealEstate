@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RealEstate.DAL.Enums;
+using RealEstate.Domain.Enums;
 
 namespace RealEstate.DAL.Entities
 {

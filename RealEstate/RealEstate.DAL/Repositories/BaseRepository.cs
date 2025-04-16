@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RealEstate.DAL.Interfaces;
-using RealEstate.DAL.Models;
+using RealEstate.Domain.Models;
 using System.Linq.Expressions;
 
 namespace RealEstate.DAL.Repositories

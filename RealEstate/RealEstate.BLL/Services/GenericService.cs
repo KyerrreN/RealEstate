@@ -1,10 +1,10 @@
 ﻿using Mapster;
 using MapsterMapper;
-using RealEstate.BLL.Exceptions;
 using RealEstate.BLL.Interfaces;
 using RealEstate.DAL.Entities;
 using RealEstate.DAL.Interfaces;
-using RealEstate.DAL.Models;
+using RealEstate.Domain.Exceptions;
+using RealEstate.Domain.Models;
 using System.Linq.Expressions;
 
 namespace RealEstate.BLL.Services

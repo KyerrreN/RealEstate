@@ -1,4 +1,4 @@
-﻿namespace RealEstate.DAL.RequestParameters
+﻿namespace RealEstate.Domain.QueryParameters
 {
     public class PagingParameters
     {

@@ -1,6 +1,4 @@
-﻿using RealEstate.DAL.Enums;
-
-namespace RealEstate.Presentation.DTOs.History
+﻿namespace RealEstate.Presentation.DTOs.History
 {
     public record HistoryDto : BaseDto
     {

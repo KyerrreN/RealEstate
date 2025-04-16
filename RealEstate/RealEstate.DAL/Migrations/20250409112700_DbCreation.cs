@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using RealEstate.DAL.Enums;
+using RealEstate.Domain.Enums;
 
 #nullable disable
 

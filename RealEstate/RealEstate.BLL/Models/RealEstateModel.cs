@@ -1,5 +1,5 @@
 ﻿using RealEstate.DAL.Entities;
-using RealEstate.DAL.Enums;
+using RealEstate.Domain.Enums;
 
 namespace RealEstate.BLL.Models
 {

@@ -3,11 +3,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using RealEstate.DAL.Builders;
-using RealEstate.DAL.Enums;
 using RealEstate.DAL.Interceptors;
 using RealEstate.DAL.Interfaces;
 using RealEstate.DAL.Options;
 using RealEstate.DAL.Repositories;
+using RealEstate.Domain.Enums;
 
 namespace RealEstate.DAL.DI
 {

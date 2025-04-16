@@ -1,6 +1,6 @@
-﻿using RealEstate.DAL.Enums;
+﻿using RealEstate.Domain.Enums;
 
-namespace RealEstate.DAL.RequestParameters
+namespace RealEstate.Domain.QueryParameters
 {
     public class RealEstateFilterParameters : PagingParameters
     {

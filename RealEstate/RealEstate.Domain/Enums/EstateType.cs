@@ -1,4 +1,4 @@
-﻿namespace RealEstate.DAL.Enums
+﻿namespace RealEstate.Domain.Enums
 {
     public enum EstateType
     {

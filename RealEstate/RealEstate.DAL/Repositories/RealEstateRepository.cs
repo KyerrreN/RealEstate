@@ -2,9 +2,9 @@
 using RealEstate.DAL.Builders;
 using RealEstate.DAL.Entities;
 using RealEstate.DAL.Interfaces;
-using RealEstate.DAL.Models;
 using RealEstate.DAL.Repositories.Extensions;
-using RealEstate.DAL.RequestParameters;
+using RealEstate.Domain.Models;
+using RealEstate.Domain.QueryParameters;
 
 namespace RealEstate.DAL.Repositories
 {
@@ -35,18 +35,9 @@ namespace RealEstate.DAL.Repositories
             var count = await realEstateQuery.CountAsync(ct);
             var totalPages = (int)Math.Ceiling((double)count / filters.PageSize);
 
-            var realEstateList = await realEstateQuery
-                .Skip((filters.PageNumber - 1) * filters.PageSize)
-                .Take(filters.PageSize)
-                .ToListAsync(ct);
+            var realEstateList = await Utilities.ToPagedEntityModelAsync(filters.PageNumber, filters.PageSize, realEstateQuery, ct);
 
-            return new PagedEntityModel<RealEstateEntity>
-            {
-                TotalCount = count,
-                TotalPages = totalPages,
-                Items = realEstateList,
-                CurrentPage = filters.PageNumber,
-            };
+            return realEstateList;
         }
     }
 }

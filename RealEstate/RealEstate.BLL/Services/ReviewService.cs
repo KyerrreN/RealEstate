@@ -1,12 +1,13 @@
 ﻿using Mapster;
 using MapsterMapper;
-using RealEstate.BLL.Exceptions;
 using RealEstate.BLL.Interfaces;
 using RealEstate.BLL.Models;
 using RealEstate.DAL.Entities;
 using RealEstate.DAL.Interfaces;
-using RealEstate.DAL.Models;
-using RealEstate.DAL.RequestParameters;
+using RealEstate.DAL.Repositories.Extensions;
+using RealEstate.Domain.Exceptions;
+using RealEstate.Domain.Models;
+using RealEstate.Domain.QueryParameters;
 
 namespace RealEstate.BLL.Services
 {
@@ -17,6 +18,7 @@ namespace RealEstate.BLL.Services
         IReviewRepository _reviewRepository) 
         : GenericService<ReviewEntity, ReviewModel>(_repository, _mapper), IReviewService
     {
+        // To refactor, paging on IQueryable
         public async Task<PagedEntityModel<ReviewModel>> GetReviewsOfUserAsync(PagingParameters paging, Guid userId, CancellationToken ct)
         {
             _ = await _userRepository.FindByIdAsync(userId, ct)
@@ -26,7 +28,7 @@ namespace RealEstate.BLL.Services
 
             var reviewModels = reviewEntities.Adapt<List<ReviewModel>>();
 
-            return PagedEntityModel<ReviewModel>.ToPagedEntityModel(paging.PageNumber, paging.PageSize, reviewModels);
+            return Utilities.ToPagedEntityModel(paging.PageNumber, paging.PageSize, reviewModels);
         }
 
         public override async Task<ReviewModel> CreateAsync(ReviewModel model, CancellationToken ct)

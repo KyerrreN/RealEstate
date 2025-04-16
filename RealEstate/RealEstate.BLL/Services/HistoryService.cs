@@ -1,13 +1,13 @@
 ﻿using Mapster;
 using MapsterMapper;
-using RealEstate.BLL.Exceptions;
 using RealEstate.BLL.Interfaces;
 using RealEstate.BLL.Models;
 using RealEstate.DAL.Entities;
 using RealEstate.DAL.Interfaces;
-using RealEstate.DAL.Models;
 using RealEstate.DAL.Repositories.Extensions;
-using RealEstate.DAL.RequestParameters;
+using RealEstate.Domain.Exceptions;
+using RealEstate.Domain.Models;
+using RealEstate.Domain.QueryParameters;
 
 namespace RealEstate.BLL.Services
 {
@@ -27,6 +27,7 @@ namespace RealEstate.BLL.Services
             await _historyRepository.DeleteAsync(historyEntity, ct);
         }
 
+        // to refactor, replace paging on list with paging on IQueryable
         public async Task<PagedEntityModel<HistoryModel>> GetAllByOwnerIdAsync(PagingParameters paging, Guid ownerId, CancellationToken ct)
         {
             _ = await _userRepository.FindByIdAsync(ownerId, ct)
@@ -36,7 +37,7 @@ namespace RealEstate.BLL.Services
 
             var historyModels = historyEntities.Adapt<List<HistoryModel>>();
 
-            var pagedEntity = PagedEntityModel<HistoryModel>.ToPagedEntityModel(paging.PageNumber, paging.PageSize, historyModels);
+            var pagedEntity = Utilities.ToPagedEntityModel(paging.PageNumber, paging.PageSize, historyModels);
 
             return pagedEntity;
         }

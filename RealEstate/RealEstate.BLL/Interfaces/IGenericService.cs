@@ -1,4 +1,4 @@
-﻿using RealEstate.DAL.Models;
+﻿using RealEstate.Domain.Models;
 using System.Linq.Expressions;
 
 namespace RealEstate.BLL.Interfaces

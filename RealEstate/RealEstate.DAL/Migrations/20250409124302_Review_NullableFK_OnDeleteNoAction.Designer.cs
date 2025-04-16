@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using RealEstate.DAL.Enums;
 using RealEstate.DAL.Repositories;
+using RealEstate.Domain.Enums;
 
 #nullable disable
 

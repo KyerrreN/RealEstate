@@ -1,4 +1,4 @@
-﻿namespace RealEstate.BLL.Models
+﻿namespace RealEstate.Domain.Models
 {
     public record ErrorModel
     {
