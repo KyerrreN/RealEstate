@@ -1,20 +1,20 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using RealEstate.DAL.Enums;
+using RealEstate.Domain.Enums;
 
 #nullable disable
 
 namespace RealEstate.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialDbCreation : Migration
+    public partial class DbCreation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
                 .Annotation("Npgsql:Enum:EstateAction", "none,rent,sell")
-                .Annotation("Npgsql:Enum:EstateStatus", "available,none,rented,sold")
+                .Annotation("Npgsql:Enum:EstateStatus", "for_rent,for_sale,none")
                 .Annotation("Npgsql:Enum:EstateType", "apartment,house,none,office");
 
             migrationBuilder.CreateTable(
@@ -43,6 +43,7 @@ namespace RealEstate.DAL.Migrations
                     Description = table.Column<string>(type: "text", nullable: false),
                     Price = table.Column<decimal>(type: "numeric", nullable: false),
                     Address = table.Column<string>(type: "text", nullable: false),
+                    City = table.Column<string>(type: "text", nullable: false),
                     EstateType = table.Column<EstateType>(type: "\"EstateType\"", nullable: false),
                     EstateStatus = table.Column<EstateStatus>(type: "\"EstateStatus\"", nullable: false),
                     OwnerId = table.Column<Guid>(type: "uuid", nullable: false),
@@ -116,10 +117,12 @@ namespace RealEstate.DAL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    RealEstateId = table.Column<Guid>(type: "uuid", nullable: false),
+                    RealEstateId = table.Column<Guid>(type: "uuid", nullable: true),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     CompletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     EstateAction = table.Column<EstateAction>(type: "\"EstateAction\"", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -130,8 +133,7 @@ namespace RealEstate.DAL.Migrations
                         name: "FK_Histories_RealEstates_RealEstateId",
                         column: x => x.RealEstateId,
                         principalTable: "RealEstates",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Histories_Users_UserId",
                         column: x => x.UserId,

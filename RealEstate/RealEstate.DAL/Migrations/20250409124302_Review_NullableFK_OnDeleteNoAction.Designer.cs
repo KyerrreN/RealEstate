@@ -5,16 +5,16 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using RealEstate.DAL.Enums;
 using RealEstate.DAL.Repositories;
+using RealEstate.Domain.Enums;
 
 #nullable disable
 
 namespace RealEstate.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250402130138_InitialDbCreation")]
-    partial class InitialDbCreation
+    [Migration("20250409124302_Review_NullableFK_OnDeleteNoAction")]
+    partial class Review_NullableFK_OnDeleteNoAction
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace RealEstate.DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "EstateAction", new[] { "none", "rent", "sell" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "EstateStatus", new[] { "available", "none", "rented", "sold" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "EstateStatus", new[] { "for_rent", "for_sale", "none" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "EstateType", new[] { "apartment", "house", "none", "office" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
@@ -70,11 +70,17 @@ namespace RealEstate.DAL.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
                     b.Property<EstateAction>("EstateAction")
                         .HasColumnType("\"EstateAction\"");
 
-                    b.Property<Guid>("RealEstateId")
+                    b.Property<Guid?>("RealEstateId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -98,6 +104,10 @@ namespace RealEstate.DAL.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -140,7 +150,7 @@ namespace RealEstate.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("AuthorId")
+                    b.Property<Guid?>("AuthorId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Comment")
@@ -216,8 +226,7 @@ namespace RealEstate.DAL.Migrations
                     b.HasOne("RealEstate.DAL.Entities.RealEstateEntity", "RealEstate")
                         .WithMany("Histories")
                         .HasForeignKey("RealEstateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("RealEstate.DAL.Entities.UserEntity", "User")
                         .WithMany("Histories")
@@ -246,8 +255,7 @@ namespace RealEstate.DAL.Migrations
                     b.HasOne("RealEstate.DAL.Entities.UserEntity", "Author")
                         .WithMany("AuthoredReviews")
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("RealEstate.DAL.Entities.UserEntity", "Recipient")
                         .WithMany("ReceivedReviews")

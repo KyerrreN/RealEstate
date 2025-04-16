@@ -2,11 +2,13 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using RealEstate.DAL.Enums;
+using RealEstate.DAL.Builders;
 using RealEstate.DAL.Interceptors;
 using RealEstate.DAL.Interfaces;
 using RealEstate.DAL.Options;
 using RealEstate.DAL.Repositories;
+using RealEstate.DAL.Transactions;
+using RealEstate.Domain.Enums;
 
 namespace RealEstate.DAL.DI
 {
@@ -39,6 +41,12 @@ namespace RealEstate.DAL.DI
             services.AddScoped<IRealEstateRepository, RealEstateRepository>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+
+            services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+
+            services.AddScoped<IRealEstateFilterBuilder, RealEstateFilterBuilder>();
+
+            services.AddScoped<ITransactionManager, TransactionManager>();
         }
     }
 }

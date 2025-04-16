@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RealEstate.DAL.Interfaces;
-using RealEstate.DAL.Models;
+using RealEstate.Domain.Models;
 using System.Linq.Expressions;
 
 namespace RealEstate.DAL.Repositories
 {
-    public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
+    public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         protected readonly AppDbContext _context;
 
@@ -55,11 +55,10 @@ namespace RealEstate.DAL.Repositories
 
         public virtual async Task<PagedEntityModel<T>> GetPagedAsync(int pageNumber, int pageSize, CancellationToken ct)
         {
-            var entities = await Query
+            var entities = Query
                 .AsNoTracking()
                 .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync(ct);
+                .Take(pageSize);
 
             var totalCount = await Query.CountAsync(ct);
 
@@ -68,7 +67,7 @@ namespace RealEstate.DAL.Repositories
             return new PagedEntityModel<T>
             {
                 TotalCount = totalCount,
-                Items = entities,
+                Items = await entities.ToListAsync(ct),
                 CurrentPage = pageNumber,
                 TotalPages = totalPages
             };
@@ -77,6 +76,13 @@ namespace RealEstate.DAL.Repositories
         public virtual async Task<T?> FindByIdAsync(Guid id, CancellationToken ct)
         {
             return await Query.FindAsync([id], cancellationToken: ct);
+        }
+
+        public Task<T?> FindOneByConditionAsync(Expression<Func<T, bool>> expression, CancellationToken ct)
+        {
+            return Query
+                .AsNoTracking()
+                .FirstOrDefaultAsync(expression, ct);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using RealEstate.DAL.Models;
+﻿using RealEstate.Domain.Models;
 using System.Linq.Expressions;
 
 namespace RealEstate.DAL.Interfaces
@@ -12,5 +12,6 @@ namespace RealEstate.DAL.Interfaces
         Task DeleteAsync(T entity, CancellationToken ct);
         Task<PagedEntityModel<T>> GetPagedAsync(int pageNumber, int pageSize, CancellationToken ct);
         Task<T?> FindByIdAsync(Guid id, CancellationToken ct);
+        Task<T?> FindOneByConditionAsync(Expression<Func<T, bool>> expression, CancellationToken ct);
     }
 }

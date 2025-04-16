@@ -1,4 +1,5 @@
 using RealEstate.BLL.DI;
+using RealEstate.Presentation.Mapping;
 using RealEstate.Presentation.Middleware;
 
 namespace RealEstate.Presentation
@@ -11,6 +12,8 @@ namespace RealEstate.Presentation
 
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
+
+            MapsterConfig.RegisterMappings();
 
             builder.Services.RegisterBLL(builder.Configuration);
 

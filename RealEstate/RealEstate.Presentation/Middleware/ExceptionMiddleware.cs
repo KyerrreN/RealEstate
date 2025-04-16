@@ -1,5 +1,5 @@
-﻿using RealEstate.BLL.Exceptions;
-using RealEstate.BLL.Models;
+﻿using RealEstate.Domain.Exceptions;
+using RealEstate.Domain.Models;
 using RealEstate.Presentation.Constants;
 using System.Text.Json;
 
