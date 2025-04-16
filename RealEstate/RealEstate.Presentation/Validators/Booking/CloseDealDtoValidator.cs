@@ -3,7 +3,7 @@ using RealEstate.Domain.Enums;
 using RealEstate.Presentation.Constants;
 using RealEstate.Presentation.DTOs.Booking;
 
-namespace RealEstate.Presentation.Validators
+namespace RealEstate.Presentation.Validators.Booking
 {
     public sealed class CloseDealDtoValidator : AbstractValidator<CloseDealDto>
     {

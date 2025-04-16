@@ -3,7 +3,7 @@ using RealEstate.Domain.Enums;
 using RealEstate.Presentation.Constants;
 using RealEstate.Presentation.DTOs.RealEstate;
 
-namespace RealEstate.Presentation.Validators
+namespace RealEstate.Presentation.Validators.RealEstate
 {
     public class UpdateRealEstateValidator : AbstractValidator<UpdateRealEstateDto>
     {
