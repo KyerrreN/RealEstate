@@ -1,5 +1,4 @@
 ﻿using Mapster;
-using MapsterMapper;
 using RealEstate.BLL.Interfaces;
 using RealEstate.DAL.Entities;
 using RealEstate.DAL.Interfaces;
@@ -9,7 +8,7 @@ using System.Linq.Expressions;
 
 namespace RealEstate.BLL.Services
 {
-    public class GenericService<TEntity, TModel>(IBaseRepository<TEntity> _repository, IMapper _mapper) 
+    public class GenericService<TEntity, TModel>(IBaseRepository<TEntity> _repository) 
         : IGenericService<TEntity, TModel>
         where TEntity : BaseEntity
         where TModel : class

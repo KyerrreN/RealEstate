@@ -11,14 +11,13 @@ using RealEstate.Domain.Exceptions;
 namespace RealEstate.BLL.Services
 {
     public class BookingService
-        (IBaseRepository<BookingEntity> _repository, 
-        IMapper _mapper, 
+        (IBaseRepository<BookingEntity> _repository,
         IRealEstateRepository _realEstateRepository, 
         IBookingRepository _bookingRepository, 
         IUserRepository _userRepository,
         ITransactionManager _transactionManager,
         IHistoryRepository _historyRepository) 
-        : GenericService<BookingEntity, BookingModel>(_repository, _mapper), IBookingService
+        : GenericService<BookingEntity, BookingModel>(_repository), IBookingService
     {
         public override async Task<BookingModel> CreateAsync(BookingModel model, CancellationToken ct)
         {

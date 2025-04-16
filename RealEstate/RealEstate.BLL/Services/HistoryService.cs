@@ -1,5 +1,4 @@
 ﻿using Mapster;
-using MapsterMapper;
 using RealEstate.BLL.Interfaces;
 using RealEstate.BLL.Models;
 using RealEstate.DAL.Entities;
@@ -12,11 +11,10 @@ using RealEstate.Domain.QueryParameters;
 namespace RealEstate.BLL.Services
 {
     public class HistoryService
-        (IBaseRepository<HistoryEntity> _repository, 
-        IMapper _mapper, 
+        (IBaseRepository<HistoryEntity> _repository,
         IHistoryRepository _historyRepository, 
         IUserRepository _userRepository) 
-        : GenericService<HistoryEntity, HistoryModel>(_repository, _mapper), IHistoryService
+        : GenericService<HistoryEntity, HistoryModel>(_repository), IHistoryService
     {
         public async Task DeleteFromHistoryAsync(Guid historyId, Guid ownerId, CancellationToken ct)
         {
