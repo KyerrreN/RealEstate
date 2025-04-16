@@ -10,7 +10,5 @@ namespace RealEstate.Domain.QueryParameters
         public decimal? MaxPrice { get; set; }
         public Guid? OwnerId { get; set; }
         public string? City { get; set; }
-
-        public string? OrderBy { get; set; } = "CreatedAt desc";
     }
 }

@@ -15,6 +15,7 @@ namespace RealEstate.DAL.Repositories
     {
         public async Task<PagedEntityModel<RealEstateEntity>> GetAllWithRequestParameters(
             RealEstateFilterParameters filters,
+            SortingParameters sorting,
             CancellationToken ct)
         {
             var realEstateQuery = Query
@@ -30,7 +31,7 @@ namespace RealEstate.DAL.Repositories
                 .SetPrice(filters.MinPrice, filters.MaxPrice);
             
             realEstateQuery = filterBuilder.Build(realEstateQuery, ct);
-            realEstateQuery.Sort(filters.OrderBy);
+            realEstateQuery.Sort(sorting.OrderBy);
 
             var count = await realEstateQuery.CountAsync(ct);
             var totalPages = (int)Math.Ceiling((double)count / filters.PageSize);

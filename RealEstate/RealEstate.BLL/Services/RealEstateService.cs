@@ -52,11 +52,11 @@ namespace RealEstate.BLL.Services
             return entityToUpdate.Adapt<RealEstateModel>();
         }
 
-        public async Task<PagedEntityModel<RealEstateModel>> GetAllWithRequestParameters(RealEstateFilterParameters filters, CancellationToken ct)
+        public async Task<PagedEntityModel<RealEstateModel>> GetAllWithRequestParameters(RealEstateFilterParameters filters, SortingParameters sorting, CancellationToken ct)
         {
             CheckRealEstateRequestParameters(filters);
 
-            var entities = await _realEstateRepository.GetAllWithRequestParameters(filters, ct);
+            var entities = await _realEstateRepository.GetAllWithRequestParameters(filters, sorting, ct);
 
             var modelList = entities.Adapt<PagedEntityModel<RealEstateModel>>();
 

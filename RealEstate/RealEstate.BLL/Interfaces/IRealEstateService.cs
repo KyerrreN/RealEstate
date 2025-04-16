@@ -7,6 +7,6 @@ namespace RealEstate.BLL.Interfaces
 {
     public interface IRealEstateService : IGenericService<RealEstateEntity, RealEstateModel>
     {
-        Task<PagedEntityModel<RealEstateModel>> GetAllWithRequestParameters(RealEstateFilterParameters filters, CancellationToken ct);
+        Task<PagedEntityModel<RealEstateModel>> GetAllWithRequestParameters(RealEstateFilterParameters filters, SortingParameters sorting, CancellationToken ct);
     }
 }

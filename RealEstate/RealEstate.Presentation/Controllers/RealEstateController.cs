@@ -16,9 +16,9 @@ namespace RealEstate.Presentation.Controllers
         private readonly IRealEstateService _realEstateService = realEstateService;
 
         [HttpGet]
-        public async Task<PagedEntityDto<RealEstateDto>> GetAll([FromQuery] RealEstateFilterParameters filters,CancellationToken ct)
+        public async Task<PagedEntityDto<RealEstateDto>> GetAll([FromQuery] RealEstateFilterParameters filters, [FromQuery] SortingParameters sorting, CancellationToken ct)
         {
-            var realEstateModels = await _realEstateService.GetAllWithRequestParameters(filters, ct);
+            var realEstateModels = await _realEstateService.GetAllWithRequestParameters(filters, sorting, ct);
 
             var realEstateDtos = realEstateModels.Adapt<PagedEntityDto<RealEstateDto>>();
 
