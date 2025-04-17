@@ -16,7 +16,6 @@ namespace RealEstate.Presentation
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
 
-            // serilog
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
                 .Enrich.FromLogContext()
@@ -26,7 +25,6 @@ namespace RealEstate.Presentation
                 .CreateLogger();
 
             builder.Host.UseSerilog();
-            // serilog
 
             MapsterConfig.RegisterMappings();
             builder.Services.AddValidatorsFromAssemblyContaining<Program>();
