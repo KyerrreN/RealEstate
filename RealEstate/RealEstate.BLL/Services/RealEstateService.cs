@@ -1,11 +1,9 @@
 ﻿using Mapster;
-using MapsterMapper;
 using RealEstate.BLL.Interfaces;
 using RealEstate.BLL.Models;
 using RealEstate.DAL.Entities;
 using RealEstate.Domain.Enums;
 using RealEstate.DAL.Interfaces;
-using RealEstate.DAL.Repositories;
 using RealEstate.Domain.Exceptions;
 using RealEstate.Domain.Models;
 using RealEstate.Domain.QueryParameters;
@@ -15,12 +13,11 @@ namespace RealEstate.BLL.Services
 {
     public class RealEstateService
         (IBaseRepository<RealEstateEntity> _repository, 
-        IMapper _mapper, 
         IRealEstateRepository _realEstateRepository, 
         IUserRepository _userRepository, 
         IHistoryRepository _historyRepository,
         ITransactionManager transactionManager)
-        : GenericService<RealEstateEntity, RealEstateModel>(_repository, _mapper), IRealEstateService
+        : GenericService<RealEstateEntity, RealEstateModel>(_repository), IRealEstateService
     {
         public override async Task<RealEstateModel> CreateAsync(RealEstateModel model, CancellationToken ct)
         {

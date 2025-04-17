@@ -1,4 +1,5 @@
-﻿using Mapster;
+﻿using FluentValidation;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using RealEstate.BLL.Interfaces;
 using RealEstate.BLL.Models;
@@ -11,10 +12,8 @@ namespace RealEstate.Presentation.Controllers
 {
     [Route(ApiRoutes.ReviewEndpoint)]
     [ApiController]
-    public class ReviewController(IReviewService reviewService) : ControllerBase
+    public class ReviewController(IReviewService _reviewService, IValidator<CreateReviewDto> _createReviewValidator) : ControllerBase
     {
-        private readonly IReviewService _reviewService = reviewService;
-
         [HttpGet("{userId:guid}")]
         public async Task<PagedEntityDto<ReviewDto>> GetAll([FromQuery] PagingParameters paging, Guid userId, CancellationToken ct)
         {
@@ -28,6 +27,8 @@ namespace RealEstate.Presentation.Controllers
         [HttpPost]
         public async Task<ReviewDto> PostReview([FromBody] CreateReviewDto reviewDto, CancellationToken ct)
         {
+            await _createReviewValidator.ValidateAndThrowAsync(reviewDto, ct);
+
             var reviewModel = reviewDto.Adapt<ReviewModel>();
 
             var createdReviewModel = await _reviewService.CreateAsync(reviewModel, ct);

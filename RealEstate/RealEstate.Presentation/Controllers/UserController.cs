@@ -1,4 +1,5 @@
-﻿using Mapster;
+﻿using FluentValidation;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using RealEstate.BLL.Interfaces;
 using RealEstate.BLL.Models;
@@ -9,10 +10,8 @@ namespace RealEstate.Presentation.Controllers
 {
     [Route(ApiRoutes.UsersEndpoint)]
     [ApiController]
-    public class UserController(IUserService userService) : ControllerBase
+    public class UserController(IUserService _userService, IValidator<CreateUserDto> _createUserValidator) : ControllerBase
     {
-        private readonly IUserService _userService = userService;
-
         [HttpGet]
         public async Task<List<UserDto>> GetAll(CancellationToken ct)
         {
@@ -34,6 +33,8 @@ namespace RealEstate.Presentation.Controllers
         [HttpPost]
         public async Task<UserDto> CreateUser([FromBody] CreateUserDto userForCreationDto, CancellationToken ct)
         {
+            await _createUserValidator.ValidateAndThrowAsync(userForCreationDto, ct);
+
             var userModel = userForCreationDto.Adapt<UserModel>();
 
             var createdUserModel = await _userService.CreateAsync(userModel, ct);

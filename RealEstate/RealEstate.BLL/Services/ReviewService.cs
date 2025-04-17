@@ -1,5 +1,4 @@
 ﻿using Mapster;
-using MapsterMapper;
 using RealEstate.BLL.Interfaces;
 using RealEstate.BLL.Models;
 using RealEstate.DAL.Entities;
@@ -12,11 +11,10 @@ using RealEstate.Domain.QueryParameters;
 namespace RealEstate.BLL.Services
 {
     public class ReviewService
-        (IBaseRepository<ReviewEntity> _repository, 
-        IMapper _mapper, 
+        (IBaseRepository<ReviewEntity> _repository,
         IUserRepository _userRepository, 
         IReviewRepository _reviewRepository) 
-        : GenericService<ReviewEntity, ReviewModel>(_repository, _mapper), IReviewService
+        : GenericService<ReviewEntity, ReviewModel>(_repository), IReviewService
     {
         // To refactor, paging on IQueryable
         public async Task<PagedEntityModel<ReviewModel>> GetReviewsOfUserAsync(PagingParameters paging, Guid userId, CancellationToken ct)
