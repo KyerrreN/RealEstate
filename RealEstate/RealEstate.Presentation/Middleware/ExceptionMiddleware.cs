@@ -2,11 +2,12 @@
 using RealEstate.Domain.Exceptions;
 using RealEstate.Domain.Models;
 using RealEstate.Presentation.Constants;
+using Serilog;
 using System.Text.Json;
 
 namespace RealEstate.Presentation.Middleware
 {
-    public class ExceptionMiddleware(RequestDelegate next)
+    public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
     {
         private readonly RequestDelegate _next = next;
 
@@ -34,7 +35,7 @@ namespace RealEstate.Presentation.Middleware
             }
         }
 
-        private static async Task HandleException(HttpContext context, Exception ex, int statusCode)
+        private async Task HandleException(HttpContext context, Exception ex, int statusCode)
         {
             context.Response.StatusCode = statusCode;
             context.Response.ContentType = ApiConstants.JsonContentType;
@@ -46,6 +47,11 @@ namespace RealEstate.Presentation.Middleware
             };
 
             var jsonResponse = JsonSerializer.Serialize(errorModel);
+
+            logger.LogError("{message} {newLine} {innerExceptionMessage}", ex.Message, Environment.NewLine, ex.InnerException?.Message);
+            logger.LogError("Error query: {query}", context.Request.Path);
+            logger.LogError("{stackTrace}", ex.StackTrace);
+
             await context.Response.WriteAsync(jsonResponse);
         }
     }

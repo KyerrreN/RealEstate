@@ -2,6 +2,8 @@ using FluentValidation;
 using RealEstate.BLL.DI;
 using RealEstate.Presentation.Mapping;
 using RealEstate.Presentation.Middleware;
+using Serilog;
+using Serilog.Exceptions;
 
 namespace RealEstate.Presentation
 {
@@ -13,6 +15,12 @@ namespace RealEstate.Presentation
 
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
+
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(builder.Configuration)
+                .CreateLogger();
+
+            builder.Host.UseSerilog();
 
             MapsterConfig.RegisterMappings();
             builder.Services.AddValidatorsFromAssemblyContaining<Program>();
