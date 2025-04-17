@@ -2,6 +2,7 @@
 using RealEstate.Domain.Exceptions;
 using RealEstate.Domain.Models;
 using RealEstate.Presentation.Constants;
+using Serilog;
 using System.Text.Json;
 
 namespace RealEstate.Presentation.Middleware
@@ -46,6 +47,9 @@ namespace RealEstate.Presentation.Middleware
             };
 
             var jsonResponse = JsonSerializer.Serialize(errorModel);
+
+            Log.Error(ex.Message);
+
             await context.Response.WriteAsync(jsonResponse);
         }
     }
