@@ -17,11 +17,7 @@ namespace RealEstate.Presentation
             builder.Services.AddOpenApi();
 
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Information()
-                .Enrich.FromLogContext()
-                .Enrich.WithExceptionDetails()
-                .WriteTo.Console()
-                .WriteTo.File("logs/serilog.txt", rollingInterval: RollingInterval.Day)
+                .ReadFrom.Configuration(builder.Configuration)
                 .CreateLogger();
 
             builder.Host.UseSerilog();

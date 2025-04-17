@@ -48,7 +48,8 @@ namespace RealEstate.Presentation.Middleware
 
             var jsonResponse = JsonSerializer.Serialize(errorModel);
 
-            Log.Error(ex.Message);
+            Log.Error($"Error Message: {ex.Message}");
+            Log.Error("{stackTrace}", ex.StackTrace);
 
             await context.Response.WriteAsync(jsonResponse);
         }
