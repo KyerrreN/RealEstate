@@ -7,6 +7,7 @@ using RealEstate.DAL.Interfaces;
 using RealEstate.DAL.Repositories;
 using RealEstate.DAL.Transactions;
 using RealEstate.Domain.Exceptions;
+using RealEstate.Domain.Interfaces;
 
 namespace RealEstate.BLL.Services
 {
@@ -16,7 +17,8 @@ namespace RealEstate.BLL.Services
         IBookingRepository _bookingRepository, 
         IUserRepository _userRepository,
         ITransactionManager _transactionManager,
-        IHistoryRepository _historyRepository) 
+        IHistoryRepository _historyRepository,
+        IDateTimeProvider dateTimeProvider) 
         : GenericService<BookingEntity, BookingModel>(_repository), IBookingService
     {
         public override async Task<BookingModel> CreateAsync(BookingModel model, CancellationToken ct)
@@ -58,7 +60,7 @@ namespace RealEstate.BLL.Services
             {
                 RealEstateId = realEstateEntities[0].Id,
                 UserId = bookingEntity.UserId,
-                CompletedAt = DateTime.UtcNow,
+                CompletedAt = dateTimeProvider.Now,
                 EstateAction = model.EstateAction,
                 Title = realEstateEntities[0].Title,
                 Description = realEstateEntities[0].Description
