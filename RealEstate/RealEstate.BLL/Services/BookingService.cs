@@ -60,7 +60,7 @@ namespace RealEstate.BLL.Services
             {
                 RealEstateId = realEstateEntities[0].Id,
                 UserId = bookingEntity.UserId,
-                CompletedAt = dateTimeProvider.Now,
+                CompletedAt = dateTimeProvider.UtcNow,
                 EstateAction = model.EstateAction,
                 Title = realEstateEntities[0].Title,
                 Description = realEstateEntities[0].Description

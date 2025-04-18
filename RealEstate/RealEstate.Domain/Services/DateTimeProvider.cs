@@ -4,6 +4,6 @@ namespace RealEstate.Domain.Services
 {
     public class DateTimeProvider : IDateTimeProvider
     {
-        public DateTime Now => DateTime.UtcNow;
+        public DateTime UtcNow => DateTime.UtcNow;
     }
 }
