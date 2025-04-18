@@ -9,6 +9,8 @@ using RealEstate.DAL.Options;
 using RealEstate.DAL.Repositories;
 using RealEstate.DAL.Transactions;
 using RealEstate.Domain.Enums;
+using RealEstate.Domain.Interfaces;
+using RealEstate.Domain.Services;
 
 namespace RealEstate.DAL.DI
 {
@@ -47,6 +49,8 @@ namespace RealEstate.DAL.DI
             services.AddScoped<IRealEstateFilterBuilder, RealEstateFilterBuilder>();
 
             services.AddScoped<ITransactionManager, TransactionManager>();
+
+            services.AddTransient<IDateTimeProvider, DateTimeProvider>();
         }
     }
 }
