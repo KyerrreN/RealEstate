@@ -16,6 +16,7 @@ namespace RealEstate.BLLTests
         private readonly UserEntity _firstUserEntity;
         private readonly UserEntity _secondUserEntity;
         private readonly UserModel _firstUserModel;
+        private readonly UserModel _secondUserModel;
 
         public UserServiceTests()
         {
@@ -39,11 +40,19 @@ namespace RealEstate.BLLTests
             };
             _firstUserModel = new UserModel
             {
-                Id = Guid.NewGuid(),
+                Id = _firstUserEntity.Id,
                 FirstName = "John",
                 LastName = "Doe",
                 Email = "johndoe@gmail.com",
                 Phone = "+375151234567"
+            };
+            _secondUserModel = new UserModel
+            {
+                Id = _secondUserEntity.Id,
+                FirstName = "Mark",
+                LastName = "Someone",
+                Email = "marksomeone@gmail.com",
+                Phone = "+375151234568"
             };
         }
 
@@ -142,12 +151,77 @@ namespace RealEstate.BLLTests
             // arrange
             UserModel? model = null;
 
+            // act/assert
+            await Should.ThrowAsync<BadRequestException>(() => _userService.CreateAsync(model, CancellationToken.None));
+            await _repositoryMock.DidNotReceive().CreateAsync(Arg.Any<UserEntity>(), Arg.Any<CancellationToken>());
+        }
+
+        [Fact]
+        public async Task DeleteAsync_ShouldCallDelete_WhenEntityExists()
+        {
+            // arrange
+            _repositoryMock.FindByIdAsync(_firstUserEntity.Id, Arg.Any<CancellationToken>())
+                .Returns(_firstUserEntity);
+
             // act
-            var exception = await Record.ExceptionAsync(() => _userService.CreateAsync(model, CancellationToken.None));
-            
+            await _userService.DeleteAsync(_firstUserEntity.Id, CancellationToken.None);
+
             // assert
-            exception.ShouldNotBeNull();
-            exception.ShouldBeOfType<BadRequestException>();
+            await _repositoryMock.Received(1).DeleteAsync(_firstUserEntity, Arg.Any<CancellationToken>());
+        }
+
+        [Fact]
+        public async Task DeleteAsync_ShouldThrowException_WhenEntityDoesNotExist()
+        {
+            // arrange
+            _repositoryMock.FindByIdAsync(Guid.Empty, Arg.Any<CancellationToken>())
+                .Returns((UserEntity?)null);
+
+            // act/assert
+            await Should.ThrowAsync<NotFoundException>(() => _userService.DeleteAsync(Guid.Empty, CancellationToken.None));
+            await _repositoryMock.DidNotReceive().DeleteAsync(Arg.Any<UserEntity>(), Arg.Any<CancellationToken>());
+        }
+
+        [Fact]
+        public async Task UpdateAsync_ShouldUpdateCorrectly_WhenIdAndModelProvided()
+        {
+            // arrange
+            _repositoryMock.FindByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+                .Returns(_firstUserEntity);
+            _repositoryMock.UpdateAsync(Arg.Any<UserEntity>(), Arg.Any<CancellationToken>())
+                .Returns(callInfo => Task.FromResult(callInfo.Arg<UserEntity>()));
+
+            // act
+            var result = await _userService.UpdateAsync(_firstUserEntity.Id, _secondUserModel, CancellationToken.None);
+
+            // assert
+            result.ShouldNotBeNull();
+            result.ShouldBeEquivalentTo(_secondUserModel);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_ThrowsNotFoundException_WhenEntityDoesNotExist()
+        {
+            // arrange
+            var id = Guid.NewGuid();
+            _repositoryMock.FindByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+                .Returns((UserEntity?)null);
+
+            // act/assert
+            await Should.ThrowAsync<NotFoundException>(() => _userService.UpdateAsync(id, _secondUserModel, CancellationToken.None));
+            await _repositoryMock.DidNotReceive().UpdateAsync(Arg.Any<UserEntity>(), Arg.Any<CancellationToken>());
+        }
+
+        [Fact]
+        public async Task UpdateAsync_ThrowsBadRequestException_WhenModelIsNull()
+        {
+            // arrange
+            _repositoryMock.FindByIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+                .Returns(_firstUserEntity);
+
+            // act/assert
+            await Should.ThrowAsync<BadRequestException>(() => _userService.UpdateAsync(Guid.Empty, null, CancellationToken.None));
+            await _repositoryMock.DidNotReceive().UpdateAsync(Arg.Any<UserEntity>(), Arg.Any<CancellationToken>());
         }
     }
 }
