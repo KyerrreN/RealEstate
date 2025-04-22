@@ -5,7 +5,9 @@ using RealEstate.BLL.Services;
 using RealEstate.DAL.Entities;
 using RealEstate.DAL.Interfaces;
 using RealEstate.Domain.Exceptions;
+using RealEstate.Domain.Models;
 using Shouldly;
+using System.Linq.Expressions;
 
 namespace RealEstate.BLLTests
 {
@@ -222,6 +224,51 @@ namespace RealEstate.BLLTests
             // act/assert
             await Should.ThrowAsync<BadRequestException>(() => _userService.UpdateAsync(Guid.Empty, null, CancellationToken.None));
             await _repositoryMock.DidNotReceive().UpdateAsync(Arg.Any<UserEntity>(), Arg.Any<CancellationToken>());
+        }
+
+        [Fact]
+        public async Task GetPagingAsync_ReturnsPagedEntityModel_WhenProvideArgs()
+        {
+            // arrange
+            var pagedEntity = new PagedEntityModel<UserEntity>
+            {
+                TotalCount = 2,
+                Items = [_firstUserEntity, _secondUserEntity],
+                CurrentPage = 1,
+                TotalPages = 1
+            };
+            _repositoryMock.GetPagedAsync(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+                .Returns(pagedEntity);
+
+            // act
+            var result = await _userService.GetPagingAsync(1, 2, CancellationToken.None);
+
+            // assert
+            result.ShouldNotBeNull();
+            result.TotalPages.ShouldBe(1);
+            result.CurrentPage.ShouldBe(1);
+            result.TotalCount.ShouldBe(2);
+            result.Items[0].FirstName.ShouldBe(_firstUserModel.FirstName);
+            result.Items[1].LastName.ShouldBe(_secondUserModel.LastName);
+        }
+
+        [Fact]
+        public async Task GetByExpression_ShouldReturnListUserModel()
+        {
+            // arrange
+            Expression<Func<UserEntity, bool>> expression = u => u.FirstName == "John";
+            List<UserEntity> matchingUsers = [_firstUserEntity];
+
+            _repositoryMock.FindByConditionAsync(expression, Arg.Any<CancellationToken>())
+                .Returns(matchingUsers);
+
+            // act
+            var result = await _userService.GetByExpression(expression, CancellationToken.None);
+
+            // assert
+            result.ShouldNotBeNull();
+            result.Count.ShouldBeGreaterThan(0);
+            result.First().ShouldBeEquivalentTo(_firstUserModel);
         }
     }
 }
