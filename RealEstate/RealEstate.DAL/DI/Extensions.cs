@@ -18,23 +18,23 @@ namespace RealEstate.DAL.DI
         {
             services.Configure<AppDbContextOptions>(configuration.GetSection(AppDbContextOptions.Option).Bind);
 
-            services.AddDbContext<AppDbContext>((serviceProvider, opt) =>
-            {
-                var dbContextOptions = serviceProvider.GetRequiredService<IOptions<AppDbContextOptions>>().Value;
+            //services.AddDbContext<AppDbContext>((serviceProvider, opt) =>
+            //{
+            //    var dbContextOptions = serviceProvider.GetRequiredService<IOptions<AppDbContextOptions>>().Value;
 
-                if (string.IsNullOrWhiteSpace(dbContextOptions.ConnectionString))
-                {
-                    throw new ArgumentException("Connection String is not configured");
-                }
+            //    if (string.IsNullOrWhiteSpace(dbContextOptions.ConnectionString))
+            //    {
+            //        throw new ArgumentException("Connection String is not configured");
+            //    }
 
-                opt.UseNpgsql(dbContextOptions.ConnectionString, o =>
-                {
-                    o.MapEnum<EstateAction>(nameof(EstateAction))
-                     .MapEnum<EstateStatus>(nameof(EstateStatus))
-                     .MapEnum<EstateType>(nameof(EstateType));
-                })
-                .AddInterceptors(new TimeStampInterceptor());
-            });
+            //    opt.UseNpgsql(dbContextOptions.ConnectionString, o =>
+            //    {
+            //        o.MapEnum<EstateAction>(nameof(EstateAction))
+            //         .MapEnum<EstateStatus>(nameof(EstateStatus))
+            //         .MapEnum<EstateType>(nameof(EstateType));
+            //    })
+            //    .AddInterceptors(new TimeStampInterceptor());
+            //});
 
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IHistoryRepository, HistoryRepository>();
