@@ -1,10 +1,8 @@
 ﻿using Mapster;
-using MapsterMapper;
 using RealEstate.BLL.Interfaces;
 using RealEstate.BLL.Models;
 using RealEstate.DAL.Entities;
 using RealEstate.DAL.Interfaces;
-using RealEstate.DAL.Repositories;
 using RealEstate.DAL.Transactions;
 using RealEstate.Domain.Exceptions;
 using RealEstate.Domain.Interfaces;

@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealEstate.DAL", "RealEstat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealEstate.Domain", "RealEstate.Domain\RealEstate.Domain.csproj", "{E2729A00-AAEA-407E-B6B6-548692760C41}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealEstate.BLLTests", "RealEstate.BLLTests\RealEstate.BLLTests.csproj", "{28305E4E-A927-4530-81FD-C0C100DF0F0D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{E2729A00-AAEA-407E-B6B6-548692760C41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2729A00-AAEA-407E-B6B6-548692760C41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2729A00-AAEA-407E-B6B6-548692760C41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28305E4E-A927-4530-81FD-C0C100DF0F0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28305E4E-A927-4530-81FD-C0C100DF0F0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28305E4E-A927-4530-81FD-C0C100DF0F0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28305E4E-A927-4530-81FD-C0C100DF0F0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
