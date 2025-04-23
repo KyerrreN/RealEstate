@@ -1,5 +1,4 @@
 ﻿using NSubstitute;
-using RealEstate.BLL.Interfaces;
 using RealEstate.BLL.Models;
 using RealEstate.BLL.Services;
 using RealEstate.DAL.Entities;
@@ -13,7 +12,7 @@ namespace RealEstate.BLLTests
 {
     public class UserServiceTests
     {
-        private readonly IUserService _userService;
+        private readonly UserService _userService;
         private readonly IBaseRepository<UserEntity> _repositoryMock;
         private readonly UserEntity _firstUserEntity;
         private readonly UserEntity _secondUserEntity;

@@ -1,6 +1,5 @@
 ﻿using Mapster;
 using NSubstitute;
-using RealEstate.BLL.Interfaces;
 using RealEstate.BLL.Models;
 using RealEstate.BLL.Services;
 using RealEstate.DAL.Entities;
@@ -15,7 +14,7 @@ namespace RealEstate.BLLTests
 {
     public class HistoryServiceTests
     {
-        private readonly IHistoryService _service;
+        private readonly HistoryService _service;
         private readonly IBaseRepository<HistoryEntity> _baseRepository;
         private readonly IHistoryRepository _historyRepository;
         private readonly IUserRepository _userRepository;

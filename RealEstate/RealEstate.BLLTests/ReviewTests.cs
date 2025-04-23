@@ -1,6 +1,5 @@
 ﻿using Mapster;
 using NSubstitute;
-using RealEstate.BLL.Interfaces;
 using RealEstate.BLL.Models;
 using RealEstate.BLL.Services;
 using RealEstate.DAL.Entities;
@@ -18,7 +17,7 @@ namespace RealEstate.BLLTests
         private readonly IUserRepository _userRepository;
         private readonly IReviewRepository _reviewRepository;
 
-        private readonly IReviewService _service;
+        private readonly ReviewService _service;
 
         public ReviewTests()
         {
@@ -40,7 +39,7 @@ namespace RealEstate.BLLTests
             };
             var reviewEntityList = new List<ReviewEntity>
             {
-                new ReviewEntity
+                new() 
                 {
                     Id= Guid.NewGuid(),
                     AuthorId = Guid.NewGuid(),
@@ -48,7 +47,7 @@ namespace RealEstate.BLLTests
                     Comment = "Great service!",
                     Rating = 5
                 },
-                new ReviewEntity
+                new() 
                 {
                     Id = Guid.NewGuid(),
                     AuthorId = Guid.NewGuid(),
@@ -57,7 +56,7 @@ namespace RealEstate.BLLTests
                     Rating = 1
                 }
             };
-            PagingParameters paging = new PagingParameters
+            PagingParameters paging = new()
             {
                 PageNumber = 1,
                 PageSize = 2

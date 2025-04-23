@@ -1,6 +1,5 @@
 ﻿using Mapster;
 using NSubstitute;
-using RealEstate.BLL.Interfaces;
 using RealEstate.BLL.Models;
 using RealEstate.BLL.Services;
 using RealEstate.DAL.Entities;
@@ -21,7 +20,7 @@ namespace RealEstate.BLLTests
         private readonly IHistoryRepository _historyRepository;
         private readonly ITransactionManager _transactionManager;
 
-        private readonly IRealEstateService _service;
+        private readonly RealEstateService _service;
 
         public RealEstateServiceTests()
         {

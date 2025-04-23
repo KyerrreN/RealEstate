@@ -1,6 +1,5 @@
 ﻿using Mapster;
 using NSubstitute;
-using RealEstate.BLL.Interfaces;
 using RealEstate.BLL.Models;
 using RealEstate.BLL.Services;
 using RealEstate.DAL.Entities;
@@ -15,7 +14,7 @@ namespace RealEstate.BLLTests
 {
     public class BookingServiceTests
     {
-        private readonly IBookingService _service;
+        private readonly BookingService _service;
         private readonly IBaseRepository<BookingEntity> _baseRepository;
         private readonly IRealEstateRepository _realEstateRepository;
         private readonly IBookingRepository _bookingRepository;
@@ -82,7 +81,7 @@ namespace RealEstate.BLLTests
                 .Returns(new UserEntity());
 
             _realEstateRepository.FindByIdAsync(_bookingModel.RealEstateId, CancellationToken.None)
-                .Returns((RealEstateEntity)null);
+                .Returns((RealEstateEntity?)null);
 
             // act/assert
             await Should.ThrowAsync<NotFoundException>(async () => await _service.CreateAsync(_bookingModel, CancellationToken.None));
@@ -115,11 +114,6 @@ namespace RealEstate.BLLTests
             {
                 Id = _bookingModel.UserId
             };
-            var realEstateEntity = new RealEstateEntity
-            {
-                Id = _bookingModel.RealEstateId,
-                OwnerId = _bookingModel.UserId
-            };
 
             _userRepository.FindByIdAsync(_bookingModel.UserId, CancellationToken.None)
                 .Returns(userEntity);
@@ -147,7 +141,7 @@ namespace RealEstate.BLLTests
         {
             // arrange
             _bookingRepository.FindByIdAsync(_bookingModel.Id, CancellationToken.None)
-                .Returns((BookingEntity)null);
+                .Returns((BookingEntity?)null);
 
             // act/assert
             await Should.ThrowAsync<NotFoundException>(async () => await _service.CloseDeal(_closeDealModel, CancellationToken.None));
@@ -206,10 +200,10 @@ namespace RealEstate.BLLTests
             _transactionManager.BeginTransactionAsync(Arg.Any<CancellationToken>())
                 .Returns(mockTransaction);
 
-            // Act
+            // act
             await _service.CloseDeal(closeModel, CancellationToken.None);
 
-            // Assert
+            // assert
             await _bookingRepository.Received(1).DeleteAsync(bookingEntity, Arg.Any<CancellationToken>());
             await _historyRepository.Received(1).CreateAsync(Arg.Any<HistoryEntity>(), Arg.Any<CancellationToken>());
             await _realEstateRepository.Received(1).DeleteAsync(realEstateEntity, Arg.Any<CancellationToken>());
