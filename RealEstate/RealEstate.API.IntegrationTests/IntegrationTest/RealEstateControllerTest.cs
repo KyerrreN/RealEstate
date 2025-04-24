@@ -51,9 +51,9 @@ namespace RealEstate.API.IntegrationTests.IntegrationTest
             {
                 MinPrice = 10m,
                 MaxPrice = 100m,
-                //City = "Minsk",
-                //OwnerId = _userId,
-                //EstateType = [EstateType.House],
+                City = "Minsk",
+                OwnerId = _userId,
+                EstateType = [EstateType.House],
                 EstateStatus = [EstateStatus.ForSale],
             };
             var paging = new PagingParameters
@@ -70,8 +70,8 @@ namespace RealEstate.API.IntegrationTests.IntegrationTest
                 $"&MaxPrice={filters.MaxPrice}" +
                 $"&City={filters.City}" +
                 $"&OwnerId={filters.OwnerId}" +
-                $"&EstateType=1" +
-                $"&EstateStatus=2"
+                $"&EstateType={filters.EstateType[0]}" +
+                $"&EstateStatus={filters.EstateStatus[0]}"
                 );
             var content = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<PagedEntityDto<RealEstateDto>>(content);
