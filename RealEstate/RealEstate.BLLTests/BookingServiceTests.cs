@@ -7,6 +7,7 @@ using RealEstate.DAL.Interfaces;
 using RealEstate.DAL.Transactions;
 using RealEstate.Domain.Enums;
 using RealEstate.Domain.Exceptions;
+using RealEstate.Domain.Interfaces;
 using Shouldly;
 using System.Linq.Expressions;
 
@@ -21,6 +22,7 @@ namespace RealEstate.BLLTests
         private readonly IUserRepository _userRepository;
         private readonly ITransactionManager _transactionManager;
         private readonly IHistoryRepository _historyRepository;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
         private readonly BookingModel _bookingModel;
         private readonly CloseDealModel _closeDealModel;
@@ -33,7 +35,9 @@ namespace RealEstate.BLLTests
             _userRepository = Substitute.For<IUserRepository>();
             _transactionManager = Substitute.For<ITransactionManager>();
             _historyRepository = Substitute.For<IHistoryRepository>();
-            _service = new BookingService(_baseRepository, _realEstateRepository, _bookingRepository, _userRepository, _transactionManager, _historyRepository);
+            _dateTimeProvider = Substitute.For<IDateTimeProvider>();
+
+            _service = new BookingService(_baseRepository, _realEstateRepository, _bookingRepository, _userRepository, _transactionManager, _historyRepository, _dateTimeProvider);
 
             _bookingModel = new BookingModel
             {
