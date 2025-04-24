@@ -183,7 +183,7 @@ namespace RealEstate.BLLTests
             {
                 Items =
                 [
-                    new()
+                    new() 
                     {
                         Id = Guid.NewGuid(),
                         OwnerId = Guid.NewGuid(),
