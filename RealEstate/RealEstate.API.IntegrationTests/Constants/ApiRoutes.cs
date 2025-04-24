@@ -5,5 +5,6 @@
         internal const string User = "/api/users";
         internal const string Review = "/api/reviews";
         internal const string RealEstate = "/api/estates";
+        internal const string History = "history";
     }
 }
