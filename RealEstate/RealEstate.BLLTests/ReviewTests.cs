@@ -93,7 +93,7 @@ namespace RealEstate.BLLTests
                 .Returns((UserEntity?)null);
 
             // act/assert
-            await Should.ThrowAsync<NotFoundException>(async () =>
+            await Should.ThrowAsync<NotFoundException>(async () => 
                 await _service.GetReviewsOfUserAsync(new PagingParameters(), new Guid(), CancellationToken.None));
         }
 
