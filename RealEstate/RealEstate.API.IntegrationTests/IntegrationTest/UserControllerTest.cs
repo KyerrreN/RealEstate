@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using RealEstate.API.IntegrationTests.Constants;
 using RealEstate.API.IntegrationTests.TestHelpers;
@@ -72,13 +71,7 @@ namespace RealEstate.API.IntegrationTests.IntegrationTest
         public async Task CreateUser_ShouldCreateAndReturnCreatedUser()
         {
             // arrange
-            var toCreateUserDto = new CreateUserDto
-            {
-                FirstName = "Pisya",
-                LastName = "Popa",
-                Email = "kakapopa@gmail.com",
-                Phone = "+375251234567"
-            };
+            var toCreateUserDto = _helper.GetCreateUserDto();
 
             // act
             var response = await _client.PostAsJsonAsync(ApiRoutes.User, toCreateUserDto);

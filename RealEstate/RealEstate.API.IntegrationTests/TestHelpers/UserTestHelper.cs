@@ -78,5 +78,16 @@ namespace RealEstate.API.IntegrationTests.TestHelpers
 
             dbContext.Users.SingleOrDefault(u => u.Id == userId).ShouldBeNull();
         }
+
+        public CreateUserDto GetCreateUserDto()
+        {
+            return new CreateUserDto
+            {
+                FirstName = "Pisya",
+                LastName = "Popa",
+                Email = "kakapopa@gmail.com",
+                Phone = "+375251234567"
+            };
+        }
     }
 }
