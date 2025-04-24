@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using RealEstate.API.IntegrationTests.Constants;
 using RealEstate.API.IntegrationTests.TestHelpers;
 using RealEstate.DAL.Repositories;
-using RealEstate.Domain.Enums;
 using RealEstate.Presentation;
 using RealEstate.Presentation.DTOs.Booking;
 using System.Net.Http.Json;

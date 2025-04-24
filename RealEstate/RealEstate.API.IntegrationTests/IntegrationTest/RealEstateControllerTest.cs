@@ -8,7 +8,6 @@ using RealEstate.Domain.QueryParameters;
 using RealEstate.Presentation;
 using RealEstate.Presentation.DTOs;
 using RealEstate.Presentation.DTOs.RealEstate;
-using System.ComponentModel;
 using System.Net.Http.Json;
 
 namespace RealEstate.API.IntegrationTests.IntegrationTest

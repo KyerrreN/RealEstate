@@ -3,7 +3,6 @@ using RealEstate.DAL.Entities;
 using RealEstate.DAL.Repositories;
 using RealEstate.Presentation.DTOs;
 using RealEstate.Presentation.DTOs.History;
-using RealEstate.Presentation.DTOs.Review;
 using Shouldly;
 
 namespace RealEstate.API.IntegrationTests.TestHelpers

@@ -8,8 +8,6 @@ using RealEstate.Domain.QueryParameters;
 using RealEstate.Presentation;
 using RealEstate.Presentation.DTOs;
 using RealEstate.Presentation.DTOs.History;
-using RealEstate.Presentation.DTOs.Review;
-using Shouldly;
 
 namespace RealEstate.API.IntegrationTests.IntegrationTest
 {
