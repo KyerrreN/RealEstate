@@ -89,5 +89,18 @@ namespace RealEstate.API.IntegrationTests.IntegrationTest
             response.EnsureSuccessStatusCode();
             _helper.AssertCreate(result!, toCreateUserDto);
         }
+
+        [Fact]
+        public async Task DeleteUser_ShouldDeleteUser()
+        {
+            // arrange
+
+            // act
+            var response = await _client.DeleteAsync($"{ApiRoutes.User}/{_userId}");
+
+            // assert
+            response.EnsureSuccessStatusCode();
+            _helper.AssertDelete(_userId);
+        }
     }
 }

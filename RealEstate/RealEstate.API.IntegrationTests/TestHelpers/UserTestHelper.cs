@@ -70,5 +70,13 @@ namespace RealEstate.API.IntegrationTests.TestHelpers
 
             dbContext.Users.SingleOrDefault(u => u.Id == result.Id).ShouldNotBeNull();
         }
+
+        public void AssertDelete(Guid userId)
+        {
+            using var scope = scopeFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            dbContext.Users.SingleOrDefault(u => u.Id == userId).ShouldBeNull();
+        }
     }
 }
