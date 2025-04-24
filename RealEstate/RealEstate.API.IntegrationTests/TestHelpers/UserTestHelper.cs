@@ -39,6 +39,17 @@ namespace RealEstate.API.IntegrationTests.TestHelpers
             ];
         }
 
+        public CreateUserDto GetCreateUserDto()
+        {
+            return new CreateUserDto
+            {
+                FirstName = "Pisya",
+                LastName = "Popa",
+                Email = "kakapopa@gmail.com",
+                Phone = "+375251234567"
+            };
+        }
+
         public void AssertGetAll(List<UserDto> result, Guid userId)
         {
             result.ShouldNotBeNull();
@@ -77,17 +88,6 @@ namespace RealEstate.API.IntegrationTests.TestHelpers
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             dbContext.Users.SingleOrDefault(u => u.Id == userId).ShouldBeNull();
-        }
-
-        public CreateUserDto GetCreateUserDto()
-        {
-            return new CreateUserDto
-            {
-                FirstName = "Pisya",
-                LastName = "Popa",
-                Email = "kakapopa@gmail.com",
-                Phone = "+375251234567"
-            };
         }
     }
 }

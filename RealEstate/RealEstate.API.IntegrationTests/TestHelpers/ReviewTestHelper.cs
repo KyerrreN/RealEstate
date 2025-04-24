@@ -64,15 +64,6 @@ namespace RealEstate.API.IntegrationTests.TestHelpers
             ];
         }
 
-        public void AssertGetAll(PagedEntityDto<ReviewDto> result, int pageSize, int pageNumber)
-        {
-            result.ShouldNotBeNull();
-            result.TotalCount.ShouldBe(4);
-            result.CurrentPage.ShouldBe(pageNumber);
-            result.Items.Count.ShouldBe(pageSize);
-            result.TotalPages.ShouldBe(result.TotalCount / pageSize);
-        }
-
         public CreateReviewDto CreateReviewDto(Guid authorId, Guid recipientId)
         {
             return new CreateReviewDto
@@ -82,6 +73,15 @@ namespace RealEstate.API.IntegrationTests.TestHelpers
                 RecipientId = recipientId,
                 Comment = "No comment",
             };
+        }
+
+        public void AssertGetAll(PagedEntityDto<ReviewDto> result, int pageSize, int pageNumber)
+        {
+            result.ShouldNotBeNull();
+            result.TotalCount.ShouldBe(4);
+            result.CurrentPage.ShouldBe(pageNumber);
+            result.Items.Count.ShouldBe(pageSize);
+            result.TotalPages.ShouldBe(result.TotalCount / pageSize);
         }
 
         public void AssertCreate(ReviewDto result)

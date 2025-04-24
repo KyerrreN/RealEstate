@@ -39,7 +39,7 @@ namespace RealEstate.BLLTests
             };
             var reviewEntityList = new List<ReviewEntity>
             {
-                new()
+                new() 
                 {
                     Id= Guid.NewGuid(),
                     AuthorId = Guid.NewGuid(),
@@ -47,7 +47,7 @@ namespace RealEstate.BLLTests
                     Comment = "Great service!",
                     Rating = 5
                 },
-                new()
+                new() 
                 {
                     Id = Guid.NewGuid(),
                     AuthorId = Guid.NewGuid(),

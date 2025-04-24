@@ -98,6 +98,36 @@ namespace RealEstate.API.IntegrationTests.TestHelpers
             ];
         }
 
+        public CreateRealEstateDto CreateRealEstateDto(Guid userId)
+        {
+            return new CreateRealEstateDto
+            {
+                Title = "test",
+                Description = "desc",
+                Price = 10m,
+                Address = "test",
+                City = "Mogilev",
+                EstateStatus = EstateStatus.ForSale,
+                EstateType = EstateType.House,
+                OwnerId = userId
+            };
+        }
+
+        public UpdateRealEstateDto CreateUpdateRealEstateDto(Guid userId)
+        {
+            return new UpdateRealEstateDto
+            {
+                Title = "Test Title",
+                Description = "Test Description",
+                Price = 10.99m,
+                Address = "Test Address",
+                City = "Minsk",
+                EstateStatus = EstateStatus.ForSale,
+                EstateType = EstateType.House,
+                OwnerId = userId,
+            };
+        }
+
         public void AssertGetAll(PagedEntityDto<RealEstateDto> result, int pageNumber, int pageSize)
         {
             result.ShouldNotBeNull();
@@ -116,21 +146,6 @@ namespace RealEstate.API.IntegrationTests.TestHelpers
             result.EstateStatus.ShouldBe(EstateStatus.ForSale.ToString());
         }
 
-        public CreateRealEstateDto CreateRealEstateDto(Guid userId)
-        {
-            return new CreateRealEstateDto
-            {
-                Title = "test",
-                Description = "desc",
-                Price = 10m,
-                Address = "test",
-                City = "Mogilev",
-                EstateStatus = EstateStatus.ForSale,
-                EstateType = EstateType.House,
-                OwnerId = userId
-            };
-        }
-
         public void AssertCreate(CreateRealEstateDto createDto, RealEstateDto result)
         {
             result.ShouldNotBeNull();
@@ -142,21 +157,6 @@ namespace RealEstate.API.IntegrationTests.TestHelpers
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             dbContext.RealEstates.Find(result.Id).ShouldNotBeNull();
-        }
-
-        public UpdateRealEstateDto CreateUpdateRealEstateDto(Guid userId)
-        {
-            return new UpdateRealEstateDto
-            {
-                Title = "Test Title",
-                Description = "Test Description",
-                Price = 10.99m,
-                Address = "Test Address",
-                City = "Minsk",
-                EstateStatus = EstateStatus.ForSale,
-                EstateType = EstateType.House,
-                OwnerId = userId,
-            };
         }
 
         public void AssertUpdate(UpdateRealEstateDto updateDto, RealEstateDto result)
