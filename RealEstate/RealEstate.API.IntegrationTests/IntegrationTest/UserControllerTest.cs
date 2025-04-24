@@ -6,6 +6,7 @@ using RealEstate.API.IntegrationTests.TestHelpers;
 using RealEstate.DAL.Repositories;
 using RealEstate.Presentation;
 using RealEstate.Presentation.DTOs.User;
+using System.Net.Http.Json;
 
 namespace RealEstate.API.IntegrationTests.IntegrationTest
 {
@@ -32,6 +33,7 @@ namespace RealEstate.API.IntegrationTests.IntegrationTest
             using var scope = _factory.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
+            dbContext.Users.RemoveRange(dbContext.Users);
             dbContext.Users.AddRange(testUsers);
             dbContext.SaveChanges();
         }
@@ -42,7 +44,7 @@ namespace RealEstate.API.IntegrationTests.IntegrationTest
             // arrange
 
             // act
-            var response = await _client.GetAsync(UserApiRoutes.Get);
+            var response = await _client.GetAsync(ApiRoutes.User);
             var content = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<List<UserDto>>(content);
 
@@ -57,13 +59,35 @@ namespace RealEstate.API.IntegrationTests.IntegrationTest
             // arrange
 
             // act
-            var response = await _client.GetAsync($"{UserApiRoutes.Get}/{_userId}");
+            var response = await _client.GetAsync($"{ApiRoutes.User}/{_userId}");
             var content = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<UserDto>(content);
 
             // assert
             response.EnsureSuccessStatusCode();
             _helper.AssertGetById(result!, _userId);
+        }
+
+        [Fact]
+        public async Task CreateUser_ShouldCreateAndReturnCreatedUser()
+        {
+            // arrange
+            var toCreateUserDto = new CreateUserDto
+            {
+                FirstName = "Pisya",
+                LastName = "Popa",
+                Email = "kakapopa@gmail.com",
+                Phone = "+375251234567"
+            };
+
+            // act
+            var response = await _client.PostAsJsonAsync(ApiRoutes.User, toCreateUserDto);
+            var content = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<UserDto>(content);
+
+            // assert
+            response.EnsureSuccessStatusCode();
+            _helper.AssertCreate(result!, toCreateUserDto);
         }
     }
 }

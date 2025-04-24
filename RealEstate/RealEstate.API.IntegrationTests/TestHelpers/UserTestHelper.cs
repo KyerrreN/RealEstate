@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using RealEstate.DAL.Entities;
+using RealEstate.DAL.Repositories;
 using RealEstate.Presentation.DTOs.User;
 using Shouldly;
 
@@ -53,6 +54,21 @@ namespace RealEstate.API.IntegrationTests.TestHelpers
             result.ShouldNotBeNull();
             result.Id.ShouldBe(userid);
             result.FirstName.ShouldBe("Misha");
+        }
+
+        public void AssertCreate(UserDto result, CreateUserDto input)
+        {
+            result.ShouldNotBeNull();
+            result.Id.ShouldNotBe(Guid.Empty);
+            result.FirstName.ShouldBe(input.FirstName);
+            result.LastName.ShouldBe(input.LastName);
+            result.Email.ShouldBe(input.Email);
+            result.Phone.ShouldBe(input.Phone);
+
+            using var scope = scopeFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            dbContext.Users.SingleOrDefault(u => u.Id == result.Id).ShouldNotBeNull();
         }
     }
 }

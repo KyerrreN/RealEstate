@@ -39,7 +39,7 @@ namespace RealEstate.API.IntegrationTests
                 {
                     db.Database.EnsureCreated();
                 }
-                catch
+                catch(Exception)
                 {
                     throw;
                 }
