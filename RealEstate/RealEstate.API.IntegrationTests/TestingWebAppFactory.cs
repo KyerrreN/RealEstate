@@ -35,8 +35,6 @@ namespace RealEstate.API.IntegrationTests
                 var scopedServices = scope.ServiceProvider;
                 var db = scopedServices.GetRequiredService<AppDbContext>();
 
-                db.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-
                 try
                 {
                     db.Database.EnsureCreated();
