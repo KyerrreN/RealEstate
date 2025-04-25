@@ -65,10 +65,10 @@ namespace RealEstate.API.IntegrationTests.IntegrationTest
         [Fact]
         public async Task CreateReview_ShouldCreateAndReturnCreatedDto()
         {
-            // act
+            // arrange
             var createReviewDto = _helper.CreateReviewDto(_authorId, _recipientId);
 
-            // arrange
+            // act
             var response = await _client.PostAsJsonAsync(ApiRoutes.Review, createReviewDto);
             var content = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<ReviewDto>(content);

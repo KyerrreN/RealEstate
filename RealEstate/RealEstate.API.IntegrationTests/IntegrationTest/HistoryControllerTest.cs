@@ -69,8 +69,6 @@ namespace RealEstate.API.IntegrationTests.IntegrationTest
         [Fact]
         public async Task GetById_ShouldReturnDto()
         {
-            // arrange
-
             // act
             var response = await _client.GetAsync(_route + $"/{_historyId}");
             var content = await response.Content.ReadAsStringAsync();
@@ -84,8 +82,6 @@ namespace RealEstate.API.IntegrationTests.IntegrationTest
         [Fact]
         public async Task Delete_ShouldDeleteRow()
         {
-            // arrange
-
             // act
             var response = await _client.DeleteAsync(_route + $"/{_historyId}");
 

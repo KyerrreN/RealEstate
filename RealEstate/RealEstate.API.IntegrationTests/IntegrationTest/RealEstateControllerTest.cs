@@ -83,8 +83,6 @@ namespace RealEstate.API.IntegrationTests.IntegrationTest
         [Fact]
         public async Task GetById_ShouldReturnDto()
         {
-            // arrange
-
             // act
             var response = await _client.GetAsync($"{ApiRoutes.RealEstate}/{_realEstateId}");
             var content = await response.Content.ReadAsStringAsync();

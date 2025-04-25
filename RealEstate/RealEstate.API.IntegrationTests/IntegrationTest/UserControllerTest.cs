@@ -40,8 +40,6 @@ namespace RealEstate.API.IntegrationTests.IntegrationTest
         [Fact]
         public async Task GetAll_ShouldGetCorrectListOfUsers()
         {
-            // arrange
-
             // act
             var response = await _client.GetAsync(ApiRoutes.User);
             var content = await response.Content.ReadAsStringAsync();
@@ -55,8 +53,6 @@ namespace RealEstate.API.IntegrationTests.IntegrationTest
         [Fact]
         public async Task GetById_ShouldGetCorrectUser()
         {
-            // arrange
-
             // act
             var response = await _client.GetAsync($"{ApiRoutes.User}/{_userId}");
             var content = await response.Content.ReadAsStringAsync();
@@ -86,8 +82,6 @@ namespace RealEstate.API.IntegrationTests.IntegrationTest
         [Fact]
         public async Task DeleteUser_ShouldDeleteUser()
         {
-            // arrange
-
             // act
             var response = await _client.DeleteAsync($"{ApiRoutes.User}/{_userId}");
 

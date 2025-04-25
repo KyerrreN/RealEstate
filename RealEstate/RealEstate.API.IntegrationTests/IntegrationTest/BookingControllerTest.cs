@@ -60,8 +60,6 @@ namespace RealEstate.API.IntegrationTests.IntegrationTest
         [Fact]
         public async Task GetAllOwner_ShouldReturnListOfBookings()
         {
-            // arrange
-
             // act
             var response = await _client.GetAsync($"{ApiRoutes.BookingOwner}/{_userId}");
             var content = await response.Content.ReadAsStringAsync();
@@ -75,8 +73,6 @@ namespace RealEstate.API.IntegrationTests.IntegrationTest
         [Fact]
         public async Task GetAllClient_ShouldReturnListOfBookings()
         {
-            // arrange
-
             // act
             var response = await _client.GetAsync($"{ApiRoutes.BookingClient}/{_ownerId}");
             var content = await response.Content.ReadAsStringAsync();
