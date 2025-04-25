@@ -18,7 +18,7 @@ namespace RealEstate.API.IntegrationTests.IntegrationTest
         private readonly TestingWebAppFactory<Program> _factory;
         private readonly RealEstateTestHelper _helper;
 
-        private readonly Guid _reId = Guid.NewGuid();
+        private readonly Guid _realEstateId = Guid.NewGuid();
         private readonly Guid _userId = Guid.NewGuid();
 
         public RealEstateControllerTest(TestingWebAppFactory<Program> factory)
@@ -32,7 +32,7 @@ namespace RealEstate.API.IntegrationTests.IntegrationTest
 
         private void AddTestData()
         {
-            var realEstates = _helper.GetRealEstates(_reId, _userId);
+            var realEstates = _helper.GetRealEstates(_realEstateId, _userId);
 
             using var scope = _factory.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -86,7 +86,7 @@ namespace RealEstate.API.IntegrationTests.IntegrationTest
             // arrange
 
             // act
-            var response = await _client.GetAsync($"{ApiRoutes.RealEstate}/{_reId}");
+            var response = await _client.GetAsync($"{ApiRoutes.RealEstate}/{_realEstateId}");
             var content = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<RealEstateDto>(content);
 
@@ -118,7 +118,7 @@ namespace RealEstate.API.IntegrationTests.IntegrationTest
             var updateDto = _helper.CreateUpdateRealEstateDto(_userId);
 
             // act
-            var response = await _client.PutAsJsonAsync($"{ApiRoutes.RealEstate}/{_reId}", updateDto);
+            var response = await _client.PutAsJsonAsync($"{ApiRoutes.RealEstate}/{_realEstateId}", updateDto);
             var content = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<RealEstateDto>(content);
 
