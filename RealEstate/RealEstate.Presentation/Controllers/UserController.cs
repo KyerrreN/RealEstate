@@ -45,7 +45,7 @@ namespace RealEstate.Presentation.Controllers
         }
 
         [HttpDelete("{userId:guid}")]
-        public async Task<StatusCodeResult> CreateUser(Guid userId, CancellationToken ct)
+        public async Task<StatusCodeResult> DeleteUser(Guid userId, CancellationToken ct)
         {
             await _userService.DeleteAsync(userId, ct);
 

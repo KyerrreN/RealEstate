@@ -174,10 +174,10 @@ namespace RealEstate.BLLTests
             var userId = Guid.NewGuid();
             var realEstateId = Guid.NewGuid();
 
-            var bookingEntity = new BookingEntity 
+            var bookingEntity = new BookingEntity
             {
-                Id = bookingId, 
-                UserId = userId 
+                Id = bookingId,
+                UserId = userId
             };
 
             var realEstateEntity = new RealEstateEntity
