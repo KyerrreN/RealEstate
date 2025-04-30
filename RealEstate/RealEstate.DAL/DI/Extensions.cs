@@ -18,25 +18,30 @@ namespace RealEstate.DAL.DI
     {
         public static void RegisterDataAccess(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<AppDbContextOptions>(configuration.GetSection(AppDbContextOptions.Option).Bind);
+            var isTestingEnvironment = Environment.GetEnvironmentVariable("INTEGRATION_TESTS") == "true";
 
-            services.AddDbContext<AppDbContext>((serviceProvider, opt) =>
+            if (!isTestingEnvironment)
             {
-                var dbContextOptions = serviceProvider.GetRequiredService<IOptions<AppDbContextOptions>>().Value;
+                services.Configure<AppDbContextOptions>(configuration.GetSection(AppDbContextOptions.Option).Bind);
 
-                if (string.IsNullOrWhiteSpace(dbContextOptions.ConnectionString))
+                services.AddDbContext<AppDbContext>((serviceProvider, opt) =>
                 {
-                    throw new ArgumentException("Connection String is not configured");
-                }
+                    var dbContextOptions = serviceProvider.GetRequiredService<IOptions<AppDbContextOptions>>().Value;
 
-                opt.UseNpgsql(dbContextOptions.ConnectionString, o =>
-                {
-                    o.MapEnum<EstateAction>(nameof(EstateAction))
-                     .MapEnum<EstateStatus>(nameof(EstateStatus))
-                     .MapEnum<EstateType>(nameof(EstateType));
-                })
-                .AddInterceptors(new TimeStampInterceptor());
-            });
+                    if (string.IsNullOrWhiteSpace(dbContextOptions.ConnectionString))
+                    {
+                        throw new ArgumentException("Connection String is not configured");
+                    }
+
+                    opt.UseNpgsql(dbContextOptions.ConnectionString, o =>
+                    {
+                        o.MapEnum<EstateAction>(nameof(EstateAction))
+                         .MapEnum<EstateStatus>(nameof(EstateStatus))
+                         .MapEnum<EstateType>(nameof(EstateType));
+                    })
+                    .AddInterceptors(new TimeStampInterceptor());
+                });
+            }
 
             services.AddScoped<IBookingRepository, BookingRepository>();
             services.AddScoped<IHistoryRepository, HistoryRepository>();
