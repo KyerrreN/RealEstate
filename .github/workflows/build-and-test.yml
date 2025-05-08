@@ -54,7 +54,7 @@ jobs:
                   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
               shell: powershell
               run: |
-                  .\.sonar\scanner\dotnet-sonarscanner begin /k:"KyerrreN_RealEstate" /o:"kyerrren" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+                  .\.sonar\scanner\dotnet-sonarscanner begin /k:"KyerrreN_RealEstate" /o:"kyerrren" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/coverage.xml"
 
             - name: Setup .NET
               uses: actions/setup-dotnet@v4
@@ -68,12 +68,27 @@ jobs:
               run: dotnet build RealEstate --no-restore
 
             - name: Run unit tests on Business Logic Layer
-              run: dotnet test RealEstate/RealEstate.BLLTests --no-build --verbosity normal
+              run: >
+                  dotnet test RealEstate/RealEstate.BLLTests
+                  --no-build
+                  --verbosity normal
+                  /p:CollectCoverage=true
+                  /p:CoverletOutputFormat=opencover
+                  /p:CoverletOutput=TestResults/coverage-unit.xml
+                  /p:Include="[RealEstate.BLL*]RealEstate.BLL.Services.*"
+                  /p:Include="[RealEstate.BLL*]RealEstate.BLL.Interfaces.*"
 
             - name: Run Integration Tests
               env:
                   INTEGRATION_TESTS: "true"
-              run: dotnet test RealEstate/RealEstate.API.IntegrationTests --no-build --verbosity normal
+              run: >
+                  dotnet test RealEstate/RealEstate.API.IntegrationTests
+                  --no-build
+                  --verbosity normal
+                  /p:CollectCoverage=true
+                  /p:CoverletOutputFormat=opencover
+                  /p:CoverletOutput=TestResults/coverage-integration.xml
+                  /p:Include="[RealEstate.Presentation*]RealEstate.Presentation.Controllers.*"
 
             - name: End SonarCloud analysis
               env:
