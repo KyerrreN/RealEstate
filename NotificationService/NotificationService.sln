@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService.API", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService.Contracts", "NotificationService.Contracts\NotificationService.Contracts.csproj", "{F19528D3-C101-4D04-B701-3541F5C26713}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService.Consumers", "NotificationService.Consumers\NotificationService.Consumers.csproj", "{304A1AF1-CF94-4FF5-9896-252628989691}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F19528D3-C101-4D04-B701-3541F5C26713}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F19528D3-C101-4D04-B701-3541F5C26713}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F19528D3-C101-4D04-B701-3541F5C26713}.Release|Any CPU.Build.0 = Release|Any CPU
+		{304A1AF1-CF94-4FF5-9896-252628989691}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{304A1AF1-CF94-4FF5-9896-252628989691}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{304A1AF1-CF94-4FF5-9896-252628989691}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{304A1AF1-CF94-4FF5-9896-252628989691}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

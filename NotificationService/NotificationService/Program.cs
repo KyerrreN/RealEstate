@@ -1,5 +1,6 @@
+using NotificationService.Consumers.DI;
 
-namespace NotificationService
+namespace NotificationService.API
 {
     public class Program
     {
@@ -12,6 +13,8 @@ namespace NotificationService
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
+
+            builder.Services.RegisterConsumers();
 
             var app = builder.Build();
 
