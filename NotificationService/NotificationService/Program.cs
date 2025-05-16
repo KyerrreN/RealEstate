@@ -9,8 +9,8 @@ namespace NotificationService.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.RegisterConsumers();
-            builder.Services.ConfigureBLL();
+            builder.Services.RegisterConsumers(builder.Configuration);
+            builder.Services.ConfigureBLL(builder.Configuration);
 
             var app = builder.Build();
 
