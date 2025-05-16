@@ -35,7 +35,7 @@ namespace RealEstate.API.IntegrationTests
             });
         }
 
-        private void ConfigureInMemoryDatabase(IServiceCollection services)
+        private static void ConfigureInMemoryDatabase(IServiceCollection services)
         {
             var descriptor = services.SingleOrDefault(
                     d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));
@@ -54,7 +54,7 @@ namespace RealEstate.API.IntegrationTests
             });
         }
 
-        private void ConfigureRabbitMQConnection(IServiceCollection services)
+        private static void ConfigureRabbitMQConnection(IServiceCollection services)
         {
             var massTransitDescriptors = services
                 .Where(d => d.ServiceType.Namespace is string ns && ns.StartsWith("MassTransit"))
