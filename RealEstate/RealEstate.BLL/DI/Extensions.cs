@@ -2,7 +2,9 @@
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using RealEstate.BLL.Interfaces;
+using RealEstate.BLL.Options;
 using RealEstate.BLL.Services;
 using RealEstate.DAL.DI;
 
@@ -21,14 +23,19 @@ namespace RealEstate.BLL.DI
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IUserService, UserService>();
 
+            services.Configure<MassTransitOptions>(
+                configuration.GetSection(MassTransitOptions.Option).Bind);
+
             services.AddMassTransit(x =>
             {
                 x.UsingRabbitMq((context, cfg) =>
                 {
-                    cfg.Host("localhost", h =>
+                    var options = context.GetRequiredService<IOptions<MassTransitOptions>>().Value;
+
+                    cfg.Host(options.Host, h =>
                     {
-                        h.Username("guest");
-                        h.Password("guest");
+                        h.Username(options.Username);
+                        h.Password(options.Password);
                     });
 
                     cfg.ConfigureEndpoints(context);
