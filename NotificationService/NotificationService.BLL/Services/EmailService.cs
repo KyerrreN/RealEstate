@@ -1,5 +1,7 @@
 ﻿using FluentEmail.Core;
 using Microsoft.AspNetCore.Hosting;
+using NotificationService.BLL.Constants;
+using NotificationService.BLL.DI;
 using NotificationService.BLL.Interfaces;
 using NotificationService.Contracts;
 
@@ -9,7 +11,7 @@ namespace NotificationService.BLL.Services
     {
         public async Task SendUserRegisterAsync(UserRegisteredEvent userMetadata, CancellationToken ct)
         {
-            string templateFile = Path.Combine(env.ContentRootPath, "Templates", "UserRegistered.cshtml");
+            string templateFile = env.CreatePathToEmailTemplate(TemplateConstants.UserRegistered);
 
             var response = await email
                 .To(userMetadata.Email)

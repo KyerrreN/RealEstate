@@ -1,6 +1,8 @@
 ﻿using FluentEmail.MailKitSmtp;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NotificationService.BLL.Constants;
 using NotificationService.BLL.Interfaces;
 using NotificationService.BLL.Options;
 using NotificationService.BLL.Services;
@@ -32,6 +34,11 @@ namespace NotificationService.BLL.DI
                 });
 
             services.AddTransient<IEmailService, EmailService>();
+        }
+
+        public static string CreatePathToEmailTemplate(this IWebHostEnvironment env, string directory)
+        {
+            return Path.Combine(env.ContentRootPath, directory);
         }
     }
 }
