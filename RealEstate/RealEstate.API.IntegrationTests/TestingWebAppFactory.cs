@@ -55,7 +55,6 @@ namespace RealEstate.API.IntegrationTests
 
         private void ConfigureRabbitMQConnection(IServiceCollection services)
         {
-            // Удаляем MassTransit регистрации
             var massTransitDescriptors = services.Where(d =>
                 d.ServiceType.Namespace != null &&
                 d.ServiceType.Namespace.StartsWith("MassTransit")).ToList();
@@ -63,7 +62,6 @@ namespace RealEstate.API.IntegrationTests
             foreach (var d in massTransitDescriptors)
                 services.Remove(d);
 
-            // Удаляем дубликат health check, если зарегистрирован
             var healthCheckDescriptor = services.SingleOrDefault(d =>
                 d.ServiceType.Name == "IHealthCheck" &&
                 d.ImplementationInstance?.GetType().FullName?.Contains("MassTransit") == true);
@@ -71,7 +69,6 @@ namespace RealEstate.API.IntegrationTests
             if (healthCheckDescriptor is not null)
                 services.Remove(healthCheckDescriptor);
 
-            // Добавляем InMemory-транспорт
             services.AddMassTransit(x =>
             {
                 x.UsingInMemory((context, cfg) =>
