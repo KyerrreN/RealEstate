@@ -1,4 +1,5 @@
-﻿using NSubstitute;
+﻿using MassTransit;
+using NSubstitute;
 using RealEstate.BLL.Models;
 using RealEstate.BLL.Services;
 using RealEstate.DAL.Entities;
@@ -14,6 +15,7 @@ namespace RealEstate.BLLTests
     {
         private readonly UserService _userService;
         private readonly IBaseRepository<UserEntity> _repositoryMock;
+        private readonly IPublishEndpoint _endpointMock;
         private readonly UserEntity _firstUserEntity;
         private readonly UserEntity _secondUserEntity;
         private readonly UserModel _firstUserModel;
@@ -22,7 +24,9 @@ namespace RealEstate.BLLTests
         public UserServiceTests()
         {
             _repositoryMock = Substitute.For<IBaseRepository<UserEntity>>();
-            _userService = new UserService(_repositoryMock);
+            _endpointMock = Substitute.For<IPublishEndpoint>();
+
+            _userService = new UserService(_repositoryMock, _endpointMock);
             _firstUserEntity = new UserEntity
             {
                 Id = Guid.NewGuid(),

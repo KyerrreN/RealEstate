@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RealEstate.DAL.Repositories;
+using MassTransit;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace RealEstate.API.IntegrationTests
 {
@@ -12,21 +14,8 @@ namespace RealEstate.API.IntegrationTests
         {
             builder.ConfigureServices(services =>
             {
-                var descriptor = services.SingleOrDefault(
-                    d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));
-
-                if (descriptor is not null)
-                    services.Remove(descriptor);
-
-                var serviceProvider = new ServiceCollection()
-                    .AddEntityFrameworkInMemoryDatabase()
-                    .BuildServiceProvider();
-
-                services.AddDbContext<AppDbContext>(options =>
-                {
-                    options.UseInMemoryDatabase("InMemoryRealEstateTest");
-                    options.UseInternalServiceProvider(serviceProvider);
-                });
+                ConfigureInMemoryDatabase(services);
+                ConfigureRabbitMQConnection(services);
 
                 var sp = services.BuildServiceProvider();
 
@@ -39,10 +28,54 @@ namespace RealEstate.API.IntegrationTests
                 {
                     db.Database.EnsureCreated();
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     throw;
                 }
+            });
+        }
+
+        private static void ConfigureInMemoryDatabase(IServiceCollection services)
+        {
+            var descriptor = services.SingleOrDefault(
+                    d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));
+
+            if (descriptor is not null)
+                services.Remove(descriptor);
+
+            var serviceProvider = new ServiceCollection()
+                .AddEntityFrameworkInMemoryDatabase()
+                .BuildServiceProvider();
+
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseInMemoryDatabase("InMemoryRealEstateTest");
+                options.UseInternalServiceProvider(serviceProvider);
+            });
+        }
+
+        private static void ConfigureRabbitMQConnection(IServiceCollection services)
+        {
+            var massTransitDescriptors = services
+                .Where(d => d.ServiceType.Namespace is string ns && ns.StartsWith("MassTransit"))
+                .ToList();
+
+            foreach (var d in massTransitDescriptors)
+                services.Remove(d);
+
+            var healthCheckDescriptor = services.SingleOrDefault(d =>
+                d.ServiceType.Name == "IHealthCheck" &&
+                d.ImplementationInstance?.GetType().FullName?.Contains("MassTransit") == true);
+
+            if (healthCheckDescriptor is not null)
+                services.Remove(healthCheckDescriptor);
+
+            services.AddMassTransit(x =>
+            {
+                x.UsingInMemory((context, cfg) =>
+                {
+                    cfg.ConfigureEndpoints(context);
+                });
             });
         }
     }
