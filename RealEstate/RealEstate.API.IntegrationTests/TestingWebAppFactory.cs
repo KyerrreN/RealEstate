@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RealEstate.DAL.Repositories;
 using MassTransit;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace RealEstate.API.IntegrationTests
 {
@@ -55,9 +56,9 @@ namespace RealEstate.API.IntegrationTests
 
         private void ConfigureRabbitMQConnection(IServiceCollection services)
         {
-            var massTransitDescriptors = services.Where(d =>
-                d.ServiceType.Namespace != null &&
-                d.ServiceType.Namespace.StartsWith("MassTransit")).ToList();
+            var massTransitDescriptors = services
+                .Where(d => d.ServiceType.Namespace is string ns && ns.StartsWith("MassTransit"))
+                .ToList();
 
             foreach (var d in massTransitDescriptors)
                 services.Remove(d);
