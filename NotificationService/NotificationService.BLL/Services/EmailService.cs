@@ -15,7 +15,7 @@ namespace NotificationService.BLL.Services
 
             var response = await email
                 .To(userMetadata.Email)
-                .Subject("Real Estate: New Account")
+                .Subject(SubjectConstants.UserRegistered)
                 .UsingTemplateFromFile(templateFile, userMetadata)
                 .SendAsync();
 
