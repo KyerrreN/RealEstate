@@ -1,17 +1,16 @@
 ﻿using MassTransit;
+using NotificationService.BLL.Interfaces;
 using NotificationService.Contracts;
 
 namespace NotificationService.Consumers
 {
-    public class UserRegisteredConsumer : IConsumer<UserRegisteredEvent>
+    public class UserRegisteredConsumer(IEmailService emailService) : IConsumer<UserRegisteredEvent>
     {
-        public Task Consume(ConsumeContext<UserRegisteredEvent> context)
+        public async Task Consume(ConsumeContext<UserRegisteredEvent> context)
         {
             var message = context.Message;
 
-            Console.WriteLine($"User {message.FirstName} {message.LastName} with email {message.Email} has succesfully registered");
-
-            return Task.CompletedTask;
+            await emailService.SendUserRegisterAsync(message, context.CancellationToken);
         }
     }
 }

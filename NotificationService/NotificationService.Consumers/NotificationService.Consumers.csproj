@@ -13,4 +13,8 @@
     <PackageReference Include="NotificationService.Contracts" Version="1.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\NotificationService.BLL\NotificationService.BLL.csproj" />
+  </ItemGroup>
+
 </Project>

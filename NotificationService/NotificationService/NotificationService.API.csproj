@@ -4,7 +4,12 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	<PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="Templates\UserRegistered.cshtml" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.1" />
@@ -15,6 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Templates\UserRegistered.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NotificationService.BLL\NotificationService.BLL.csproj" />
     <ProjectReference Include="..\NotificationService.Consumers\NotificationService.Consumers.csproj" />
   </ItemGroup>
 
