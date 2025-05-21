@@ -33,7 +33,7 @@ namespace NotificationService.BLL.DI
                     Password = mailKitOptions.Password
                 });
 
-            services.AddTransient<IEmailService, EmailService>();
+            services.AddScoped<IEmailService, EmailService>();
         }
 
         public static string CreatePathToEmailTemplate(this IWebHostEnvironment env, string directory)
