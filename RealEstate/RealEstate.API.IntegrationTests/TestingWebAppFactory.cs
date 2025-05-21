@@ -56,12 +56,15 @@ namespace RealEstate.API.IntegrationTests
 
         private static void ConfigureRabbitMQConnection(IServiceCollection services)
         {
-            var massTransitDescriptors = services
-                .Where(d => d.ServiceType.Namespace is string ns && ns.StartsWith("MassTransit"))
-                .ToList();
+            for (int i = services.Count - 1; i >= 0; i--)
+            {
+                var serviceType = services[i].ServiceType;
 
-            foreach (var d in massTransitDescriptors)
-                services.Remove(d);
+                if (serviceType.Namespace is string ns && ns.StartsWith("MassTransit"))
+                {
+                    services.RemoveAt(i);
+                }
+            }
 
             var healthCheckDescriptor = services.SingleOrDefault(d =>
                 d.ServiceType.Name == "IHealthCheck" &&
