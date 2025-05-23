@@ -27,7 +27,16 @@ namespace NotificationService.Consumers.DI
                         h.Password(options.Password);
                     });
 
-                    cfg.ConfigureEndpoints(context);
+                    cfg.ReceiveEndpoint("user-queue", e =>
+                    {
+                        e.Bind("notification-exchange", s =>
+                        {
+                            s.RoutingKey = "user";
+                            s.ExchangeType = "direct";
+                        });
+
+                        e.ConfigureConsumer<UserRegisteredConsumer>(context);
+                    });
                 });
             });
         }

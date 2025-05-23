@@ -23,7 +23,10 @@ namespace RealEstate.BLL.Services
                 Email = createdUser.Email,
             };
 
-            await publishEndpoint.Publish(userEvent, ct);
+            await publishEndpoint.Publish(userEvent, publishContext =>
+            {
+                publishContext.SetRoutingKey("user");
+            }, ct);
 
             return createdUser;
         }

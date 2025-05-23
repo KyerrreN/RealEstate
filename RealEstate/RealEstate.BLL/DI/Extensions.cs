@@ -1,8 +1,10 @@
 ﻿using Mapster;
 using MassTransit;
+using MassTransit.Transports.Fabric;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using NotificationService.Contracts;
 using RealEstate.BLL.Interfaces;
 using RealEstate.BLL.Options;
 using RealEstate.BLL.Services;
@@ -38,7 +40,15 @@ namespace RealEstate.BLL.DI
                         h.Password(options.Password);
                     });
 
-                    cfg.ConfigureEndpoints(context);
+                    cfg.Message<UserRegisteredEvent>(e =>
+                    {
+                        e.SetEntityName("notification-exchange");
+                    });
+
+                    cfg.Publish<UserRegisteredEvent>(e =>
+                    {
+                        e.ExchangeType = "direct";
+                    });
                 });
             });
         }
