@@ -1,5 +1,6 @@
 ﻿using FluentEmail.Core;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 using NotificationService.BLL.Constants;
 using NotificationService.BLL.DI;
 using NotificationService.BLL.Interfaces;
@@ -7,7 +8,10 @@ using NotificationService.Contracts;
 
 namespace NotificationService.BLL.Services
 {
-    public class EmailService(IFluentEmail email, IWebHostEnvironment env) : IEmailService
+    public class EmailService
+        (IFluentEmail email, 
+        IWebHostEnvironment env,
+        ILogger<EmailService> logger) : IEmailService
     {
         public async Task SendUserRegisterAsync(UserRegisteredEvent userMetadata, CancellationToken ct)
         {
@@ -21,16 +25,16 @@ namespace NotificationService.BLL.Services
 
             if (!response.Successful)
             {
-                Console.WriteLine("Failed to send email");
+                logger.LogError("Message couldn't be sent");
 
                 foreach(var error in response.ErrorMessages)
                 {
-                    Console.WriteLine($" - {error}");
+                    logger.LogError(error);
                 }
             }
             else
             {
-                Console.WriteLine("Success");
+                logger.LogInformation("Message sent successfully");
             }
         }
     }
