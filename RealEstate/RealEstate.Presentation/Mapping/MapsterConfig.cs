@@ -23,6 +23,16 @@ namespace RealEstate.Presentation.Mapping
                 .Map(dest => dest.Email, src => src.Recipient.Email)
                 .Map(dest => dest.FirstName, src => src.Recipient.FirstName)
                 .Map(dest => dest.LastName, src => src.Recipient.LastName);
+
+            TypeAdapterConfig<RealEstateEntity, RealEstateAddedEvent>.NewConfig()
+                .Map(dest => dest.Email, src => src.Owner.Email)
+                .Map(dest => dest.FirstName, src => src.Owner.FirstName)
+                .Map(dest => dest.LastName, src => src.Owner.LastName);
+
+            TypeAdapterConfig<RealEstateEntity, RealEstateDeletedEvent>.NewConfig()
+                .Map(dest => dest.Email, src => src.Owner.Email)
+                .Map(dest => dest.FirstName, src => src.Owner.FirstName)
+                .Map(dest => dest.LastName, src => src.Owner.LastName);
         }
     }
 }

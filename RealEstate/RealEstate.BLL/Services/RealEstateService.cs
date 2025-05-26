@@ -35,18 +35,7 @@ namespace RealEstate.BLL.Services
 
             var createdEntity = await _realEstateRepository.CreateAsync(entity, ct);
 
-            var realEstateAddedEvent = new RealEstateAddedEvent
-            {
-                Address = createdEntity.Address,
-                Title = createdEntity.Title,
-                Description = createdEntity.Description,
-                Price = createdEntity.Price,
-                Email = createdEntity.Owner.Email,
-                EstateStatus = createdEntity.EstateStatus.ToString(),
-                EstateType = createdEntity.EstateType.ToString(),
-                FirstName = createdEntity.Owner.FirstName,
-                LastName = createdEntity.Owner.LastName
-            };
+            var realEstateAddedEvent = createdEntity.Adapt<RealEstateAddedEvent>();
 
             await publishEndpoint.Publish(realEstateAddedEvent, context =>
             {
@@ -118,14 +107,7 @@ namespace RealEstate.BLL.Services
                 throw;
             }
 
-            var deletedEvent = new RealEstateDeletedEvent
-            {
-                Email = entityToDelete.Owner.Email,
-                FirstName = entityToDelete.Owner.FirstName,
-                LastName = entityToDelete.Owner.LastName,
-                Title = entityToDelete.Title,
-                Address = entityToDelete.Address,
-            };
+            var deletedEvent = entityToDelete.Adapt<RealEstateDeletedEvent>();
 
             await publishEndpoint.Publish(deletedEvent, context =>
             {
