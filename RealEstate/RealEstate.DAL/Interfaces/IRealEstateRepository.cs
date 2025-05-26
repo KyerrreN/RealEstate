@@ -6,6 +6,7 @@ namespace RealEstate.DAL.Interfaces
 {
     public interface IRealEstateRepository : IBaseRepository<RealEstateEntity>
     {
+        Task<RealEstateEntity?> FindByIdWithUserAsync(Guid id, CancellationToken ct);
         Task<PagedEntityModel<RealEstateEntity>> GetAllWithRequestParameters(RealEstateFilterParameters filters, SortingParameters sorting, CancellationToken ct);
     }
 }

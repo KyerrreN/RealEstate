@@ -88,7 +88,7 @@ namespace RealEstate.BLL.Services
 
         public override async Task DeleteAsync(Guid id, CancellationToken ct)
         {
-            var entityToDelete = await _realEstateRepository.FindByIdAsync(id, ct)
+            var entityToDelete = await _realEstateRepository.FindByIdWithUserAsync(id, ct)
                 ?? throw new NotFoundException(id);
 
             var historyModel = new HistoryModel
