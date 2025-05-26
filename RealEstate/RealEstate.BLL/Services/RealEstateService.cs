@@ -10,6 +10,7 @@ using RealEstate.Domain.QueryParameters;
 using RealEstate.DAL.Transactions;
 using NotificationService.Contracts;
 using MassTransit;
+using NotificationService.Contracts.Constants;
 
 namespace RealEstate.BLL.Services
 {
@@ -49,7 +50,7 @@ namespace RealEstate.BLL.Services
 
             await publishEndpoint.Publish(realEstateAddedEvent, context =>
             {
-                context.SetRoutingKey("real-estate-added");
+                context.SetRoutingKey(NotificationConstants.RealEstateAddedRoutingKey);
             }, ct);
 
             return createdEntity.Adapt<RealEstateModel>();
