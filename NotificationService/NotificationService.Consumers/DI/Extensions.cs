@@ -29,7 +29,7 @@ namespace NotificationService.Consumers.DI
                         h.Password(options.Password);
                     });
 
-                    cfg.ReceiveEndpoint("user-queue", e =>
+                    cfg.ReceiveEndpoint(NotificationConstants.UserQueue, e =>
                     {
                         e.Bind(NotificationConstants.Exchange, s =>
                         {
@@ -40,7 +40,7 @@ namespace NotificationService.Consumers.DI
                         e.ConfigureConsumer<UserRegisteredConsumer>(context);
                     });
 
-                    cfg.ReceiveEndpoint("real-estate-queue", e =>
+                    cfg.ReceiveEndpoint(NotificationConstants.RealEstateQueue, e =>
                     {
                         e.Bind(NotificationConstants.Exchange, s =>
                         {
