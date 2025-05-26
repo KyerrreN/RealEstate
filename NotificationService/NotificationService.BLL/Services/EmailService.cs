@@ -1,5 +1,7 @@
 ﻿using FluentEmail.Core;
+using FluentEmail.Core.Models;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 using NotificationService.BLL.Constants;
 using NotificationService.BLL.DI;
 using NotificationService.BLL.Interfaces;
@@ -7,8 +9,24 @@ using NotificationService.Contracts;
 
 namespace NotificationService.BLL.Services
 {
-    public class EmailService(IFluentEmail email, IWebHostEnvironment env) : IEmailService
+    public class EmailService
+        (IFluentEmail email, 
+        IWebHostEnvironment env,
+        ILogger<EmailService> logger) : IEmailService
     {
+        public async Task SendRealEstateAddedAsync(RealEstateAddedEvent realEstateMetadata, CancellationToken ct)
+        {
+            string templateFile = env.CreatePathToEmailTemplate(TemplateConstants.RealEstateAdded);
+
+            var response = await email
+                .To(realEstateMetadata.Email)
+                .Subject(SubjectConstants.RealEstateAdded)
+                .UsingTemplateFromFile(templateFile, realEstateMetadata)
+                .SendAsync(ct);
+
+            ProcessResponseSuccess(response);
+        }
+
         public async Task SendUserRegisterAsync(UserRegisteredEvent userMetadata, CancellationToken ct)
         {
             string templateFile = env.CreatePathToEmailTemplate(TemplateConstants.UserRegistered);
@@ -17,20 +35,25 @@ namespace NotificationService.BLL.Services
                 .To(userMetadata.Email)
                 .Subject(SubjectConstants.UserRegistered)
                 .UsingTemplateFromFile(templateFile, userMetadata)
-                .SendAsync();
+                .SendAsync(ct);
 
+            ProcessResponseSuccess(response);
+        }
+
+        private void ProcessResponseSuccess(SendResponse response)
+        {
             if (!response.Successful)
             {
-                Console.WriteLine("Failed to send email");
+                logger.LogError("Message couldn't be sent");
 
-                foreach(var error in response.ErrorMessages)
+                foreach (var error in response.ErrorMessages)
                 {
-                    Console.WriteLine($" - {error}");
+                    logger.LogError(error);
                 }
             }
             else
             {
-                Console.WriteLine("Success");
+                logger.LogInformation("Message sent successfully");
             }
         }
     }

@@ -3,6 +3,8 @@ using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using NotificationService.Contracts;
+using NotificationService.Contracts.Constants;
 using RealEstate.BLL.Interfaces;
 using RealEstate.BLL.Options;
 using RealEstate.BLL.Services;
@@ -38,7 +40,25 @@ namespace RealEstate.BLL.DI
                         h.Password(options.Password);
                     });
 
-                    cfg.ConfigureEndpoints(context);
+                    cfg.Message<UserRegisteredEvent>(e =>
+                    {
+                        e.SetEntityName(NotificationConstants.Exchange);
+                    });
+
+                    cfg.Message<RealEstateAddedEvent>(e =>
+                    {
+                        e.SetEntityName(NotificationConstants.Exchange);
+                    });
+
+                    cfg.Publish<UserRegisteredEvent>(e =>
+                    {
+                        e.ExchangeType = NotificationConstants.ExchangeType;
+                    });
+
+                    cfg.Publish<RealEstateAddedEvent>(e =>
+                    {
+                        e.ExchangeType = NotificationConstants.ExchangeType;
+                    });
                 });
             });
         }

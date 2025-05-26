@@ -8,6 +8,9 @@ using RealEstate.Domain.Exceptions;
 using RealEstate.Domain.Models;
 using RealEstate.Domain.QueryParameters;
 using RealEstate.DAL.Transactions;
+using NotificationService.Contracts;
+using MassTransit;
+using NotificationService.Contracts.Constants;
 
 namespace RealEstate.BLL.Services
 {
@@ -16,7 +19,8 @@ namespace RealEstate.BLL.Services
         IRealEstateRepository _realEstateRepository, 
         IUserRepository _userRepository, 
         IHistoryRepository _historyRepository,
-        ITransactionManager transactionManager)
+        ITransactionManager transactionManager,
+        IPublishEndpoint publishEndpoint)
         : GenericService<RealEstateEntity, RealEstateModel>(_repository), IRealEstateService
     {
         public override async Task<RealEstateModel> CreateAsync(RealEstateModel model, CancellationToken ct)
@@ -27,7 +31,29 @@ namespace RealEstate.BLL.Services
             _ = await _userRepository.FindByIdAsync(model.OwnerId, ct)
                 ?? throw new NotFoundException(model.OwnerId);
 
-            return await base.CreateAsync(model, ct);
+            var entity = model.Adapt<RealEstateEntity>();
+
+            var createdEntity = await _realEstateRepository.CreateAsync(entity, ct);
+
+            var realEstateAddedEvent = new RealEstateAddedEvent
+            {
+                Address = createdEntity.Address,
+                Title = createdEntity.Title,
+                Description = createdEntity.Description,
+                Price = createdEntity.Price,
+                Email = createdEntity.Owner.Email,
+                EstateStatus = createdEntity.EstateStatus.ToString(),
+                EstateType = createdEntity.EstateType.ToString(),
+                FirstName = createdEntity.Owner.FirstName,
+                LastName = createdEntity.Owner.LastName
+            };
+
+            await publishEndpoint.Publish(realEstateAddedEvent, context =>
+            {
+                context.SetRoutingKey(NotificationConstants.RealEstateAddedRoutingKey);
+            }, ct);
+
+            return createdEntity.Adapt<RealEstateModel>();
         }
 
         public override async Task<RealEstateModel> UpdateAsync(Guid id, RealEstateModel model, CancellationToken ct)

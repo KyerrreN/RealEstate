@@ -4,6 +4,7 @@ using RealEstate.BLL.Models;
 using RealEstate.DAL.Entities;
 using RealEstate.DAL.Interfaces;
 using NotificationService.Contracts;
+using NotificationService.Contracts.Constants;
 
 namespace RealEstate.BLL.Services
 {
@@ -23,7 +24,10 @@ namespace RealEstate.BLL.Services
                 Email = createdUser.Email,
             };
 
-            await publishEndpoint.Publish(userEvent, ct);
+            await publishEndpoint.Publish(userEvent, publishContext =>
+            {
+                publishContext.SetRoutingKey(NotificationConstants.UserRoutingKey);
+            }, ct);
 
             return createdUser;
         }
