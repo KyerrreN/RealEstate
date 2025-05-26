@@ -1,0 +1,7 @@
+﻿@using NotificationService.Contracts
+@model ReviewAddedEvent
+<h1>Hello, @Model.FirstName @Model.LastName</h1>
+<p>You have recieved a new review by @Model.AuthorFirstName @Model.AuthorLastName</p>
+<h2>Rating: @Model.Rating</h2>
+<h2>Comment</h2>
+<p>@Model.Comment</p>

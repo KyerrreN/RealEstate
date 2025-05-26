@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using NotificationService.Consumers.Options;
+using NotificationService.Contracts;
 using NotificationService.Contracts.Constants;
 
 namespace NotificationService.Consumers.DI
@@ -19,6 +20,7 @@ namespace NotificationService.Consumers.DI
                 x.AddConsumer<UserRegisteredConsumer>();
                 x.AddConsumer<RealEstateAddedConsumer>();
                 x.AddConsumer<RealEstateDeletedConsumer>();
+                x.AddConsumer<ReviewAddedConsumer>();
 
                 x.UsingRabbitMq((context, cfg) =>
                 {
@@ -57,6 +59,17 @@ namespace NotificationService.Consumers.DI
 
                         e.ConfigureConsumer<RealEstateAddedConsumer>(context);
                         e.ConfigureConsumer<RealEstateDeletedConsumer>(context);
+                    });
+
+                    cfg.ReceiveEndpoint(NotificationConstants.ReviewQueue, e =>
+                    {
+                        e.Bind(NotificationConstants.Exchange, s =>
+                        {
+                            s.RoutingKey = NotificationConstants.ReviewAddedRoutingKey;
+                            s.ExchangeType = NotificationConstants.ExchangeType;
+                        });
+
+                        e.ConfigureConsumer<ReviewAddedConsumer>(context);
                     });
                 });
             });

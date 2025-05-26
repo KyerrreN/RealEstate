@@ -50,12 +50,32 @@ namespace RealEstate.BLL.DI
                         e.SetEntityName(NotificationConstants.Exchange);
                     });
 
+                    cfg.Message<ReviewAddedEvent>(e =>
+                    {
+                        e.SetEntityName(NotificationConstants.Exchange);
+                    });
+
+                    cfg.Message<RealEstateDeletedEvent>(e =>
+                    {
+                        e.SetEntityName(NotificationConstants.Exchange);
+                    });
+
                     cfg.Publish<UserRegisteredEvent>(e =>
                     {
                         e.ExchangeType = NotificationConstants.ExchangeType;
                     });
 
                     cfg.Publish<RealEstateAddedEvent>(e =>
+                    {
+                        e.ExchangeType = NotificationConstants.ExchangeType;
+                    });
+
+                    cfg.Publish<RealEstateDeletedEvent>(e =>
+                    {
+                        e.ExchangeType = NotificationConstants.ExchangeType;
+                    });
+
+                    cfg.Publish<ReviewAddedEvent>(e =>
                     {
                         e.ExchangeType = NotificationConstants.ExchangeType;
                     });

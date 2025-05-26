@@ -40,6 +40,19 @@ namespace NotificationService.BLL.Services
             ProcessResponseSuccess(response);
         }
 
+        public async Task SendReviewAddedAsync(ReviewAddedEvent reviewMetadata, CancellationToken ct)
+        {
+            string templateFile = env.CreatePathToEmailTemplate(TemplateConstants.ReviewAdded);
+            
+            var response = await email
+                .To(reviewMetadata.Email)
+                .Subject(SubjectConstants.ReviewAdded)
+                .UsingTemplateFromFile(templateFile, reviewMetadata)
+                .SendAsync(ct);
+
+            ProcessResponseSuccess(response);
+        }
+
         public async Task SendUserRegisterAsync(UserRegisteredEvent userMetadata, CancellationToken ct)
         {
             string templateFile = env.CreatePathToEmailTemplate(TemplateConstants.UserRegistered);
