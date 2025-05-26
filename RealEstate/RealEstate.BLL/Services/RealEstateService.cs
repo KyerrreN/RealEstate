@@ -117,6 +117,20 @@ namespace RealEstate.BLL.Services
                 await transaction.RollbackAsync(ct);
                 throw;
             }
+
+            var deletedEvent = new RealEstateDeletedEvent
+            {
+                Email = entityToDelete.Owner.Email,
+                FirstName = entityToDelete.Owner.FirstName,
+                LastName = entityToDelete.Owner.LastName,
+                Title = entityToDelete.Title,
+                Address = entityToDelete.Address,
+            };
+
+            await publishEndpoint.Publish(deletedEvent, context =>
+            {
+                context.SetRoutingKey(NotificationConstants.RealEstateDeletedRoutingKey);
+            }, ct);
         }
         private static void CheckRealEstateRequestParameters(RealEstateFilterParameters filters)
         {

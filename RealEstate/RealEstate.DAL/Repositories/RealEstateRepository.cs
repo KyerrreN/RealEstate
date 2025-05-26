@@ -40,5 +40,12 @@ namespace RealEstate.DAL.Repositories
 
             return realEstateList;
         }
+
+        public override async Task<RealEstateEntity?> FindByIdAsync(Guid id, CancellationToken ct)
+        {
+            return await Query
+                .Include(re => re.Owner)
+                .FirstOrDefaultAsync(re => re.Id == id, cancellationToken: ct);
+        }
     }
 }
