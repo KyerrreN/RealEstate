@@ -18,6 +18,7 @@ namespace NotificationService.Consumers.DI
             {
                 x.AddConsumer<UserRegisteredConsumer>();
                 x.AddConsumer<RealEstateAddedConsumer>();
+                x.AddConsumer<RealEstateDeletedConsumer>();
 
                 x.UsingRabbitMq((context, cfg) =>
                 {
@@ -48,7 +49,14 @@ namespace NotificationService.Consumers.DI
                             s.ExchangeType = NotificationConstants.ExchangeType;
                         });
 
+                        e.Bind(NotificationConstants.Exchange, s =>
+                        {
+                            s.RoutingKey = NotificationConstants.RealEstateDeletedRoutingKey;
+                            s.ExchangeType = NotificationConstants.ExchangeType;
+                        });
+
                         e.ConfigureConsumer<RealEstateAddedConsumer>(context);
+                        e.ConfigureConsumer<RealEstateDeletedConsumer>(context);
                     });
                 });
             });

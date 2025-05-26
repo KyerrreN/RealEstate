@@ -27,6 +27,19 @@ namespace NotificationService.BLL.Services
             ProcessResponseSuccess(response);
         }
 
+        public async Task SendRealEstateDeletedAsync(RealEstateDeletedEvent realEstateMetadata, CancellationToken ct)
+        {
+            string templateFile = env.CreatePathToEmailTemplate(TemplateConstants.RealEstateDeleted);
+
+            var response = await email
+                .To(realEstateMetadata.Email)
+                .Subject(SubjectConstants.RealEstateDeleted)
+                .UsingTemplateFromFile(templateFile, realEstateMetadata)
+                .SendAsync(ct);
+
+            ProcessResponseSuccess(response);
+        }
+
         public async Task SendUserRegisterAsync(UserRegisteredEvent userMetadata, CancellationToken ct)
         {
             string templateFile = env.CreatePathToEmailTemplate(TemplateConstants.UserRegistered);

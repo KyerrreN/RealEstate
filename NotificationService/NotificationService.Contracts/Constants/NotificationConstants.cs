@@ -10,5 +10,6 @@
 
         public const string UserRoutingKey = "user";
         public const string RealEstateAddedRoutingKey = "real-estate-added";
+        public const string RealEstateDeletedRoutingKey = "real-estate-deleted";
     }
 }

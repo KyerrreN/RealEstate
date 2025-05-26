@@ -6,5 +6,6 @@ namespace NotificationService.BLL.Interfaces
     {
         Task SendUserRegisterAsync(UserRegisteredEvent userMetadata, CancellationToken ct);
         Task SendRealEstateAddedAsync(RealEstateAddedEvent realEstateMetadata, CancellationToken ct);
+        Task SendRealEstateDeletedAsync(RealEstateDeletedEvent realEstateMetadata, CancellationToken ct);
     }
 }
