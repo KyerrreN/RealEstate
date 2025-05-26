@@ -65,6 +65,12 @@ jobs:
                     <add key="github" value="https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" />
                     <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
                     </packageSources>
+                    <packageSourceCredentials>
+                      <github>
+                        <add key="Username" value="${{ github.actor }}" />
+                        <add key="ClearTextPassword" value="${{ secrets.PACKAGE_TOKEN }}" />
+                      </github>
+                    </packageSourceCredentials>
                   </configuration>
                   "@ | Out-File -FilePath nuget.config -Encoding utf8
 
