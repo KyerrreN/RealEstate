@@ -1,4 +1,5 @@
 ﻿using FluentEmail.Core;
+using FluentEmail.Core.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using NotificationService.BLL.Constants;
@@ -13,6 +14,19 @@ namespace NotificationService.BLL.Services
         IWebHostEnvironment env,
         ILogger<EmailService> logger) : IEmailService
     {
+        public async Task SendRealEstateAddedAsync(RealEstateAddedEvent realEstateMetadata, CancellationToken ct)
+        {
+            string templateFile = env.CreatePathToEmailTemplate(TemplateConstants.RealEstateAdded);
+
+            var response = await email
+                .To(realEstateMetadata.Email)
+                .Subject(SubjectConstants.RealEstateAdded)
+                .UsingTemplateFromFile(templateFile, realEstateMetadata)
+                .SendAsync(ct);
+
+            ProcessResponseSuccess(response);
+        }
+
         public async Task SendUserRegisterAsync(UserRegisteredEvent userMetadata, CancellationToken ct)
         {
             string templateFile = env.CreatePathToEmailTemplate(TemplateConstants.UserRegistered);
@@ -21,13 +35,18 @@ namespace NotificationService.BLL.Services
                 .To(userMetadata.Email)
                 .Subject(SubjectConstants.UserRegistered)
                 .UsingTemplateFromFile(templateFile, userMetadata)
-                .SendAsync();
+                .SendAsync(ct);
 
+            ProcessResponseSuccess(response);
+        }
+
+        private void ProcessResponseSuccess(SendResponse response)
+        {
             if (!response.Successful)
             {
                 logger.LogError("Message couldn't be sent");
 
-                foreach(var error in response.ErrorMessages)
+                foreach (var error in response.ErrorMessages)
                 {
                     logger.LogError(error);
                 }

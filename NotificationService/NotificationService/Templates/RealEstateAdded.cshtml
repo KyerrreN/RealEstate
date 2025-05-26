@@ -1,0 +1,69 @@
+﻿@using NotificationService.Contracts
+@model RealEstateAddedEvent
+<h1>Hello, @Model.FirstName @Model.LastName</h1>
+<p>Your real estate submission has been succesfully posted</p>
+<h2>Here is the information about your posting</h2>
+<ul>
+    <li>
+        <h3>
+            Title
+        </h3>
+        <p>@Model.Title</p>
+    </li>
+
+    <li>
+        <h3>
+            Description
+        </h3>
+        <p>
+            @Model.Description
+        </p>
+    </li>
+
+    <li>
+        <h3>
+            Estate type
+        </h3>
+        <p>
+            @Model.EstateStatus
+        </p>
+    </li>
+
+    <li>
+        <h3>
+            Price
+        </h3>
+        <p>
+            @Model.Price
+        </p>
+    </li>
+
+    <li>
+        <h3>
+            Address
+        </h3>
+        <p>
+            @Model.Address
+        </p>
+    </li>
+
+    <li>
+        <h3>
+            Intent
+        </h3>
+        <p>
+            @if (Model.EstateStatus == "ForSale")
+            {
+                @:This estate is for sale.
+            }
+            else if (Model.EstateStatus == "ForRent")
+            {
+                @:This estate is for rent.
+            }
+            else
+            {
+                @:Unknown status.
+            }
+        </p>
+    </li>
+</ul>

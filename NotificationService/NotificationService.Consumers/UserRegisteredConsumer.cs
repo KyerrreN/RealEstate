@@ -13,7 +13,7 @@ namespace NotificationService.Consumers
         {
             var message = context.Message;
 
-            logger.LogInformation("Message from main service recieved. Sending email to {Email}", message.Email);
+            logger.LogInformation("Message from main service received. Sending email to {Email}", message.Email);
 
             await emailService.SendUserRegisterAsync(message, context.CancellationToken);
         }

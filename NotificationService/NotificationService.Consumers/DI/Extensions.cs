@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using NotificationService.Consumers.Options;
+using NotificationService.Contracts.Constants;
 
 namespace NotificationService.Consumers.DI
 {
@@ -16,6 +17,7 @@ namespace NotificationService.Consumers.DI
             services.AddMassTransit(x =>
             {
                 x.AddConsumer<UserRegisteredConsumer>();
+                x.AddConsumer<RealEstateAddedConsumer>();
 
                 x.UsingRabbitMq((context, cfg) =>
                 {
@@ -29,13 +31,24 @@ namespace NotificationService.Consumers.DI
 
                     cfg.ReceiveEndpoint("user-queue", e =>
                     {
-                        e.Bind("notification-exchange", s =>
+                        e.Bind(NotificationConstants.Exchange, s =>
                         {
-                            s.RoutingKey = "user";
-                            s.ExchangeType = "direct";
+                            s.RoutingKey = NotificationConstants.UserRoutingKey;
+                            s.ExchangeType = NotificationConstants.ExchangeType;
                         });
 
                         e.ConfigureConsumer<UserRegisteredConsumer>(context);
+                    });
+
+                    cfg.ReceiveEndpoint("real-estate-queue", e =>
+                    {
+                        e.Bind(NotificationConstants.Exchange, s =>
+                        {
+                            s.RoutingKey = NotificationConstants.RealEstateAddedRoutingKey;
+                            s.ExchangeType = NotificationConstants.ExchangeType;
+                        });
+
+                        e.ConfigureConsumer<RealEstateAddedConsumer>(context);
                     });
                 });
             });
