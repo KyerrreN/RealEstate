@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using NotificationService.Contracts;
 using RealEstate.BLL.Models;
 using RealEstate.DAL.Entities;
 using RealEstate.Presentation.DTOs.RealEstate;
@@ -17,6 +18,11 @@ namespace RealEstate.Presentation.Mapping
                 .Map(dest => dest.FullName, src => $"{src.FirstName} {src.LastName}");
 
             TypeAdapterConfig<RealEstateEntity, RealEstateDto>.NewConfig();
+
+            TypeAdapterConfig<ReviewEntity, ReviewAddedEvent>.NewConfig()
+                .Map(dest => dest.Email, src => src.Recipient.Email)
+                .Map(dest => dest.FirstName, src => src.Recipient.FirstName)
+                .Map(dest => dest.LastName, src => src.Recipient.LastName);
         }
     }
 }

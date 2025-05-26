@@ -41,16 +41,7 @@ namespace RealEstate.BLL.Services
 
             var createdReviewEntity = await _reviewRepository.CreateAsync(reviewEntity, ct);
 
-            var reviewEvent = new ReviewAddedEvent
-            {
-                Email = createdReviewEntity.Recipient.Email,
-                FirstName = createdReviewEntity.Recipient.FirstName,
-                LastName = createdReviewEntity.Recipient.LastName,
-                Rating = model.Rating,
-                Comment = model.Comment,
-                AuthorFirstName = createdReviewEntity.Author!.FirstName,
-                AuthorLastName = createdReviewEntity.Author.LastName
-            };
+            var reviewEvent = createdReviewEntity.Adapt<ReviewAddedEvent>();
 
             await publishEndpoint.Publish(reviewEvent, context =>
             {
