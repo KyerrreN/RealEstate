@@ -33,9 +33,6 @@ namespace RealEstate.DAL.Repositories
             realEstateQuery = filterBuilder.Build(realEstateQuery, ct);
             realEstateQuery.Sort(sorting.OrderBy);
 
-            var count = await realEstateQuery.CountAsync(ct);
-            var totalPages = (int)Math.Ceiling((double)count / filters.PageSize);
-
             var realEstateList = await Utilities.ToPagedEntityModelAsync(filters.PageNumber, filters.PageSize, realEstateQuery, ct);
 
             return realEstateList;
