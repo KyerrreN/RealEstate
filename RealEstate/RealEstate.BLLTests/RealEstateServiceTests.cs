@@ -1,10 +1,12 @@
 ﻿using Mapster;
+using MassTransit;
 using NSubstitute;
 using RealEstate.BLL.Models;
 using RealEstate.BLL.Services;
 using RealEstate.DAL.Entities;
 using RealEstate.DAL.Interfaces;
 using RealEstate.DAL.Transactions;
+using RealEstate.Domain.Enums;
 using RealEstate.Domain.Exceptions;
 using RealEstate.Domain.Models;
 using RealEstate.Domain.QueryParameters;
@@ -19,6 +21,7 @@ namespace RealEstate.BLLTests
         private readonly IUserRepository _userRepository;
         private readonly IHistoryRepository _historyRepository;
         private readonly ITransactionManager _transactionManager;
+        private readonly IPublishEndpoint _endpointMock;
 
         private readonly RealEstateService _service;
 
@@ -29,8 +32,9 @@ namespace RealEstate.BLLTests
             _userRepository = Substitute.For<IUserRepository>();
             _historyRepository = Substitute.For<IHistoryRepository>();
             _transactionManager = Substitute.For<ITransactionManager>();
+            _endpointMock = Substitute.For<IPublishEndpoint>();
 
-            _service = new RealEstateService(_baseRepository, _realEstateRepository, _userRepository, _historyRepository, _transactionManager);
+            _service = new RealEstateService(_baseRepository, _realEstateRepository, _userRepository, _historyRepository, _transactionManager, _endpointMock);
         }
 
         [Fact]
@@ -48,17 +52,33 @@ namespace RealEstate.BLLTests
         public async Task CreateAsync_ShouldCreateRealEstate_WhenModelIsValidAndUserExists()
         {
             // arrange
+            var ownerId = Guid.NewGuid();
             var model = new RealEstateModel
             {
                 Id = Guid.NewGuid(),
-                OwnerId = Guid.NewGuid(),
-                Title = "Nice Apartment"
+                OwnerId = ownerId,
+                Title = "Nice Apartment",
+                Description = "Test",
+                Price = 10m,
+                Address = "Test",
+                EstateStatus = EstateStatus.ForSale,
+                EstateType = EstateType.House,
+                Owner = new UserEntity
+                {
+                    Id = ownerId,
+                    Email = "testemail@gmail.com",
+                    FirstName = "Test",
+                    LastName = "Test"
+                }
             };
 
             var entity = model.Adapt<RealEstateEntity>();
 
             _userRepository.FindByIdAsync(model.OwnerId, Arg.Any<CancellationToken>())
                 .Returns(new UserEntity { Id = model.OwnerId });
+
+            _realEstateRepository.CreateAsync(Arg.Any<RealEstateEntity>(), Arg.Any<CancellationToken>())
+                .Returns(entity);
 
             _baseRepository.CreateAsync(Arg.Any<RealEstateEntity>(), Arg.Any<CancellationToken>())
                 .Returns(entity);
