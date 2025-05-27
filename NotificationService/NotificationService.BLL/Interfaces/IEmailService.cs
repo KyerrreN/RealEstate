@@ -2,11 +2,8 @@
 
 namespace NotificationService.BLL.Interfaces
 {
-    public interface IEmailService
+    public interface IEmailService<T> where T : BaseEvent
     {
-        Task SendUserRegisterAsync(UserRegisteredEvent userMetadata, CancellationToken ct);
-        Task SendRealEstateAddedAsync(RealEstateAddedEvent realEstateMetadata, CancellationToken ct);
-        Task SendRealEstateDeletedAsync(RealEstateDeletedEvent realEstateMetadata, CancellationToken ct);
-        Task SendReviewAddedAsync(ReviewAddedEvent reviewMetadata, CancellationToken ct);
+        Task Send(T data, string path, string subject, CancellationToken ct);
     }
 }

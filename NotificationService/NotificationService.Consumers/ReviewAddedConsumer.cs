@@ -1,12 +1,13 @@
 ﻿using MassTransit;
 using Microsoft.Extensions.Logging;
 using NotificationService.BLL.Interfaces;
+using NotificationService.Consumers.Constants;
 using NotificationService.Contracts;
 
 namespace NotificationService.Consumers
 {
     public class ReviewAddedConsumer(
-        IEmailService emailService,
+        IEmailService<ReviewAddedEvent> emailService,
         ILogger<ReviewAddedConsumer> logger) : IConsumer<ReviewAddedEvent>
     {
         public async Task Consume(ConsumeContext<ReviewAddedEvent> context)
@@ -15,7 +16,11 @@ namespace NotificationService.Consumers
 
             logger.LogInformation("Message received. Sending message to {Email}", message.Email);
 
-            await emailService.SendReviewAddedAsync(message, context.CancellationToken);
+            await emailService.Send(
+                message, 
+                TemplateConstants.ReviewAdded,
+                SubjectConstants.ReviewAdded,
+                context.CancellationToken);
         }
     }
 }

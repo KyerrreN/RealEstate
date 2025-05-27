@@ -1,4 +1,4 @@
-﻿namespace NotificationService.BLL.Constants
+﻿namespace NotificationService.Consumers.Constants
 {
     public class SubjectConstants
     {

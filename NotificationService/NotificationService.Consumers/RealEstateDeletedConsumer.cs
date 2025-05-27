@@ -1,12 +1,13 @@
 ﻿using MassTransit;
 using Microsoft.Extensions.Logging;
 using NotificationService.BLL.Interfaces;
+using NotificationService.Consumers.Constants;
 using NotificationService.Contracts;
 
 namespace NotificationService.Consumers
 {
     public class RealEstateDeletedConsumer(
-        IEmailService emailService,
+        IEmailService<RealEstateDeletedEvent> emailService,
         ILogger<RealEstateDeletedConsumer> logger) : IConsumer<RealEstateDeletedEvent>
     {
         public async Task Consume(ConsumeContext<RealEstateDeletedEvent> context)
@@ -15,7 +16,11 @@ namespace NotificationService.Consumers
 
             logger.LogInformation("Message received. Sending message to {Email}", message.Email);
 
-            await emailService.SendRealEstateDeletedAsync(message, context.CancellationToken);
+            await emailService.Send(
+                message,
+                TemplateConstants.RealEstateDeleted,
+                SubjectConstants.RealEstateDeleted,
+                context.CancellationToken);
         }
     }
 }
