@@ -56,26 +56,11 @@ jobs:
               with:
                   dotnet-version: "9.0.x"
 
-            - name: Generate NuGet config for GitHub Packages
-              shell: powershell
-              run: |
-                  @"
-                  <configuration>
-                   <packageSources>
-                    <add key="github" value="https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" />
-                    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
-                    </packageSources>
-                    <packageSourceCredentials>
-                      <github>
-                        <add key="Username" value="${{ github.actor }}" />
-                        <add key="ClearTextPassword" value="${{ secrets.PACKAGE_TOKEN }}" />
-                      </github>
-                    </packageSourceCredentials>
-                  </configuration>
-                  "@ | Out-File -FilePath nuget.config -Encoding utf8
+            - name: Configure NuGet Feed
+              run: dotnet nuget add source --username ${{ github.actor }} --password ${{ secrets.PACKAGE_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
 
             - name: Restore Dependencies
-              run: dotnet restore RealEstate --configfile nuget.config
+              run: dotnet restore RealEstate
 
             - name: Build solution
               run: dotnet build RealEstate --no-restore
