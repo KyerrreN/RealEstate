@@ -1,4 +1,6 @@
 ﻿using Mapster;
+using MassTransit;
+using MassTransit.Transports;
 using NSubstitute;
 using RealEstate.BLL.Models;
 using RealEstate.BLL.Services;
@@ -16,6 +18,7 @@ namespace RealEstate.BLLTests
         private readonly IBaseRepository<ReviewEntity> _baseRepository;
         private readonly IUserRepository _userRepository;
         private readonly IReviewRepository _reviewRepository;
+        private readonly IPublishEndpoint _endpointMock;
 
         private readonly ReviewService _service;
 
@@ -24,8 +27,9 @@ namespace RealEstate.BLLTests
             _baseRepository = Substitute.For<IBaseRepository<ReviewEntity>>();
             _userRepository = Substitute.For<IUserRepository>();
             _reviewRepository = Substitute.For<IReviewRepository>();
+            _endpointMock = Substitute.For<IPublishEndpoint>();
 
-            _service = new ReviewService(_baseRepository, _userRepository, _reviewRepository);
+            _service = new ReviewService(_baseRepository, _userRepository, _reviewRepository, _endpointMock);
         }
 
         [Fact]
@@ -148,7 +152,20 @@ namespace RealEstate.BLLTests
                 AuthorId = authorId,
                 RecipientId = recipientId,
                 Comment = "Great experience",
-                Rating = 5
+                Rating = 5,
+                Author = new UserModel
+                {
+                    Id = authorId,
+                    FirstName = "John",
+                    LastName = "Doe",
+                },
+                Recipient = new UserModel
+                {
+                    Id = recipientId,
+                    FirstName = "Jane",
+                    LastName = "Smith",
+                    Email = "example@gmail.com"
+                }
             };
 
             var entity = model.Adapt<ReviewEntity>();

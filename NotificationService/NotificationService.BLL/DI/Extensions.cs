@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NotificationService.BLL.Constants;
 using NotificationService.BLL.Interfaces;
 using NotificationService.BLL.Options;
 using NotificationService.BLL.Services;
+using NotificationService.Contracts;
 
 namespace NotificationService.BLL.DI
 {
@@ -33,7 +33,10 @@ namespace NotificationService.BLL.DI
                     Password = mailKitOptions.Password
                 });
 
-            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IEmailService<ReviewAddedEvent>, EmailService<ReviewAddedEvent>>();
+            services.AddScoped<IEmailService<UserRegisteredEvent>, EmailService<UserRegisteredEvent>>();
+            services.AddScoped<IEmailService<RealEstateAddedEvent>, EmailService<RealEstateAddedEvent>>();
+            services.AddScoped<IEmailService<RealEstateDeletedEvent>, EmailService<RealEstateDeletedEvent>>();
         }
 
         public static string CreatePathToEmailTemplate(this IWebHostEnvironment env, string directory)

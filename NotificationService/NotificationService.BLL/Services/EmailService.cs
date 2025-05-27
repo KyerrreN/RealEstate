@@ -2,39 +2,25 @@
 using FluentEmail.Core.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
-using NotificationService.BLL.Constants;
 using NotificationService.BLL.DI;
 using NotificationService.BLL.Interfaces;
 using NotificationService.Contracts;
 
 namespace NotificationService.BLL.Services
 {
-    public class EmailService
+    public class EmailService<T>
         (IFluentEmail email, 
         IWebHostEnvironment env,
-        ILogger<EmailService> logger) : IEmailService
+        ILogger<EmailService<T>> logger) : IEmailService<T> where T : BaseEvent
     {
-        public async Task SendRealEstateAddedAsync(RealEstateAddedEvent realEstateMetadata, CancellationToken ct)
+        public async Task Send(T data, string path, string subject, CancellationToken ct)
         {
-            string templateFile = env.CreatePathToEmailTemplate(TemplateConstants.RealEstateAdded);
+            string templateFile = env.CreatePathToEmailTemplate(path);
 
             var response = await email
-                .To(realEstateMetadata.Email)
-                .Subject(SubjectConstants.RealEstateAdded)
-                .UsingTemplateFromFile(templateFile, realEstateMetadata)
-                .SendAsync(ct);
-
-            ProcessResponseSuccess(response);
-        }
-
-        public async Task SendUserRegisterAsync(UserRegisteredEvent userMetadata, CancellationToken ct)
-        {
-            string templateFile = env.CreatePathToEmailTemplate(TemplateConstants.UserRegistered);
-
-            var response = await email
-                .To(userMetadata.Email)
-                .Subject(SubjectConstants.UserRegistered)
-                .UsingTemplateFromFile(templateFile, userMetadata)
+                .To(data.Email)
+                .Subject(subject)
+                .UsingTemplateFromFile(templateFile, data)
                 .SendAsync(ct);
 
             ProcessResponseSuccess(response);

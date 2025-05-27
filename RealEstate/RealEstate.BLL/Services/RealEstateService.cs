@@ -35,18 +35,7 @@ namespace RealEstate.BLL.Services
 
             var createdEntity = await _realEstateRepository.CreateAsync(entity, ct);
 
-            var realEstateAddedEvent = new RealEstateAddedEvent
-            {
-                Address = createdEntity.Address,
-                Title = createdEntity.Title,
-                Description = createdEntity.Description,
-                Price = createdEntity.Price,
-                Email = createdEntity.Owner.Email,
-                EstateStatus = createdEntity.EstateStatus.ToString(),
-                EstateType = createdEntity.EstateType.ToString(),
-                FirstName = createdEntity.Owner.FirstName,
-                LastName = createdEntity.Owner.LastName
-            };
+            var realEstateAddedEvent = createdEntity.Adapt<RealEstateAddedEvent>();
 
             await publishEndpoint.Publish(realEstateAddedEvent, context =>
             {
@@ -88,7 +77,7 @@ namespace RealEstate.BLL.Services
 
         public override async Task DeleteAsync(Guid id, CancellationToken ct)
         {
-            var entityToDelete = await _realEstateRepository.FindByIdAsync(id, ct)
+            var entityToDelete = await _realEstateRepository.FindByIdWithUserAsync(id, ct)
                 ?? throw new NotFoundException(id);
 
             var historyModel = new HistoryModel
@@ -117,6 +106,13 @@ namespace RealEstate.BLL.Services
                 await transaction.RollbackAsync(ct);
                 throw;
             }
+
+            var deletedEvent = entityToDelete.Adapt<RealEstateDeletedEvent>();
+
+            await publishEndpoint.Publish(deletedEvent, context =>
+            {
+                context.SetRoutingKey(NotificationConstants.RealEstateDeletedRoutingKey);
+            }, ct);
         }
         private static void CheckRealEstateRequestParameters(RealEstateFilterParameters filters)
         {

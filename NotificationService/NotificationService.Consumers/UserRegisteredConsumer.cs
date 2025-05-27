@@ -1,12 +1,13 @@
 ﻿using MassTransit;
 using Microsoft.Extensions.Logging;
 using NotificationService.BLL.Interfaces;
+using NotificationService.Consumers.Constants;
 using NotificationService.Contracts;
 
 namespace NotificationService.Consumers
 {
     public class UserRegisteredConsumer
-        (IEmailService emailService,
+        (IEmailService<UserRegisteredEvent> emailService,
         ILogger<UserRegisteredConsumer> logger) : IConsumer<UserRegisteredEvent>
     {
         public async Task Consume(ConsumeContext<UserRegisteredEvent> context)
@@ -15,7 +16,11 @@ namespace NotificationService.Consumers
 
             logger.LogInformation("Message from main service received. Sending email to {Email}", message.Email);
 
-            await emailService.SendUserRegisterAsync(message, context.CancellationToken);
+            await emailService.Send(
+                message, 
+                TemplateConstants.UserRegistered,
+                SubjectConstants.UserRegistered,
+                context.CancellationToken);
         }
     }
 }

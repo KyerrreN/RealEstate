@@ -5,6 +5,7 @@ using RealEstate.DAL.Entities;
 using RealEstate.DAL.Interfaces;
 using NotificationService.Contracts;
 using NotificationService.Contracts.Constants;
+using Mapster;
 
 namespace RealEstate.BLL.Services
 {
@@ -17,12 +18,7 @@ namespace RealEstate.BLL.Services
         {
             var createdUser = await base.CreateAsync(model, ct);
 
-            var userEvent = new UserRegisteredEvent
-            {
-                FirstName = createdUser.FirstName,
-                LastName = createdUser.LastName,
-                Email = createdUser.Email,
-            };
+            var userEvent = createdUser.Adapt<UserRegisteredEvent>();
 
             await publishEndpoint.Publish(userEvent, publishContext =>
             {

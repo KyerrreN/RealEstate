@@ -1,4 +1,7 @@
 ﻿using Mapster;
+using MassTransit;
+using NotificationService.Contracts;
+using NotificationService.Contracts.Constants;
 using RealEstate.BLL.Interfaces;
 using RealEstate.BLL.Models;
 using RealEstate.DAL.Entities;
@@ -13,7 +16,8 @@ namespace RealEstate.BLL.Services
     public class ReviewService
         (IBaseRepository<ReviewEntity> _repository,
         IUserRepository _userRepository, 
-        IReviewRepository _reviewRepository) 
+        IReviewRepository _reviewRepository,
+        IPublishEndpoint publishEndpoint) 
         : GenericService<ReviewEntity, ReviewModel>(_repository), IReviewService
     {
         // To refactor, paging on IQueryable
@@ -36,6 +40,13 @@ namespace RealEstate.BLL.Services
             var reviewEntity = model.Adapt<ReviewEntity>();
 
             var createdReviewEntity = await _reviewRepository.CreateAsync(reviewEntity, ct);
+
+            var reviewEvent = createdReviewEntity.Adapt<ReviewAddedEvent>();
+
+            await publishEndpoint.Publish(reviewEvent, context =>
+            {
+                context.SetRoutingKey(NotificationConstants.ReviewAddedRoutingKey);
+            }, ct);
 
             return createdReviewEntity.Adapt<ReviewModel>();
         }

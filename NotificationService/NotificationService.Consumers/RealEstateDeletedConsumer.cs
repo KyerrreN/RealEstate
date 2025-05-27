@@ -6,20 +6,20 @@ using NotificationService.Contracts;
 
 namespace NotificationService.Consumers
 {
-    public class RealEstateAddedConsumer
-        (IEmailService<RealEstateAddedEvent> emailService,
-        ILogger<RealEstateAddedConsumer> logger) : IConsumer<RealEstateAddedEvent>
+    public class RealEstateDeletedConsumer(
+        IEmailService<RealEstateDeletedEvent> emailService,
+        ILogger<RealEstateDeletedConsumer> logger) : IConsumer<RealEstateDeletedEvent>
     {
-        public async Task Consume(ConsumeContext<RealEstateAddedEvent> context)
+        public async Task Consume(ConsumeContext<RealEstateDeletedEvent> context)
         {
             var message = context.Message;
 
             logger.LogInformation("Message received. Sending message to {Email}", message.Email);
 
             await emailService.Send(
-                message, 
-                TemplateConstants.RealEstateAdded, 
-                SubjectConstants.RealEstateAdded, 
+                message,
+                TemplateConstants.RealEstateDeleted,
+                SubjectConstants.RealEstateDeleted,
                 context.CancellationToken);
         }
     }
