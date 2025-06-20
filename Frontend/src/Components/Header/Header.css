@@ -1,0 +1,22 @@
+header {
+    display: flex;
+    flex-wrap: wrap;
+
+    justify-content: space-between;
+    align-items: center;
+}
+header > div:nth-child(1) {
+    margin: 10px;
+    outline: 1px solid red;
+}
+header > div > span {
+    color: #00ad64;
+    font-weight: 800;
+}
+header > div:nth-child(2) {
+    margin: 10px;
+    outline: 1px solid red;
+
+    display: inline-flex;
+    gap: 10px;
+}
