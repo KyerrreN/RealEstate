@@ -15,6 +15,9 @@ export default function Header() {
                         Sign in
                     </Button>
                     <Button variant="contained">Sign up</Button>
+                    <Button variant="outlined" color="error">
+                        Logout
+                    </Button>
                 </div>
             </header>
 
