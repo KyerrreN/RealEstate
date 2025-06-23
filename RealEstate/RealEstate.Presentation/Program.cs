@@ -3,7 +3,7 @@ using RealEstate.BLL.DI;
 using RealEstate.Presentation.Mapping;
 using RealEstate.Presentation.Middleware;
 using Serilog;
-using Serilog.Exceptions;
+using Microsoft.OpenApi.Models;
 
 namespace RealEstate.Presentation
 {
@@ -27,13 +27,49 @@ namespace RealEstate.Presentation
 
             builder.Services.RegisterBLL(builder.Configuration);
 
+            builder.Services.AddSwaggerGen(s =>
+            {
+                s.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Real Estate API",
+                    Version = "v1",
+                    Description = "API for managing real estate bookings, users, and reviews."
+                });
+
+                s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Place to add JWT with bearer",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                s.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Name = "Bearer"
+                        },
+                        new List<string>()
+                    }
+                });
+            });
+
             var app = builder.Build();
 
             app.UseMiddleware<ExceptionMiddleware>();
 
             if (app.Environment.IsDevelopment())
             {
-                app.MapOpenApi();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();
