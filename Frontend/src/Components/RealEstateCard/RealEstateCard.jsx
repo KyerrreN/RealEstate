@@ -5,7 +5,7 @@ import Divider from "@mui/material/Divider";
 export default function RealEstateCard() {
     return (
         <div className="card">
-            <img src={PlaceholderImg} alt="Property Image" />
+            <img src={PlaceholderImg} alt="Property" />
 
             <span className="card-header">Header PLACEHOLDER</span>
             <span className="card-desc">

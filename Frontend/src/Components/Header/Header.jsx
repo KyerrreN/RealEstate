@@ -6,57 +6,58 @@ export default function Header() {
     const { loginWithRedirect, logout, isAuthenticated, isLoading } =
         useAuth0();
 
-    return (
-        <>
-            <header className="container">
-                <div>
-                    <span>Real Estate UI</span>
-                </div>
+    let authButton;
 
-                <div>
-                    {isLoading ? (
-                        <Button variant="outlined">Please wait</Button>
-                    ) : isAuthenticated ? (
-                        <>
-                            <Button
-                                variant="outlined"
-                                color="error"
-                                onClick={() =>
-                                    logout({
-                                        logoutParams: {
-                                            returnTo: window.location.origin,
-                                        },
-                                    })
-                                }
-                            >
-                                Logout
-                            </Button>
-                        </>
-                    ) : (
-                        <>
-                            <Button
-                                variant="contained"
-                                color="success"
-                                onClick={() => loginWithRedirect()}
-                            >
-                                Sign in
-                            </Button>
-                            <Button
-                                variant="contained"
-                                onClick={() =>
-                                    loginWithRedirect({
-                                        authorizationParams: {
-                                            screen_hint: "signup",
-                                        },
-                                    })
-                                }
-                            >
-                                Sign up
-                            </Button>
-                        </>
-                    )}
-                </div>
-            </header>
-        </>
+    if (isLoading) {
+        authButton = <Button variant="outlined">Please wait</Button>;
+    } else if (isAuthenticated) {
+        authButton = (
+            <Button
+                variant="outlined"
+                color="error"
+                onClick={() =>
+                    logout({
+                        logoutParams: {
+                            returnTo: window.location.origin,
+                        },
+                    })
+                }
+            >
+                Logout
+            </Button>
+        );
+    } else {
+        authButton = (
+            <>
+                <Button
+                    variant="contained"
+                    color="success"
+                    onClick={() => loginWithRedirect()}
+                >
+                    Sign in
+                </Button>
+                <Button
+                    variant="contained"
+                    onClick={() =>
+                        loginWithRedirect({
+                            authorizationParams: {
+                                screen_hint: "signup",
+                            },
+                        })
+                    }
+                >
+                    Sign up
+                </Button>
+            </>
+        );
+    }
+
+    return (
+        <header className="container">
+            <div>
+                <span>Real Estate UI</span>
+            </div>
+            <div>{authButton}</div>
+        </header>
     );
 }
