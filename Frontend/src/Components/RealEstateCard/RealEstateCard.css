@@ -1,0 +1,44 @@
+.card {
+    width: 400px;
+    height: auto;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 10px 5px;
+    margin: 10px;
+
+    background-color: aliceblue;
+    border-radius: 10px;
+}
+
+.card > img {
+    width: auto;
+    height: 200px;
+
+    border-radius: 2%;
+}
+
+.card-header {
+    font-size: 32px;
+    font-weight: 300;
+    margin-top: 5px;
+}
+
+.card-desc {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.card-meta {
+    display: inline-flex;
+    flex-direction: column;
+}
+
+@media (max-width: 424px) {
+    .card,
+    .card > img {
+        width: auto;
+    }
+}
