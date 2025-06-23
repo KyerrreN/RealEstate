@@ -1,10 +1,9 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import "./Header.css";
 import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
 
 export default function Header() {
-    const { loginWithRedirect, logout, isAuthenticated, user, isLoading } =
+    const { loginWithRedirect, logout, isAuthenticated, isLoading } =
         useAuth0();
 
     return (
@@ -58,8 +57,6 @@ export default function Header() {
                     )}
                 </div>
             </header>
-
-            <Divider>Welcome</Divider>
         </>
     );
 }
