@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RealEstate.BLL.Interfaces;
 using RealEstate.BLL.Models;
@@ -10,6 +11,7 @@ namespace RealEstate.Presentation.Controllers
 {
     [Route(ApiRoutes.BookingEndpoint)]
     [ApiController]
+    [Authorize]
     public class BookingController(IBookingService _bookingService,
         IValidator<CreateBookingDto> _createBookingValidator,
         IValidator<CloseDealDto> _closeDealValidator) 
