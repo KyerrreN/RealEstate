@@ -4,6 +4,8 @@ using RealEstate.Presentation.Mapping;
 using RealEstate.Presentation.Middleware;
 using Serilog;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using RealEstate.Presentation.Options;
 
 namespace RealEstate.Presentation
 {
@@ -12,6 +14,10 @@ namespace RealEstate.Presentation
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var authSettings = builder.Configuration
+                .GetSection(AuthOptions.Position)
+                .Get<AuthOptions>() 
+                ?? throw new NullReferenceException($"Failed to bind {nameof(AuthOptions)}, chech for missing required properties");
 
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
@@ -62,6 +68,16 @@ namespace RealEstate.Presentation
                 });
             });
 
+            builder.Services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(opt =>
+            {
+                opt.Authority = authSettings.Domain;
+                opt.Audience = authSettings.Audience;
+            });
+
             var app = builder.Build();
 
             app.UseMiddleware<ExceptionMiddleware>();
@@ -74,6 +90,7 @@ namespace RealEstate.Presentation
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
