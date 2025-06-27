@@ -31,7 +31,8 @@ namespace RealEstate.API.IntegrationTests.TestHelpers
                         FirstName = "test",
                         LastName = "test",
                         Phone = "+375251234567",
-                        Email = "test@gmail.com"
+                        Email = "test@gmail.com",
+                        Auth0Id = "Auth0|Test"
                     }
                 },
                 new RealEstateEntity
