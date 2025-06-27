@@ -41,6 +41,7 @@ namespace RealEstate.API.IntegrationTests.IntegrationTest
             dbContext.SaveChanges();
         }
 
+        [Fact]
         public async Task CreateBookingFromClient_ShouldCreateRowAndReturnCreatedBooking()
         {
             // arrange

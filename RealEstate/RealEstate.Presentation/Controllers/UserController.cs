@@ -22,6 +22,17 @@ namespace RealEstate.Presentation.Controllers
             return userDtos;
         }
 
+        [HttpGet("auth0/{auth0Id}")]
+        [AllowAnonymous]
+        public async Task<UserDto> GetByAuth0Id(string auth0Id, CancellationToken ct)
+        {
+            var userModel = await _userService.GetByAuth0IdAsync(auth0Id, ct);
+
+            var userDto = userModel.Adapt<UserDto>();
+
+            return userDto;
+        }
+
         [HttpGet("{userId:guid}")]
         [AllowAnonymous]
         public async Task<UserDto> GetOne(Guid userId, CancellationToken ct)

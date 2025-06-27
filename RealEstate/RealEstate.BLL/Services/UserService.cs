@@ -6,6 +6,7 @@ using RealEstate.DAL.Interfaces;
 using NotificationService.Contracts;
 using NotificationService.Contracts.Constants;
 using Mapster;
+using RealEstate.Domain.Exceptions;
 
 namespace RealEstate.BLL.Services
 {
@@ -26,6 +27,16 @@ namespace RealEstate.BLL.Services
             }, ct);
 
             return createdUser;
+        }
+
+        public async Task<UserModel> GetByAuth0IdAsync(string auth0Id, CancellationToken ct)
+        {
+            var userEntity = await _repository.FindOneByConditionAsync(u => u.Auth0Id == auth0Id, ct)
+                ?? throw new NotFoundException(auth0Id);
+
+            var userModel = userEntity.Adapt<UserModel>();
+
+            return userModel;
         }
     }
 }
