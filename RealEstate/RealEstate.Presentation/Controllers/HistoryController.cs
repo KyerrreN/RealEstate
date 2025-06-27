@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RealEstate.BLL.Interfaces;
 using RealEstate.Domain.QueryParameters;
@@ -10,6 +11,7 @@ namespace RealEstate.Presentation.Controllers
 {
     [Route(ApiRoutes.HistoryEndpoint)]
     [ApiController]
+    [Authorize]
     public class HistoryController(IHistoryService _historyService) : ControllerBase
     {
         [HttpGet]

@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RealEstate.BLL.Interfaces;
 using RealEstate.BLL.Models;
@@ -12,12 +13,14 @@ namespace RealEstate.Presentation.Controllers
 {
     [Route(ApiRoutes.RealEstateEndpoint)]
     [ApiController]
+    [Authorize]
     public class RealEstateController(IRealEstateService _realEstateService,
         IValidator<CreateRealEstateDto> _createRealEstateValidator,
         IValidator<UpdateRealEstateDto> _updateRealEstateValidator) 
         : ControllerBase
     {
         [HttpGet]
+        [AllowAnonymous]
         public async Task<PagedEntityDto<RealEstateDto>> GetAll([FromQuery] RealEstateFilterParameters filters, [FromQuery] SortingParameters sorting, CancellationToken ct)
         {
             var realEstateModels = await _realEstateService.GetAllWithRequestParameters(filters, sorting, ct);
@@ -28,6 +31,7 @@ namespace RealEstate.Presentation.Controllers
         }
 
         [HttpGet("{id:guid}")]
+        [AllowAnonymous]
         public async Task<RealEstateDto> GetById(Guid id, CancellationToken ct)
         {
             var realEstateModel = await _realEstateService.GetByIdAsync(id, ct);

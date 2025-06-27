@@ -26,7 +26,8 @@ namespace RealEstate.API.IntegrationTests.TestHelpers
                         FirstName = "Author",
                         LastName = "Author",
                         Phone = "+375251234567",
-                        Email = "author@gmail.com"
+                        Email = "author@gmail.com",
+                        Auth0Id = "Auth0|Test1"
                     },
                     Recipient = new UserEntity
                     {
@@ -34,7 +35,8 @@ namespace RealEstate.API.IntegrationTests.TestHelpers
                         FirstName = "Recipient",
                         LastName = "Recipient",
                         Phone = "+375251234568",
-                        Email = "recipient@gmail.com"
+                        Email = "recipient@gmail.com",
+                        Auth0Id = "Auth0|Test2"
                     }
                 },
                 new ReviewEntity

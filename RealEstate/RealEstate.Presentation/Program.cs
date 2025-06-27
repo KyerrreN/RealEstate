@@ -1,9 +1,11 @@
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
 using RealEstate.BLL.DI;
 using RealEstate.Presentation.Mapping;
 using RealEstate.Presentation.Middleware;
+using RealEstate.Presentation.Options;
 using Serilog;
-using Serilog.Exceptions;
 
 namespace RealEstate.Presentation
 {
@@ -12,6 +14,8 @@ namespace RealEstate.Presentation
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var authSettings = builder.Configuration.GetRequiredOptions<AuthOptions>(AuthOptions.Position);
+            var swaggerSettings = builder.Configuration.GetRequiredOptions<SwaggerOptions>(SwaggerOptions.Position);
 
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
@@ -27,17 +31,76 @@ namespace RealEstate.Presentation
 
             builder.Services.RegisterBLL(builder.Configuration);
 
+            builder.Services.AddSwaggerGen(s =>
+            {
+                s.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = swaggerSettings.Title,
+                    Version = swaggerSettings.Version,
+                    Description = swaggerSettings.Description
+                });
+
+                s.AddSecurityDefinition(SwaggerOptions.Bearer, new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Place to add JWT with bearer",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = SwaggerOptions.Bearer
+                });
+
+                s.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = SwaggerOptions.Bearer
+                            },
+                            Name = SwaggerOptions.Bearer
+                        },
+                        []
+                    }
+                });
+            });
+
+            builder.Services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(opt =>
+            {
+                opt.Authority = authSettings.Domain;
+                opt.Audience = authSettings.Audience;
+            });
+
+            builder.Services.AddCors(opt =>
+            {
+                opt.AddDefaultPolicy(policy =>
+                {
+                    policy.WithOrigins("http://localhost:5173")
+                          .AllowAnyMethod()
+                          .AllowAnyHeader();
+                });
+            });
+
             var app = builder.Build();
 
             app.UseMiddleware<ExceptionMiddleware>();
 
             if (app.Environment.IsDevelopment())
             {
-                app.MapOpenApi();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();
 
+            app.UseCors();
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();

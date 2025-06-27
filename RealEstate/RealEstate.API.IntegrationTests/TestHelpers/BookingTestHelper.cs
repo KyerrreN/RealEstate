@@ -26,6 +26,7 @@ namespace RealEstate.API.IntegrationTests.TestHelpers
                         LastName = "test",
                         Email = "test@gmail.com",
                         Phone = "+375251234567",
+                        Auth0Id = "auth0|test1",
                     },
                     RealEstateId = realEstateId,
                     RealEstate = new RealEstateEntity
@@ -46,6 +47,7 @@ namespace RealEstate.API.IntegrationTests.TestHelpers
                             LastName = "test",
                             Email = "test@gmail.com",
                             Phone = "+375251234567",
+                            Auth0Id = "auth0|test2",
                         }
                     }
                 },

@@ -27,6 +27,7 @@ namespace RealEstate.API.IntegrationTests.TestHelpers
                         Email = "a@gmail.com",
                         FirstName = "test",
                         LastName = "test",
+                        Auth0Id = "Auth0|Test"
                     }
                 },
                 new HistoryEntity

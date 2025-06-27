@@ -29,8 +29,12 @@ namespace RealEstate.Presentation.Validators.User
                 .WithMessage(ValidatorConstants.MaximumLength);
 
             RuleFor(x => x.Phone)
-                .Matches(@"^\+375(15|16|17|21|22|23|25|29|33|44)\d{7}$")
-                .WithMessage(ValidatorConstants.PhoneNumber);
+                .NotEmpty()
+                .WithMessage(ValidatorConstants.NotEmpty);
+
+            RuleFor(x => x.Auth0Id)
+                .NotEmpty()
+                .WithMessage(ValidatorConstants.NotEmpty);
         }
     }
 }

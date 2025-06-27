@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RealEstate.DAL.Repositories;
 using MassTransit;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Authentication;
 
 namespace RealEstate.API.IntegrationTests
 {
@@ -14,6 +14,15 @@ namespace RealEstate.API.IntegrationTests
         {
             builder.ConfigureServices(services =>
             {
+                services.AddAuthentication("TestScheme")
+                    .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("TestScheme", options => { });
+
+                services.PostConfigure<AuthenticationOptions>(options =>
+                {
+                    options.DefaultAuthenticateScheme = "TestScheme";
+                    options.DefaultChallengeScheme = "TestScheme";
+                });
+
                 ConfigureInMemoryDatabase(services);
                 ConfigureRabbitMQConnection(services);
 

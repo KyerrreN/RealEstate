@@ -5,5 +5,6 @@ namespace RealEstate.BLL.Interfaces
 {
     public interface IUserService : IGenericService<UserEntity, UserModel>
     {
+        Task<UserModel> GetByAuth0IdAsync(string auth0Id, CancellationToken ct);
     }
 }

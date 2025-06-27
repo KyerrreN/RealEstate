@@ -18,7 +18,8 @@ namespace RealEstate.API.IntegrationTests.TestHelpers
                     FirstName = "Misha",
                     LastName = "Iz-za-ugla",
                     Email = "mishanya@gmail.com",
-                    Phone = "+1234567890"
+                    Phone = "+1234567890",
+                    Auth0Id = "Auth0|Test1"
                 },
                 new UserEntity
                 {
@@ -26,7 +27,8 @@ namespace RealEstate.API.IntegrationTests.TestHelpers
                     FirstName = "Vasya",
                     LastName = "Kosar'",
                     Email = "vasek228@gmail.com",
-                    Phone = "+1234567891"
+                    Phone = "+1234567891",
+                    Auth0Id = "Auth0|Test2"
                 },
                 new UserEntity
                 {
@@ -34,7 +36,8 @@ namespace RealEstate.API.IntegrationTests.TestHelpers
                     FirstName = "Anton",
                     LastName = "Samosval",
                     Email = "samosvalepta@gmail.com",
-                    Phone = "+1234567892"
+                    Phone = "+1234567892",
+                    Auth0Id = "Auth0|Test3"
                 },
             ];
         }
@@ -46,7 +49,8 @@ namespace RealEstate.API.IntegrationTests.TestHelpers
                 FirstName = "Pisya",
                 LastName = "Popa",
                 Email = "kakapopa@gmail.com",
-                Phone = "+375251234567"
+                Phone = "+375251234567",
+                Auth0Id = "Auth0|Test4"
             };
         }
 
