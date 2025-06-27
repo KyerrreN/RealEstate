@@ -33,6 +33,7 @@ namespace RealEstate.Presentation.Controllers
             return userDto;
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<UserDto> CreateUser([FromBody] CreateUserDto userForCreationDto, CancellationToken ct)
         {

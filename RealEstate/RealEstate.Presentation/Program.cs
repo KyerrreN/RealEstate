@@ -63,7 +63,7 @@ namespace RealEstate.Presentation
                             },
                             Name = "Bearer"
                         },
-                        new List<string>()
+                        []
                     }
                 });
             });
