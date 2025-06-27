@@ -82,7 +82,7 @@ namespace RealEstate.Presentation
             {
                 opt.AddDefaultPolicy(policy =>
                 {
-                    policy.AllowAnyOrigin()
+                    policy.WithOrigins("http://localhost:5173")
                           .AllowAnyMethod()
                           .AllowAnyHeader();
                 });
