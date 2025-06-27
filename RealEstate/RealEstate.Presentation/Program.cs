@@ -14,10 +14,8 @@ namespace RealEstate.Presentation
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            var authSettings = builder.Configuration
-                .GetSection(AuthOptions.Position)
-                .Get<AuthOptions>()
-                ?? throw new NullReferenceException($"Failed to bind {nameof(AuthOptions)}, chech for missing required properties");
+            var authSettings = builder.Configuration.GetRequiredOptions<AuthOptions>(AuthOptions.Position);
+            var swaggerSettings = builder.Configuration.GetRequiredOptions<SwaggerOptions>(SwaggerOptions.Position);
 
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
@@ -37,18 +35,18 @@ namespace RealEstate.Presentation
             {
                 s.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "Real Estate API",
-                    Version = "v1",
-                    Description = "API for managing real estate bookings, users, and reviews."
+                    Title = swaggerSettings.Title,
+                    Version = swaggerSettings.Version,
+                    Description = swaggerSettings.Description
                 });
 
-                s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                s.AddSecurityDefinition(SwaggerOptions.Bearer, new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
                     Description = "Place to add JWT with bearer",
                     Name = "Authorization",
                     Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer"
+                    Scheme = SwaggerOptions.Bearer
                 });
 
                 s.AddSecurityRequirement(new OpenApiSecurityRequirement()
@@ -59,9 +57,9 @@ namespace RealEstate.Presentation
                             Reference = new OpenApiReference
                             {
                                 Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
+                                Id = SwaggerOptions.Bearer
                             },
-                            Name = "Bearer"
+                            Name = SwaggerOptions.Bearer
                         },
                         []
                     }

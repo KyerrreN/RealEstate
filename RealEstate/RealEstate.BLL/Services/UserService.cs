@@ -11,10 +11,12 @@ using RealEstate.Domain.Exceptions;
 namespace RealEstate.BLL.Services
 {
     public class UserService(
-        IBaseRepository<UserEntity> _repository,
+        IBaseRepository<UserEntity> repositoryForBase,
         IPublishEndpoint publishEndpoint) 
-        : GenericService<UserEntity, UserModel>(_repository), IUserService
+        : GenericService<UserEntity, UserModel>(repositoryForBase), IUserService
     {
+        private readonly IBaseRepository<UserEntity> repository = repositoryForBase;
+
         public override async Task<UserModel> CreateAsync(UserModel model, CancellationToken ct)
         {
             var createdUser = await base.CreateAsync(model, ct);
@@ -31,7 +33,7 @@ namespace RealEstate.BLL.Services
 
         public async Task<UserModel> GetByAuth0IdAsync(string auth0Id, CancellationToken ct)
         {
-            var userEntity = await _repository.FindOneByConditionAsync(u => u.Auth0Id == auth0Id, ct)
+            var userEntity = await repository.FindOneByConditionAsync(u => u.Auth0Id == auth0Id, ct)
                 ?? throw new NotFoundException(auth0Id);
 
             var userModel = userEntity.Adapt<UserModel>();
