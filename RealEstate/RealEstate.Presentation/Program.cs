@@ -1,11 +1,11 @@
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
 using RealEstate.BLL.DI;
 using RealEstate.Presentation.Mapping;
 using RealEstate.Presentation.Middleware;
-using Serilog;
-using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using RealEstate.Presentation.Options;
+using Serilog;
 
 namespace RealEstate.Presentation
 {
@@ -16,7 +16,7 @@ namespace RealEstate.Presentation
             var builder = WebApplication.CreateBuilder(args);
             var authSettings = builder.Configuration
                 .GetSection(AuthOptions.Position)
-                .Get<AuthOptions>() 
+                .Get<AuthOptions>()
                 ?? throw new NullReferenceException($"Failed to bind {nameof(AuthOptions)}, chech for missing required properties");
 
             builder.Services.AddControllers();
@@ -78,6 +78,16 @@ namespace RealEstate.Presentation
                 opt.Audience = authSettings.Audience;
             });
 
+            builder.Services.AddCors(opt =>
+            {
+                opt.AddDefaultPolicy(policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader();
+                });
+            });
+
             var app = builder.Build();
 
             app.UseMiddleware<ExceptionMiddleware>();
@@ -89,6 +99,8 @@ namespace RealEstate.Presentation
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors();
 
             app.UseAuthentication();
             app.UseAuthorization();
