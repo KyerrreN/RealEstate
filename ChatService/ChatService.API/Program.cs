@@ -1,4 +1,6 @@
 
+using ChatService.BLL.DI;
+
 namespace ChatService.API
 {
     public class Program
@@ -6,6 +8,8 @@ namespace ChatService.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.RegisterBLL(builder.Configuration);
 
             builder.Services.AddAuthorization();
 
