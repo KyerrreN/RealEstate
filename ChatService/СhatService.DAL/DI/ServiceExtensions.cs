@@ -12,6 +12,9 @@ namespace СhatService.DAL.DI
     {
         public static async Task RegisterDAL(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<MongoConfiguration>(
+                configuration.GetRequiredSection(MongoConfiguration.Position));
+
             var mongoSettings = configuration
                 .GetRequiredSection(MongoConfiguration.Position)
                 .Get<MongoConfiguration>()

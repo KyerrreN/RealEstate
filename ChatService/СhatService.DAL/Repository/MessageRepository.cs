@@ -1,4 +1,5 @@
 ﻿using ChatService.Domain.Models;
+using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using СhatService.DAL.Configuration;
@@ -7,13 +8,15 @@ using СhatService.DAL.Interface;
 
 namespace СhatService.DAL.Repository
 {
-    public class MessageRepository(IMongoDatabase db, MongoConfiguration config) : IMessageRepository
+    public class MessageRepository(IMongoDatabase db, IOptions<MongoConfiguration> config) : IMessageRepository
     {
-        private readonly IMongoCollection<Message> _collection = db.GetCollection<Message>(config.Collection);
+        private readonly IMongoCollection<Message> _collection = db.GetCollection<Message>(config.Value.Collection);
 
-        public async Task AddAsync(Message message, CancellationToken ct)
+        public async Task<Message> AddAsync(Message message, CancellationToken ct)
         {
             await _collection.InsertOneAsync(message, new(), ct);
+
+            return message;
         }
 
         public async Task<IEnumerable<Message>> GetAllAsync(Guid realEstateId, string userId, CancellationToken ct)
@@ -21,8 +24,9 @@ namespace СhatService.DAL.Repository
             var filter = Builders<Message>.Filter.And(
                 Builders<Message>.Filter.Eq(m => m.RealEstateId, realEstateId),
                 Builders<Message>.Filter.Or(
-                    Builders<Message>.Filter.Eq(m => m.SenderId, userId)),
+                    Builders<Message>.Filter.Eq(m => m.SenderId, userId),
                     Builders<Message>.Filter.Eq(m => m.RecieverId, userId)
+                )
             );
 
             var sort = Builders<Message>.Sort.Ascending(m => m.SentAt);

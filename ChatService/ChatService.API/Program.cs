@@ -24,6 +24,8 @@ namespace ChatService.API
 
             app.UseAuthorization();
 
+            app.MapMessageEndpoints();
+
             app.Run();
         }
     }
