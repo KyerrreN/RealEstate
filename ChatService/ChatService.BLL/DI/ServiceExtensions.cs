@@ -6,9 +6,9 @@ namespace ChatService.BLL.DI
 {
     public static class ServiceExtensions
     {
-        public static void RegisterBLL(this IServiceCollection services, IConfiguration configuration)
+        public static async Task RegisterBLL(this IServiceCollection services, IConfiguration configuration)
         {
-            services.RegisterDAL(configuration);
+            await services.RegisterDAL(configuration);
         }
     }
 }

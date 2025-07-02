@@ -8,7 +8,7 @@ namespace СhatService.DAL.DI
 {
     public static class ServiceExtensions
     {
-        public static void RegisterDAL(this IServiceCollection services, IConfiguration configuration)
+        public static async Task RegisterDAL(this IServiceCollection services, IConfiguration configuration)
         {
             var mongoSettings = configuration
                 .GetRequiredSection(MongoConfiguration.Position)
@@ -21,7 +21,7 @@ namespace СhatService.DAL.DI
 
             services.AddSingleton<IMongoDatabase>(database);
 
-            InitializeMongo(database, mongoSettings).Wait();
+            await InitializeMongo(database, mongoSettings);
         }
 
         private static async Task InitializeMongo(IMongoDatabase db, MongoConfiguration mongoSettings)
