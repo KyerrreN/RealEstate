@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using СhatService.DAL.Configuration;
 using СhatService.DAL.Documents;
+using СhatService.DAL.Interface;
+using СhatService.DAL.Repository;
 
 namespace СhatService.DAL.DI
 {
@@ -20,6 +22,7 @@ namespace СhatService.DAL.DI
             var database = mongoClient.GetDatabase(mongoUrl.DatabaseName);
 
             services.AddSingleton<IMongoDatabase>(database);
+            services.AddScoped<IMessageRepository, MessageRepository>();
 
             await InitializeMongo(database, mongoSettings);
         }
