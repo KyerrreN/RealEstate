@@ -1,4 +1,5 @@
-﻿using ChatService.BLL.Interface;
+﻿using ChatService.API.Constants;
+using ChatService.BLL.Interface;
 using ChatService.BLL.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +9,7 @@ namespace ChatService.API
     {
         public static void MapMessageEndpoints(this IEndpointRouteBuilder app)
         {
-            app.MapPost("api/messages", async (
+            app.MapPost(ApiConstants.RouteSaveMessage, async (
                 [FromBody] CreateMessageModel model,
                 IMessageService service,
                 CancellationToken ct) =>
@@ -16,9 +17,9 @@ namespace ChatService.API
                 var result = await service.AddMessageAsync(model, ct);
 
                 return Results.Ok(result);
-            });
+            }).RequireAuthorization();
 
-            app.MapGet("api/messages/{userId}/realestate/{realEstateId:guid}", async (
+            app.MapGet(ApiConstants.RouteGetMessages, async (
                 IMessageService service,
                 string userId,
                 Guid realEstateId,
@@ -27,9 +28,9 @@ namespace ChatService.API
                 var result = await service.GetAllAsync(realEstateId, userId, ct);
 
                 return Results.Ok(result);
-            });
+            }).RequireAuthorization();
 
-            app.MapGet("api/dialogs/{userId}", async (
+            app.MapGet(ApiConstants.RouteGetUserDialogs, async (
                 IMessageService service,
                 string userId,
                 CancellationToken ct) =>
@@ -37,7 +38,7 @@ namespace ChatService.API
                 var result = await service.GetUserDialogsAsync(userId, ct);
 
                 return Results.Ok(result);
-            });
+            }).RequireAuthorization();
         }
     }
 }

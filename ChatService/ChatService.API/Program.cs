@@ -1,4 +1,6 @@
 using ChatService.BLL.DI;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ChatService.API
 {
@@ -10,6 +12,20 @@ namespace ChatService.API
 
             await builder.Services.RegisterBLL(builder.Configuration);
 
+            // TEMP, will be replaced with Auth0
+            builder.Services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", opt =>
+                {
+                    opt.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = false,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes("super_secret_key_123"))
+                    };
+                });
             builder.Services.AddAuthorization();
 
             var app = builder.Build();
@@ -22,6 +38,13 @@ namespace ChatService.API
 
             app.UseHttpsRedirection();
 
+            app.UseCors(opt =>
+            {
+                opt.WithOrigins("http://localhost:5173")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+            app.UseAuthentication();    
             app.UseAuthorization();
 
             app.MapMessageEndpoints();
