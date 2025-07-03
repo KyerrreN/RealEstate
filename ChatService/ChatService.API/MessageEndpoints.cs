@@ -20,7 +20,6 @@ namespace ChatService.API
                 CancellationToken ct) =>
             {
                 var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
-                Console.WriteLine(userId);
 
                 if (string.IsNullOrEmpty(userId))
                 {
@@ -36,10 +35,17 @@ namespace ChatService.API
 
             app.MapGet(ApiConstants.RouteGetMessages, async (
                 IMessageService service,
-                string userId,
+                HttpContext context,
                 Guid realEstateId,
                 CancellationToken ct) =>
             {
+                var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Results.Unauthorized();
+                }
+
                 var result = await service.GetAllAsync(realEstateId, userId, ct);
 
                 return Results.Ok(result);
@@ -47,9 +53,16 @@ namespace ChatService.API
 
             app.MapGet(ApiConstants.RouteGetUserDialogs, async (
                 IMessageService service,
-                string userId,
+                HttpContext context,
                 CancellationToken ct) =>
             {
+                var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Results.Unauthorized();
+                }
+
                 var result = await service.GetUserDialogsAsync(userId, ct);
 
                 return Results.Ok(result);
