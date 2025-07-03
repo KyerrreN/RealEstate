@@ -1,11 +1,10 @@
 ﻿using ChatService.API.Constants;
 using ChatService.API.DTO;
+using ChatService.API.Filters;
 using ChatService.BLL.Interface;
 using ChatService.BLL.Models;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
-using System.Security.Claims;
 
 namespace ChatService.API
 {
@@ -19,19 +18,14 @@ namespace ChatService.API
                 IMessageService service,
                 CancellationToken ct) =>
             {
-                var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                if (string.IsNullOrEmpty(userId))
-                {
-                    return Results.Unauthorized();
-                }
-
                 var model = dto.Adapt<CreateMessageModel>(); 
                 
-                var result = await service.AddMessageAsync(model, userId, ct);
+                var result = await service.AddMessageAsync(model, context.Items["UserId"] as string, ct);
 
                 return Results.Ok(result);
-            }).RequireAuthorization();
+            })
+                .AddEndpointFilter<RequireUserIdFilter>()
+                .RequireAuthorization();
 
             app.MapGet(ApiConstants.RouteGetMessages, async (
                 IMessageService service,
@@ -39,34 +33,24 @@ namespace ChatService.API
                 Guid realEstateId,
                 CancellationToken ct) =>
             {
-                var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                if (string.IsNullOrEmpty(userId))
-                {
-                    return Results.Unauthorized();
-                }
-
-                var result = await service.GetAllAsync(realEstateId, userId, ct);
+                var result = await service.GetAllAsync(realEstateId, context.Items["UserId"]! as string, ct);
 
                 return Results.Ok(result);
-            }).RequireAuthorization();
+            })
+                .AddEndpointFilter<RequireUserIdFilter>()
+                .RequireAuthorization();
 
             app.MapGet(ApiConstants.RouteGetUserDialogs, async (
                 IMessageService service,
                 HttpContext context,
                 CancellationToken ct) =>
             {
-                var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                if (string.IsNullOrEmpty(userId))
-                {
-                    return Results.Unauthorized();
-                }
-
-                var result = await service.GetUserDialogsAsync(userId, ct);
+                var result = await service.GetUserDialogsAsync(context.Items["UserId"] as string, ct);
 
                 return Results.Ok(result);
-            }).RequireAuthorization();
+            })
+                .AddEndpointFilter<RequireUserIdFilter>()
+                .RequireAuthorization();
         }
     }
 }
