@@ -1,7 +1,11 @@
 ﻿using ChatService.API.Constants;
+using ChatService.API.DTO;
 using ChatService.BLL.Interface;
 using ChatService.BLL.Models;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
+using System.Security.Claims;
 
 namespace ChatService.API
 {
@@ -10,11 +14,22 @@ namespace ChatService.API
         public static void MapMessageEndpoints(this IEndpointRouteBuilder app)
         {
             app.MapPost(ApiConstants.RouteSaveMessage, async (
-                [FromBody] CreateMessageModel model,
+                [FromBody] CreateMessageDto dto,
+                HttpContext context,
                 IMessageService service,
                 CancellationToken ct) =>
             {
-                var result = await service.AddMessageAsync(model, ct);
+                var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                Console.WriteLine(userId);
+
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Results.Unauthorized();
+                }
+
+                var model = dto.Adapt<CreateMessageModel>(); 
+                
+                var result = await service.AddMessageAsync(model, userId, ct);
 
                 return Results.Ok(result);
             }).RequireAuthorization();

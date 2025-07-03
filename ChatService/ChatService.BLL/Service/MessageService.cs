@@ -9,9 +9,10 @@ namespace ChatService.BLL.Service
 {
     public class MessageService(IMessageRepository repository) : IMessageService
     {
-        public async Task<MessageModel> AddMessageAsync(CreateMessageModel model, CancellationToken ct)
+        public async Task<MessageModel> AddMessageAsync(CreateMessageModel model, string userId, CancellationToken ct)
         {
             var message = model.Adapt<Message>();
+            message.SenderId = userId;
             message.SentAt = DateTime.UtcNow;
 
             var result = await repository.AddAsync(message, ct);

@@ -23,10 +23,12 @@ namespace ChatService.API
                         ValidateLifetime = false,
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes("super_secret_key_123"))
+                            Encoding.UTF8.GetBytes("super_secret_key_123_123212313213"))
                     };
                 });
             builder.Services.AddAuthorization();
+
+            builder.Services.AddCors();
 
             var app = builder.Build();
 
