@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using СhatService.DAL.Configuration;
 using СhatService.DAL.Documents;
+using СhatService.DAL.Interface;
+using СhatService.DAL.Repository;
 
 namespace СhatService.DAL.DI
 {
@@ -10,6 +12,9 @@ namespace СhatService.DAL.DI
     {
         public static async Task RegisterDAL(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<MongoConfiguration>(
+                configuration.GetRequiredSection(MongoConfiguration.Position));
+
             var mongoSettings = configuration
                 .GetRequiredSection(MongoConfiguration.Position)
                 .Get<MongoConfiguration>()
@@ -20,6 +25,7 @@ namespace СhatService.DAL.DI
             var database = mongoClient.GetDatabase(mongoUrl.DatabaseName);
 
             services.AddSingleton<IMongoDatabase>(database);
+            services.AddScoped<IMessageRepository, MessageRepository>();
 
             await InitializeMongo(database, mongoSettings);
         }
