@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealEstate.BLLTests", "Real
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealEstate.API.IntegrationTests", "RealEstate.API.IntegrationTests\RealEstate.API.IntegrationTests.csproj", "{B9375805-25EA-4876-A0B0-A78FAAA68F0D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealEstate.Proto", "RealEstate.Proto\RealEstate.Proto.csproj", "{7CF23832-834C-425E-B185-90CD881ABD08}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{B9375805-25EA-4876-A0B0-A78FAAA68F0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9375805-25EA-4876-A0B0-A78FAAA68F0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9375805-25EA-4876-A0B0-A78FAAA68F0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CF23832-834C-425E-B185-90CD881ABD08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CF23832-834C-425E-B185-90CD881ABD08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CF23832-834C-425E-B185-90CD881ABD08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CF23832-834C-425E-B185-90CD881ABD08}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

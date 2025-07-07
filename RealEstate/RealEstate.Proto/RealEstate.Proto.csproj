@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>RealEstate Proto</Title>
+	  <Authors>KyerrreN</Authors>
+    <Description>Proto file to share across gRPC client and server </Description>
+	  <Version>1.0.3</Version>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<Content Include="Protos\real_estate.proto" Pack="true" Visible="true"/>
+	</ItemGroup>
+
+</Project>
