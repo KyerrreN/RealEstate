@@ -32,7 +32,9 @@ namespace RealEstate.BLL.Grpc.Interceptors
                 stopwatch.Stop();
                 logger.LogError(ex, "gRPC request failed: {Method} | Duration: {Elapsed}ms",
                     method, stopwatch.ElapsedMilliseconds);
-                throw;
+
+                throw new RpcException(new Status(StatusCode.Internal,
+                    $"Internal error while calling {method}"), ex.Message);
             }
         }
     }
