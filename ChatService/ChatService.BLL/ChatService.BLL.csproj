@@ -7,11 +7,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.31.1" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.71.0" />
+    <PackageReference Include="Grpc.Net.ClientFactory" Version="2.71.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.72.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Mapster" Version="7.4.0" />
+    <PackageReference Include="RealEstate.Proto" Version="1.0.3" GeneratePathProperty="true" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\СhatService.DAL\СhatService.DAL.csproj" />
   </ItemGroup>
+
+	<ItemGroup>
+		<Protobuf Include="$(PkgRealEstate_Proto)\content\Protos\real_estate.proto" GrpcServices="Client" />
+	</ItemGroup>
 
 </Project>
