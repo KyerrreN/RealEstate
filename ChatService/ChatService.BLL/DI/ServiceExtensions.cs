@@ -14,12 +14,15 @@ namespace ChatService.BLL.DI
         {
             await services.RegisterDAL(configuration);
 
-            services.AddScoped<IMessageService, MessageService>();
+            const string grpcAddressKey = "gRPC:Address";
+            var grpcAdress = configuration[grpcAddressKey]
+                ?? throw new InvalidOperationException($"Couldn't find gRPC address in {grpcAddressKey}");
 
+            services.AddScoped<IMessageService, MessageService>();
 
             services.AddGrpcClient<RealEstateService.RealEstateServiceClient>(opt =>
             {
-                opt.Address = new Uri("https://localhost:7283");
+                opt.Address = new Uri(grpcAdress);
             });
             services.AddScoped<RealEstateGrpcClient>();
         }
