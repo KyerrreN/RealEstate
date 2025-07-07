@@ -2,6 +2,8 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using RealEstate.BLL.DI;
+using RealEstate.BLL.Grpc.Interceptors;
+using RealEstate.BLL.Grpc.Services;
 using RealEstate.Presentation.Mapping;
 using RealEstate.Presentation.Middleware;
 using RealEstate.Presentation.Options;
@@ -86,6 +88,11 @@ namespace RealEstate.Presentation
                 });
             });
 
+            builder.Services.AddGrpc(opt =>
+            {
+                opt.Interceptors.Add<GrpcLoggingInterceptor>();
+            });
+
             var app = builder.Build();
 
             app.UseMiddleware<ExceptionMiddleware>();
@@ -104,6 +111,7 @@ namespace RealEstate.Presentation
             app.UseAuthorization();
 
             app.MapControllers();
+            app.MapGrpcService<RealEstateGrpcService>();
 
             app.Run();
         }

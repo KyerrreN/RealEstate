@@ -8,5 +8,6 @@ namespace RealEstate.DAL.Interfaces
     {
         Task<RealEstateEntity?> FindByIdWithUserAsync(Guid id, CancellationToken ct);
         Task<PagedEntityModel<RealEstateEntity>> GetAllWithRequestParameters(RealEstateFilterParameters filters, SortingParameters sorting, CancellationToken ct);
+        Task<List<RealEstateEntity>> GetByIdsAsync(Guid[] ids, CancellationToken ct);
     }
 }
