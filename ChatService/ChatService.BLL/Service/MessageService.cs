@@ -35,9 +35,8 @@ namespace ChatService.BLL.Service
         public async Task<IEnumerable<DialogPreviewModel>> GetUserDialogsAsync(string userId, CancellationToken ct)
         {
             var dialogs = await repository.GetUserDialogsAsync(userId, ct);
-            var dialogList = dialogs.ToList();
 
-            var realEstateIds = dialogList
+            var realEstateIds = dialogs
                 .Select(d => d.RealEstateId.ToString())
                 .Distinct()
                 .ToList();
@@ -52,7 +51,7 @@ namespace ChatService.BLL.Service
                     Price = re.Price,
                 });
 
-            var dialogsModel = dialogList
+            var dialogsModel = dialogs
                 .Select(dialog =>
                 {
                     var model = dialog.Adapt<DialogPreviewModel>();
