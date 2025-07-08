@@ -6,5 +6,7 @@
         public required string InterlocutorId { get; set; }
         public required string LastMessage { get; set; }
         public DateTime LastMessageTime { get; set; }
+
+        public RealEstateModel? RealEstate { get; set; }
     }
 }

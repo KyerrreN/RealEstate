@@ -1,4 +1,5 @@
-﻿using ChatService.BLL.Interface;
+﻿using ChatService.BLL.Grpc;
+using ChatService.BLL.Interface;
 using ChatService.BLL.Models;
 using ChatService.Domain.Models;
 using Mapster;
@@ -7,7 +8,9 @@ using СhatService.DAL.Interface;
 
 namespace ChatService.BLL.Service
 {
-    public class MessageService(IMessageRepository repository) : IMessageService
+    public class MessageService(
+        IMessageRepository repository,
+        RealEstateGrpcClient grpcClient) : IMessageService
     {
         public async Task<MessageModel> AddMessageAsync(CreateMessageModel model, string userId, CancellationToken ct)
         {
@@ -33,7 +36,33 @@ namespace ChatService.BLL.Service
         {
             var dialogs = await repository.GetUserDialogsAsync(userId, ct);
 
-            var dialogsModel = dialogs.Adapt<IEnumerable<DialogPreviewModel>>();
+            var realEstateIds = dialogs
+                .Select(d => d.RealEstateId.ToString())
+                .Distinct()
+                .ToList();
+
+            var grpcRealEstates = await grpcClient.GetByIdsAsync(realEstateIds, ct);
+
+            var realEstateDict = grpcRealEstates.ToDictionary(
+                re => Guid.Parse(re.Id),
+                re => new RealEstateModel
+                {
+                    Title = re.Title,
+                    Price = re.Price,
+                });
+
+            var dialogsModel = dialogs
+                .Select(dialog =>
+                {
+                    var model = dialog.Adapt<DialogPreviewModel>();
+
+                    if (realEstateDict.TryGetValue(dialog.RealEstateId, out var realEstate))
+                    {
+                        model.RealEstate = realEstate;
+                    }
+
+                    return model;
+                });
 
             return dialogsModel.ToList();
         }

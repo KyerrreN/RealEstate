@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option csharp_namespace = "RealEstate.Grpc";
+
+package realestate;
+
+service RealEstateService {
+	rpc GetByIds (GetByIdsRequest) returns (GetByIdsResponse);
+}
+
+message GetByIdsRequest {
+	repeated string real_estate_ids = 1;
+}
+
+message RealEstateDto {
+	string id = 1;
+	string title = 2;
+	double price = 3;
+}
+
+message GetByIdsResponse {
+	repeated RealEstateDto real_estates = 1;
+}

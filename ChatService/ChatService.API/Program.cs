@@ -1,4 +1,5 @@
 using ChatService.BLL.DI;
+using ChatService.BLL.Grpc;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 

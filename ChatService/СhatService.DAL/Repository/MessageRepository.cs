@@ -37,7 +37,7 @@ namespace СhatService.DAL.Repository
                 .ToListAsync(ct);
         }
 
-        public async Task<IEnumerable<DialogPreviewModel>> GetUserDialogsAsync(string userId, CancellationToken ct)
+        public async Task<List<DialogPreviewModel>> GetUserDialogsAsync(string userId, CancellationToken ct)
         {
             var filter = Builders<Message>.Filter.Or(
                 Builders<Message>.Filter.Eq(m => m.SenderId, userId),

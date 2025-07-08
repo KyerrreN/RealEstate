@@ -7,16 +7,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.31.1" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.72.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Mapster" Version="7.4.0" />
     <PackageReference Include="Mapster.DependencyInjection" Version="1.0.1" />
     <PackageReference Include="MassTransit" Version="8.4.1" />
     <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.4.1" />
     <PackageReference Include="NotificationService.Contracts" Version="1.4.0" />
+    <PackageReference Include="RealEstate.Proto" Version="1.0.3" GeneratePathProperty="true" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\RealEstate.DAL\RealEstate.DAL.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<Protobuf Include="$(PkgRealEstate_Proto)\content\Protos\real_estate.proto" GrpcServices="Server" />
+	</ItemGroup>
 </Project>

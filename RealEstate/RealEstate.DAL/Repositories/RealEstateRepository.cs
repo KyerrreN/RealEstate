@@ -44,5 +44,12 @@ namespace RealEstate.DAL.Repositories
                 .Include(re => re.Owner)
                 .FirstOrDefaultAsync(re => re.Id == id, cancellationToken: ct);
         }
+
+        public async Task<List<RealEstateEntity>> GetByIdsAsync(Guid[] ids, CancellationToken ct)
+        {
+            return await Query
+                .Where(re => ids.Contains(re.Id))
+                .ToListAsync(ct);
+        }
     }
 }
