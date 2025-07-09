@@ -1,3 +1,4 @@
+using ChatService.API.Hubs;
 using ChatService.BLL.DI;
 using ChatService.BLL.Grpc;
 using Microsoft.IdentityModel.Tokens;
@@ -29,6 +30,8 @@ namespace ChatService.API
                 });
             builder.Services.AddAuthorization();
 
+            builder.Services.AddSignalR();
+
             builder.Services.AddCors();
 
             var app = builder.Build();
@@ -51,6 +54,7 @@ namespace ChatService.API
             app.UseAuthorization();
 
             app.MapMessageEndpoints();
+            app.MapHub<ChatHub>("/chathub");
 
             app.Run();
         }
