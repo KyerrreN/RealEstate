@@ -1,5 +1,6 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RealEstate.BLL.DI;
 using RealEstate.BLL.Grpc.Interceptors;
@@ -8,6 +9,7 @@ using RealEstate.Presentation.Mapping;
 using RealEstate.Presentation.Middleware;
 using RealEstate.Presentation.Options;
 using Serilog;
+using System.Security.Claims;
 
 namespace RealEstate.Presentation
 {
@@ -68,15 +70,13 @@ namespace RealEstate.Presentation
                 });
             });
 
-            builder.Services.AddAuthentication(opt =>
-            {
-                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(opt =>
-            {
-                opt.Authority = authSettings.Domain;
-                opt.Audience = authSettings.Audience;
-            });
+            builder.Services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(opt =>
+                {
+                    opt.Authority = "https://test-realestate.eu.auth0.com/";
+                    opt.Audience = "https://realestate.com/api";
+                });
 
             builder.Services.AddCors(opt =>
             {

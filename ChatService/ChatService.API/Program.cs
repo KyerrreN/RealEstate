@@ -1,6 +1,7 @@
 using ChatService.API.Hubs;
 using ChatService.BLL.DI;
 using ChatService.BLL.Grpc;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -15,19 +16,13 @@ namespace ChatService.API
             await builder.Services.RegisterBLL(builder.Configuration);
 
             // TEMP, will be replaced with Auth0
-            builder.Services.AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", opt =>
-                {
-                    opt.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                        ValidateLifetime = false,
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes("super_secret_key_123_123212313213"))
-                    };
-                });
+            builder.Services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(opt =>
+            {
+                opt.Authority = "https://test-realestate.eu.auth0.com/";
+                opt.Audience = "https://realestate.com/api";
+            });
             builder.Services.AddAuthorization();
 
             builder.Services.AddSignalR();
