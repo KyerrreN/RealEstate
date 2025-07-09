@@ -10,11 +10,14 @@ export default function DialogList({ dialogs }) {
         renderData = <p>You dont have any dialogs</p>;
     } else {
         renderData = dialogs.map((dialog) => {
+            console.log("RECIEVER ID: ", dialog.interlocutorId);
             return (
                 <ListItem key={dialog.realEstateId}>
                     <ListItemButton
                         onClick={() =>
-                            navigate(`/dialogs/${dialog.realEstateId}`)
+                            navigate(
+                                `/dialogs/${dialog.realEstateId}/${dialog.interlocutorId}`
+                            )
                         }
                     >
                         <ListItemText

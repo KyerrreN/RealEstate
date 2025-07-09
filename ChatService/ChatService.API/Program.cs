@@ -2,6 +2,7 @@ using ChatService.API.Hubs;
 using ChatService.BLL.DI;
 using ChatService.BLL.Grpc;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -22,6 +23,22 @@ namespace ChatService.API
             {
                 opt.Authority = "https://test-realestate.eu.auth0.com/";
                 opt.Audience = "https://realestate.com/api";
+
+                opt.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            (path.StartsWithSegments("/chathub")))
+                        { 
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
             });
             builder.Services.AddAuthorization();
 
@@ -43,7 +60,8 @@ namespace ChatService.API
             {
                 opt.WithOrigins("http://localhost:5173")
                     .AllowAnyHeader()
-                    .AllowAnyMethod();
+                    .AllowAnyMethod()
+                    .AllowCredentials();
             });
             app.UseAuthentication();    
             app.UseAuthorization();

@@ -12,7 +12,7 @@ function App() {
                     <Route path="/" element={<RealEstate />} />
                     <Route path="/dialogs" element={<DialogsPage />} />
                     <Route
-                        path="/dialogs/:realEstateId"
+                        path="/dialogs/:realEstateId/:recieverId"
                         element={<DialogViewPage />}
                     />
                 </Routes>
