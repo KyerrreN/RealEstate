@@ -25,7 +25,6 @@ export default function DialogsPage() {
                         audience: "https://realestate.com/api",
                     },
                 });
-                console.log("token: " + token);
 
                 const response = await axios.get(
                     "https://localhost:7055/api/dialogs",

@@ -44,8 +44,6 @@ export default function DialogViewPage() {
             },
         });
 
-        console.log("TOKEN: ", token);
-
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("https://localhost:7055/chathub", {
                 accessTokenFactory: () => token,
@@ -72,12 +70,6 @@ export default function DialogViewPage() {
     useEffect(() => {
         fetchMessages();
     }, [realEstateId, getAccessTokenSilently]);
-
-    // check messages, todelete
-    useEffect(() => {
-        console.log("MESSAGES");
-        console.log(messages);
-    }, [messages]);
 
     useEffect(() => {
         connectToHub();
