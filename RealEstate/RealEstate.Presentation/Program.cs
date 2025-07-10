@@ -1,6 +1,5 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RealEstate.BLL.DI;
 using RealEstate.BLL.Grpc.Interceptors;
@@ -9,7 +8,6 @@ using RealEstate.Presentation.Mapping;
 using RealEstate.Presentation.Middleware;
 using RealEstate.Presentation.Options;
 using Serilog;
-using System.Security.Claims;
 
 namespace RealEstate.Presentation
 {
@@ -20,6 +18,7 @@ namespace RealEstate.Presentation
             var builder = WebApplication.CreateBuilder(args);
             var authSettings = builder.Configuration.GetRequiredOptions<AuthOptions>(AuthOptions.Position);
             var swaggerSettings = builder.Configuration.GetRequiredOptions<SwaggerOptions>(SwaggerOptions.Position);
+            var corsSettings = builder.Configuration.GetRequiredOptions<CorsOptions>(CorsOptions.Position);
 
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
@@ -82,7 +81,7 @@ namespace RealEstate.Presentation
             {
                 opt.AddDefaultPolicy(policy =>
                 {
-                    policy.WithOrigins("http://localhost:5173")
+                    policy.WithOrigins(corsSettings.Origins)
                           .AllowAnyMethod()
                           .AllowAnyHeader();
                 });

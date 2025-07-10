@@ -16,6 +16,8 @@ namespace ChatService.API
 
             var authOptions = builder.Configuration.GetRequiredSection(AuthOptions.Position).Get<AuthOptions>()
                 ?? throw new InvalidOperationException($"Failed to bind {nameof(AuthOptions)} from position: {AuthOptions.Position}");
+            var corsOptions = builder.Configuration.GetRequiredSection(CorsOptions.Position).Get<CorsOptions>()
+                ?? throw new InvalidOperationException($"Failed to bind {nameof(CorsOptions)} from position: {CorsOptions.Position}");
 
             builder.Services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
