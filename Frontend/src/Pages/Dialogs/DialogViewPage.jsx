@@ -41,6 +41,15 @@ export default function DialogViewPage() {
         });
     };
 
+    const onReceiveMessage = (msg) => {
+        setMessages((prev) => {
+            if (prev.some((m) => m.id === msg.id)) {
+                return prev;
+            }
+            return [...prev, msg];
+        });
+    };
+
     const connectToHub = useCallback(async () => {
         const connection = new signalR.HubConnectionBuilder()
             .withUrl(URL_CHATHUB, {
@@ -48,15 +57,6 @@ export default function DialogViewPage() {
             })
             .withAutomaticReconnect()
             .build();
-
-        const onReceiveMessage = (msg) => {
-            setMessages((prev) => {
-                if (prev.some((m) => m.id === msg.id)) {
-                    return prev;
-                }
-                return [...prev, msg];
-            });
-        };
 
         connection.on("ReceiveMessage", onReceiveMessage);
 
