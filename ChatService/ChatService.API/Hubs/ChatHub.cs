@@ -30,7 +30,7 @@ namespace ChatService.API.Hubs
 
             var message = await service.AddMessageAsync(messageModel, userId, CancellationToken.None);
 
-            await Clients.Group(messageDto.RealEstateId.ToString()).SendAsync("RecieveMessage", message);
+            await Clients.Group(messageDto.RealEstateId.ToString()).SendAsync("ReceiveMessage", message);
         }
     }
 }

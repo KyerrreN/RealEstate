@@ -3,13 +3,29 @@ import Footer from "../../Components/Footer/Footer";
 import DialogList from "../../Components/Dialog/DialogList";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useCallback, useEffect, useState } from "react";
+import { getDialogs } from "../../api/axiosChatClient";
 
 export default function DialogsPage() {
     const { isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
     const navigate = useNavigate();
     const [dialogs, setDialogs] = useState([]);
+
+    const fetchDialogs = useCallback(async () => {
+        try {
+            const token = await getAccessTokenSilently({
+                authorizationParams: {
+                    audience: "https://realestate.com/api",
+                },
+            });
+
+            const data = await getDialogs(token);
+
+            setDialogs(data);
+        } catch (e) {
+            console.error("Failed to fetch dialogs: ", e);
+        }
+    }, [getAccessTokenSilently]);
 
     useEffect(() => {
         if (!isLoading && !isAuthenticated) {
@@ -18,33 +34,10 @@ export default function DialogsPage() {
     }, [isLoading, isAuthenticated, navigate]);
 
     useEffect(() => {
-        const fetchDialogs = async () => {
-            try {
-                const token = await getAccessTokenSilently({
-                    authorizationParams: {
-                        audience: "https://realestate.com/api",
-                    },
-                });
-
-                const response = await axios.get(
-                    "https://localhost:7055/api/dialogs",
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-
-                setDialogs(response.data);
-            } catch (e) {
-                console.error("Failed to fetch dialogs: ", e);
-            }
-        };
-
         if (isAuthenticated) {
             fetchDialogs();
         }
-    }, [isAuthenticated, getAccessTokenSilently]);
+    }, [isAuthenticated, fetchDialogs]);
 
     return (
         <>

@@ -9,7 +9,6 @@ export default function DialogList({ dialogs }) {
         renderData = <p>You dont have any dialogs</p>;
     } else {
         renderData = dialogs.map((dialog) => {
-            console.log("RECIEVER ID: ", dialog.interlocutorId);
             return (
                 <ListItem key={dialog.realEstateId}>
                     <ListItemButton
@@ -27,8 +26,6 @@ export default function DialogList({ dialogs }) {
                 </ListItem>
             );
         });
-
-        console.log(dialogs);
     }
 
     return (

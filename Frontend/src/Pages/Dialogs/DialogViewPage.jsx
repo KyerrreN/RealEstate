@@ -1,20 +1,20 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import Header from "../../Components/Header/Header";
 import Footer from "../../Components/Footer/Footer";
 import * as signalR from "@microsoft/signalr";
 import Message from "../../Components/Message/Message";
 import SendMessage from "../../Components/SendMessage/SendMessage";
+import { getMessagesFromDialog } from "../../api/axiosChatClient";
 
 export default function DialogViewPage() {
     const { realEstateId, recieverId } = useParams();
     const { getAccessTokenSilently } = useAuth0();
     const [messages, setMessages] = useState([]);
-    const connectionRef = useRef(null);
+    const [signalRConnection, setSignalRConnection] = useState(null);
 
-    const fetchMessages = async () => {
+    const fetchMessages = useCallback(async () => {
         try {
             const token = await getAccessTokenSilently({
                 authorizationParams: {
@@ -22,36 +22,29 @@ export default function DialogViewPage() {
                 },
             });
 
-            const response = await axios.get(
-                `https://localhost:7055/api/messages/realestate/${realEstateId}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            const data = await getMessagesFromDialog(token, realEstateId);
 
-            setMessages(response.data);
+            setMessages(data);
         } catch (e) {
             console.error("Failed to fetch messages: " + e);
         }
-    };
+    }, [getAccessTokenSilently, realEstateId]);
 
-    const connectToHub = async () => {
-        const token = await getAccessTokenSilently({
-            authorizationParams: {
-                audience: "https://realestate.com/api",
-            },
-        });
-
+    const connectToHub = useCallback(async () => {
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("https://localhost:7055/chathub", {
-                accessTokenFactory: () => token,
+                accessTokenFactory: async () => {
+                    return await getAccessTokenSilently({
+                        authorizationParams: {
+                            audience: "https://realestate.com/api",
+                        },
+                    });
+                },
             })
             .withAutomaticReconnect()
             .build();
 
-        connection.on("RecieveMessage", (msg) => {
+        connection.on("ReceiveMessage", (msg) => {
             setMessages((prev) => {
                 if (prev.some((m) => m.id === msg.id)) {
                     return prev;
@@ -63,10 +56,9 @@ export default function DialogViewPage() {
         await connection.start();
         await connection.invoke("JoinDialog", realEstateId);
 
-        connectionRef.current = connection;
-    };
+        setSignalRConnection(connection);
+    }, [getAccessTokenSilently, realEstateId]);
 
-    // load msgs
     useEffect(() => {
         fetchMessages();
     }, [realEstateId, getAccessTokenSilently]);
@@ -75,7 +67,7 @@ export default function DialogViewPage() {
         connectToHub();
 
         return () => {
-            connectionRef.current?.stop();
+            signalRConnection?.stop();
         };
     }, [realEstateId, getAccessTokenSilently]);
 
@@ -86,11 +78,11 @@ export default function DialogViewPage() {
                 <h2>Messages for Real Estate: {realEstateId}</h2>
                 <ul>
                     {messages.map((msg) => {
-                        return <Message message={msg} />;
+                        return <Message key={msg.id} message={msg} />;
                     })}
                 </ul>
                 <SendMessage
-                    connection={connectionRef.current}
+                    connection={signalRConnection}
                     realEstateId={realEstateId}
                     recieverId={recieverId}
                 />
