@@ -74,8 +74,8 @@ namespace RealEstate.Presentation
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(opt =>
                 {
-                    opt.Authority = "https://test-realestate.eu.auth0.com/";
-                    opt.Audience = "https://realestate.com/api";
+                    opt.Authority = authSettings.Domain;
+                    opt.Audience = authSettings.Audience;
                 });
 
             builder.Services.AddCors(opt =>

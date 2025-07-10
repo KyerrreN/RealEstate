@@ -1,5 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import Header from "../../Components/Header/Header";
 import Footer from "../../Components/Footer/Footer";
@@ -33,28 +33,32 @@ export default function DialogViewPage() {
         }
     }, [getAccessTokenSilently, realEstateId]);
 
+    const getAccessToken = async () => {
+        return await getAccessTokenSilently({
+            authorizationParams: {
+                audience: AUTH_AUDIENCE,
+            },
+        });
+    };
+
     const connectToHub = useCallback(async () => {
         const connection = new signalR.HubConnectionBuilder()
             .withUrl(URL_CHATHUB, {
-                accessTokenFactory: async () => {
-                    return await getAccessTokenSilently({
-                        authorizationParams: {
-                            audience: AUTH_AUDIENCE,
-                        },
-                    });
-                },
+                accessTokenFactory: getAccessToken,
             })
             .withAutomaticReconnect()
             .build();
 
-        connection.on("ReceiveMessage", (msg) => {
+        const onReceiveMessage = (msg) => {
             setMessages((prev) => {
                 if (prev.some((m) => m.id === msg.id)) {
                     return prev;
                 }
                 return [...prev, msg];
             });
-        });
+        };
+
+        connection.on("ReceiveMessage", onReceiveMessage);
 
         await connection.start();
         await connection.invoke("JoinDialog", realEstateId);
