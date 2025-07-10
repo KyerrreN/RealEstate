@@ -1,5 +1,4 @@
 import { List, ListItem, ListItemButton, ListItemText } from "@mui/material";
-import "./DialogList.css";
 import { useNavigate } from "react-router-dom";
 
 export default function DialogList({ dialogs }) {
