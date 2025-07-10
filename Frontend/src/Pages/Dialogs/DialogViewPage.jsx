@@ -14,11 +14,14 @@ export default function DialogViewPage() {
     const [messages, setMessages] = useState([]);
     const [signalRConnection, setSignalRConnection] = useState(null);
 
+    const AUTH_AUDIENCE = import.meta.env.VITE_AUTH_AUDIENCE;
+    const URL_CHATHUB = import.meta.env.VITE_URL_CHATHUB;
+
     const fetchMessages = useCallback(async () => {
         try {
             const token = await getAccessTokenSilently({
                 authorizationParams: {
-                    audience: "https://realestate.com/api",
+                    audience: AUTH_AUDIENCE,
                 },
             });
 
@@ -32,11 +35,11 @@ export default function DialogViewPage() {
 
     const connectToHub = useCallback(async () => {
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl("https://localhost:7055/chathub", {
+            .withUrl(URL_CHATHUB, {
                 accessTokenFactory: async () => {
                     return await getAccessTokenSilently({
                         authorizationParams: {
-                            audience: "https://realestate.com/api",
+                            audience: AUTH_AUDIENCE,
                         },
                     });
                 },

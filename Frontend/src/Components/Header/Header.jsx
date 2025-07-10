@@ -2,7 +2,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import "./Header.css";
 import Button from "@mui/material/Button";
 import { useEffect } from "react";
-import axios from "axios";
+import { saveUser } from "../../api/axiosRealEstateClient";
 
 export default function Header() {
     const { loginWithRedirect, logout, isAuthenticated, isLoading, user } =
@@ -20,13 +20,13 @@ export default function Header() {
                 const { firstName, lastName, phoneNumber } = user;
 
                 try {
-                    await axios.post("https://localhost:7283/api/users/", {
+                    await saveUser(
                         firstName,
                         lastName,
-                        phone: phoneNumber,
-                        email: user.email,
-                        auth0Id: user.sub,
-                    });
+                        phoneNumber,
+                        user.email,
+                        user.sub
+                    );
                 } catch (e) {
                     console.error(e);
                 }

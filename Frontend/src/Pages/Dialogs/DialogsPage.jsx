@@ -11,11 +11,13 @@ export default function DialogsPage() {
     const navigate = useNavigate();
     const [dialogs, setDialogs] = useState([]);
 
+    const AUTH_AUDIENCE = import.meta.env.VITE_AUTH_AUDIENCE;
+
     const fetchDialogs = useCallback(async () => {
         try {
             const token = await getAccessTokenSilently({
                 authorizationParams: {
-                    audience: "https://realestate.com/api",
+                    audience: AUTH_AUDIENCE,
                 },
             });
 
