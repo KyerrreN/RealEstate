@@ -1,10 +1,8 @@
+using ChatService.API.Constants;
 using ChatService.API.Hubs;
+using ChatService.API.Options;
 using ChatService.BLL.DI;
-using ChatService.BLL.Grpc;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 namespace ChatService.API
 {
@@ -16,30 +14,32 @@ namespace ChatService.API
 
             await builder.Services.RegisterBLL(builder.Configuration);
 
-            // TEMP, will be replaced with Auth0
+            var authOptions = builder.Configuration.GetRequiredSection(AuthOptions.Position).Get<AuthOptions>()
+                ?? throw new InvalidOperationException($"Failed to bind {nameof(AuthOptions)} from position: {AuthOptions.Position}");
+
             builder.Services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(opt =>
-            {
-                opt.Authority = "https://test-realestate.eu.auth0.com/";
-                opt.Audience = "https://realestate.com/api";
-
-                opt.Events = new JwtBearerEvents
                 {
-                    OnMessageReceived = context =>
-                    {
-                        var accessToken = context.Request.Query["access_token"];
+                    opt.Authority = authOptions.Domain;
+                    opt.Audience = authOptions.Audience;
 
-                        var path = context.HttpContext.Request.Path;
-                        if (!string.IsNullOrEmpty(accessToken) &&
-                            (path.StartsWithSegments("/chathub")))
-                        { 
-                            context.Token = accessToken;
+                    opt.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) &&
+                                (path.StartsWithSegments(ApiConstants.RouteHub)))
+                            {
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
                         }
-                        return Task.CompletedTask;
-                    }
-                };
-            });
+                    };
+                });
             builder.Services.AddAuthorization();
 
             builder.Services.AddSignalR();
@@ -63,11 +63,11 @@ namespace ChatService.API
                     .AllowAnyMethod()
                     .AllowCredentials();
             });
-            app.UseAuthentication();    
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapMessageEndpoints();
-            app.MapHub<ChatHub>("/chathub");
+            app.MapHub<ChatHub>(ApiConstants.RouteHub);
 
             app.Run();
         }

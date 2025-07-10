@@ -2,7 +2,7 @@
 
 namespace ChatService.API.Filters
 {
-    public class RequireUserIdFilter : IEndpointFilter
+    public class RequireAndSetUserIdFilter : IEndpointFilter
     {
         public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
         {

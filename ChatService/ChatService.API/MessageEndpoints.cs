@@ -24,7 +24,7 @@ namespace ChatService.API
 
                 return Results.Ok(result);
             })
-                .AddEndpointFilter<RequireUserIdFilter>()
+                .AddEndpointFilter<RequireAndSetUserIdFilter>()
                 .RequireAuthorization();
 
             app.MapGet(ApiConstants.RouteGetMessages, async (
@@ -37,7 +37,7 @@ namespace ChatService.API
 
                 return Results.Ok(result);
             })
-                .AddEndpointFilter<RequireUserIdFilter>()
+                .AddEndpointFilter<RequireAndSetUserIdFilter>()
                 .RequireAuthorization();
 
             app.MapGet(ApiConstants.RouteGetUserDialogs, async (
@@ -49,7 +49,7 @@ namespace ChatService.API
 
                 return Results.Ok(result);
             })
-                .AddEndpointFilter<RequireUserIdFilter>()
+                .AddEndpointFilter<RequireAndSetUserIdFilter>()
                 .RequireAuthorization();
         }
     }

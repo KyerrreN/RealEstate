@@ -9,5 +9,7 @@
         public const string RouteSaveMessage = Api + "messages";
         public const string RouteGetMessages = Api + "messages/realestate/{realEstateId:guid}";
         public const string RouteGetUserDialogs = Api + "dialogs";
+
+        public const string RouteHub = "/chathub";
     }
 }

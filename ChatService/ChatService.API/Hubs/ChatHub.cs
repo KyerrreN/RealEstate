@@ -8,6 +8,7 @@ using System.Security.Claims;
 
 namespace ChatService.API.Hubs
 {
+    [Authorize]
     public class ChatHub(IMessageService service) : Hub
     {
         public async Task JoinDialog(string dialogId)
@@ -15,11 +16,9 @@ namespace ChatService.API.Hubs
             await Groups.AddToGroupAsync(Context.ConnectionId, dialogId);
         }
 
-        [Authorize]
         public async Task SendMessage(CreateMessageDto messageDto)
         {
             var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            Console.WriteLine("USER ID: " + userId);
             if (string.IsNullOrEmpty(userId))
             {
                 throw new HubException("User is not authenticated.");
