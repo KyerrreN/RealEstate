@@ -5,7 +5,7 @@ VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatService.API", "ChatService.API\ChatService.API.csproj", "{FB6E49D1-8E51-4440-AFFE-BD17FD4DD4CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "СhatService.DAL", "СhatService.DAL\СhatService.DAL.csproj", "{079B7BF2-2C4A-4E78-ACC3-6502F49DB302}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatService.DAL", "ChatService.DAL\ChatService.DAL.csproj", "{079B7BF2-2C4A-4E78-ACC3-6502F49DB302}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatService.BLL", "ChatService.BLL\ChatService.BLL.csproj", "{4EDA7E44-3839-48CB-91D5-B774857B72EE}"
 EndProject
