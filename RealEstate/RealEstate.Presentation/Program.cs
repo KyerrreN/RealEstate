@@ -18,6 +18,7 @@ namespace RealEstate.Presentation
             var builder = WebApplication.CreateBuilder(args);
             var authSettings = builder.Configuration.GetRequiredOptions<AuthOptions>(AuthOptions.Position);
             var swaggerSettings = builder.Configuration.GetRequiredOptions<SwaggerOptions>(SwaggerOptions.Position);
+            var corsSettings = builder.Configuration.GetRequiredOptions<CorsOptions>(CorsOptions.Position);
 
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
@@ -68,21 +69,19 @@ namespace RealEstate.Presentation
                 });
             });
 
-            builder.Services.AddAuthentication(opt =>
-            {
-                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(opt =>
-            {
-                opt.Authority = authSettings.Domain;
-                opt.Audience = authSettings.Audience;
-            });
+            builder.Services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(opt =>
+                {
+                    opt.Authority = authSettings.Domain;
+                    opt.Audience = authSettings.Audience;
+                });
 
             builder.Services.AddCors(opt =>
             {
                 opt.AddDefaultPolicy(policy =>
                 {
-                    policy.WithOrigins("http://localhost:5173")
+                    policy.WithOrigins(corsSettings.Origins)
                           .AllowAnyMethod()
                           .AllowAnyHeader();
                 });

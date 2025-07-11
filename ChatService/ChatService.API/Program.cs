@@ -1,7 +1,8 @@
+using ChatService.API.Constants;
+using ChatService.API.Hubs;
+using ChatService.API.Options;
 using ChatService.BLL.DI;
-using ChatService.BLL.Grpc;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace ChatService.API
 {
@@ -13,21 +14,37 @@ namespace ChatService.API
 
             await builder.Services.RegisterBLL(builder.Configuration);
 
-            // TEMP, will be replaced with Auth0
-            builder.Services.AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", opt =>
+            var authOptions = builder.Configuration.GetRequiredSection(AuthOptions.Position).Get<AuthOptions>()
+                ?? throw new InvalidOperationException($"Failed to bind {nameof(AuthOptions)} from position: {AuthOptions.Position}");
+            var corsOptions = builder.Configuration.GetRequiredSection(CorsOptions.Position).Get<CorsOptions>()
+                ?? throw new InvalidOperationException($"Failed to bind {nameof(CorsOptions)} from position: {CorsOptions.Position}");
+
+            builder.Services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(opt =>
                 {
-                    opt.TokenValidationParameters = new TokenValidationParameters
+                    opt.Authority = authOptions.Domain;
+                    opt.Audience = authOptions.Audience;
+
+                    opt.Events = new JwtBearerEvents
                     {
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                        ValidateLifetime = false,
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes("super_secret_key_123_123212313213"))
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) &&
+                                (path.StartsWithSegments(ApiConstants.RouteHub)))
+                            {
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
                     };
                 });
             builder.Services.AddAuthorization();
+
+            builder.Services.AddSignalR();
 
             builder.Services.AddCors();
 
@@ -45,12 +62,14 @@ namespace ChatService.API
             {
                 opt.WithOrigins("http://localhost:5173")
                     .AllowAnyHeader()
-                    .AllowAnyMethod();
+                    .AllowAnyMethod()
+                    .AllowCredentials();
             });
-            app.UseAuthentication();    
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapMessageEndpoints();
+            app.MapHub<ChatHub>(ApiConstants.RouteHub);
 
             app.Run();
         }
