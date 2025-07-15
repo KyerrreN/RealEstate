@@ -35,15 +35,39 @@ services:
             - "8091:8081"
         environment:
             - PostgreSQL__ConnectionString=${MAIN_POSTGRESQL_STRING}
-            - MassTransit__Username=${MAIN_MASSTRANSIT_USERNAME}
-            - MassTransit__Password=${MAIN_MASSTRANSIT_PASSWORD}
-            - MassTransit__Host=${MAIN_MASSTRANSIT_HOST}
+            - MassTransit__Username=${MASSTRANSIT_USERNAME}
+            - MassTransit__Password=${MASSTRANSIT_PASSWORD}
+            - MassTransit__Host=${MASSTRANSIT_HOST}
             - Auth0__Domain=${AUTH_DOMAIN}
             - Auth0__Audience=${AUTH_AUDIENCE}
             - Auth0__ClientSecret=${AUTH_CLIENT_SECRET}
         depends_on:
             - postgresql
             - rabbitmq
+
+    notification_service:
+        build:
+            context: ./NotificationService
+            dockerfile: NotificationService/Dockerfile
+            args:
+                GITHUB_USERNAME: ${GITHUB_USERNAME}
+                GITHUB_TOKEN: ${GITHUB_TOKEN}
+        ports:
+            - "8100:8080"
+            - "8101:8081"
+        environment:
+            - MassTransit__Username=${MASSTRANSIT_USERNAME}
+            - MassTransit__Password=${MASSTRANSIT_PASSWORD}
+            - MassTransit__Host=${MASSTRANSIT_HOST}
+            - MailKit__Server=${MAILKIT_SERVER}
+            - MailKit__Port=${MAILKIT_PORT}
+            - MailKit__UseSsl=${MAILKIT_USE_SSL}
+            - MailKit__RequiresAuthentication=${MAILKIT_REQUIRE_AUTH}
+            - MailKit__User=${MAILKIT_USER}
+            - MailKit__Password=${MAILKIT_PASSWORD}
+        depends_on:
+            - rabbitmq
+            - smtp4dev
 
     postgresql:
         image: postgres
@@ -76,7 +100,18 @@ services:
         volumes:
             - mongo-data:/data/db
 
+    smtp4dev:
+        image: rnwood/smtp4dev:v3
+        restart: always
+        ports:
+            - "5000:80"
+            - "25:25"
+            - "143:143"
+        volumes:
+            - smtp4dev-data:/smtp4dev
+
 volumes:
     mongo-data:
     real_estate_pgdata:
     rabbitmq_data:
+    smtp4dev-data:
