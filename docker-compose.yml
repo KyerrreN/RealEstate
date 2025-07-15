@@ -19,7 +19,7 @@ services:
             - Cors__Origins__0=${CHAT_CORS_ORIGIN}
         depends_on:
             mongo:
-                condition: service_started
+                condition: service_healthy
 
     real_estate_service:
         build:
@@ -89,7 +89,7 @@ services:
             test: rabbitmq-diagnostics check_port_connectivity
             interval: 5s
             timeout: 3s
-            retries: 10
+            retries: 3
         restart: always
         ports:
             - "5672:5672"
@@ -107,6 +107,11 @@ services:
             - "27017:27017"
         volumes:
             - mongo-data:/data/db
+        healthcheck:
+            test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/real-estate --quiet
+            interval: 5s
+            timeout: 5s
+            retries: 3
 
     smtp4dev:
         image: rnwood/smtp4dev:v3
