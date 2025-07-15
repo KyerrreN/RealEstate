@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+    chatservice:
+        build:
+            context: ./ChatService
+            dockerfile: ChatService.API/Dockerfile
+            args:
+                GITHUB_USERNAME: ${GITHUB_USERNAME}
+                GITHUB_TOKEN: ${GITHUB_TOKEN}
+        ports:
+            - "8080:8080"
+            - "8081:8081"
+        environment:
+            - ASPNETCORE_ENVIRONMENT=DEVELOPMENT
+            - MongoDB__ConnectionString=${CHAT_MONGO_STRING}
+            - MongoDB__Collection=${CHAT_MONGO_COLLECTION}
+            - gRPC__Address=${CHAT_GRPC_ADDRESS}
+            - Auth__Domain=${CHAT_AUTH_DOMAIN}
+            - Auth__Audience=${CHAT_AUTH_AUDIENCE}
+            - Cors__Origins__0=${CHAT_CORS_ORIGIN}
+        depends_on:
+            - mongo
+
+    mongo:
+        image: mongo:7.0
+        restart: always
+        ports:
+            - "27017:27017"
+        volumes:
+            - mongo-data:/data/db
+
+volumes:
+    mongo-data:
