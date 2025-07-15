@@ -16,11 +16,57 @@ services:
             - MongoDB__ConnectionString=${CHAT_MONGO_STRING}
             - MongoDB__Collection=${CHAT_MONGO_COLLECTION}
             - gRPC__Address=${CHAT_GRPC_ADDRESS}
-            - Auth__Domain=${CHAT_AUTH_DOMAIN}
-            - Auth__Audience=${CHAT_AUTH_AUDIENCE}
+            - Auth__Domain=${AUTH_DOMAIN}
+            - Auth__Audience=${AUTH_AUDIENCE}
             - Cors__Origins__0=${CHAT_CORS_ORIGIN}
         depends_on:
             - mongo
+
+    real_estate_service:
+        build:
+            context: ./RealEstate
+            dockerfile: RealEstate.Presentation/Dockerfile
+            args:
+                GITHUB_USERNAME: ${GITHUB_USERNAME}
+                GITHUB_TOKEN: ${GITHUB_TOKEN}
+
+        ports:
+            - "8090:8080"
+            - "8091:8081"
+        environment:
+            - PostgreSQL__ConnectionString=${MAIN_POSTGRESQL_STRING}
+            - MassTransit__Username=${MAIN_MASSTRANSIT_USERNAME}
+            - MassTransit__Password=${MAIN_MASSTRANSIT_PASSWORD}
+            - MassTransit__Host=${MAIN_MASSTRANSIT_HOST}
+            - Auth0__Domain=${AUTH_DOMAIN}
+            - Auth0__Audience=${AUTH_AUDIENCE}
+            - Auth0__ClientSecret=${AUTH_CLIENT_SECRET}
+        depends_on:
+            - postgresql
+            - rabbitmq
+
+    postgresql:
+        image: postgres
+        restart: always
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=1234
+        ports:
+            - "5432:5432"
+        volumes:
+            - real_estate_pgdata:/var/lib/postgresql/data
+
+    rabbitmq:
+        image: rabbitmq:4-management
+        restart: always
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+        environment:
+            - RABBITMQ_DEFAULT_USER=guest
+            - RABBITMQ_DEFAULT_PASS=guest
+        volumes:
+            - rabbitmq_data:/var/lib/rabbitmq
 
     mongo:
         image: mongo:7.0
@@ -32,3 +78,5 @@ services:
 
 volumes:
     mongo-data:
+    real_estate_pgdata:
+    rabbitmq_data:

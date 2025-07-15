@@ -34,7 +34,7 @@ namespace RealEstate.BLL.DI
                 {
                     var options = context.GetRequiredService<IOptions<MassTransitOptions>>().Value;
 
-                    cfg.Host(options.Host, h =>
+                    cfg.Host(options.Host, "/", h =>
                     {
                         h.Username(options.Username);
                         h.Password(options.Password);
