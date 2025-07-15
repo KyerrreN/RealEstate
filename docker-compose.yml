@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
     chatservice:
         build:
@@ -20,7 +18,8 @@ services:
             - Auth__Audience=${AUTH_AUDIENCE}
             - Cors__Origins__0=${CHAT_CORS_ORIGIN}
         depends_on:
-            - mongo
+            mongo:
+                condition: service_started
 
     real_estate_service:
         build:
@@ -42,8 +41,10 @@ services:
             - Auth0__Audience=${AUTH_AUDIENCE}
             - Auth0__ClientSecret=${AUTH_CLIENT_SECRET}
         depends_on:
-            - postgresql
-            - rabbitmq
+            postgresql:
+                condition: service_started
+            rabbitmq:
+                condition: service_healthy
 
     notification_service:
         build:
@@ -66,8 +67,10 @@ services:
             - MailKit__User=${MAILKIT_USER}
             - MailKit__Password=${MAILKIT_PASSWORD}
         depends_on:
-            - rabbitmq
-            - smtp4dev
+            rabbitmq:
+                condition: service_healthy
+            smtp4dev:
+                condition: service_started
 
     postgresql:
         image: postgres
@@ -82,6 +85,11 @@ services:
 
     rabbitmq:
         image: rabbitmq:4-management
+        healthcheck:
+            test: rabbitmq-diagnostics check_port_connectivity
+            interval: 5s
+            timeout: 3s
+            retries: 10
         restart: always
         ports:
             - "5672:5672"
