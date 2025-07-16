@@ -19,8 +19,15 @@ WORKDIR /src
 COPY ["NotificationService/NotificationService.API.csproj", "NotificationService/"]
 COPY ["NotificationService.BLL/NotificationService.BLL.csproj", "NotificationService.BLL/"]
 COPY ["NotificationService.Consumers/NotificationService.Consumers.csproj", "NotificationService.Consumers/"]
-RUN dotnet nuget add source --username $GITHUB_USERNAME --password $GITHUB_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${GITHUB_USERNAME}/index.json"
-RUN dotnet restore "./NotificationService/NotificationService.API.csproj"
+
+RUN --mount=type=secret,id=github_username \
+    --mount=type=secret,id=github_token \
+    GITHUB_USERNAME=$(cat /run/secrets/github_username) && \
+    GITHUB_TOKEN=$(cat /run/secrets/github_token) && \
+    dotnet nuget add source --username $GITHUB_USERNAME --password $GITHUB_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${GITHUB_USERNAME}/index.json" && \
+    dotnet restore "./NotificationService/NotificationService.API.csproj" && \
+    dotnet nuget remove source github
+
 COPY . .
 WORKDIR "/src/NotificationService"
 RUN dotnet build "./NotificationService.API.csproj" -c $BUILD_CONFIGURATION -o /app/build

@@ -28,8 +28,15 @@ COPY ["RealEstate.Presentation/RealEstate.Presentation.csproj", "RealEstate.Pres
 COPY ["RealEstate.BLL/RealEstate.BLL.csproj", "RealEstate.BLL/"]
 COPY ["RealEstate.DAL/RealEstate.DAL.csproj", "RealEstate.DAL/"]
 COPY ["RealEstate.Domain/RealEstate.Domain.csproj", "RealEstate.Domain/"]
-RUN dotnet nuget add source --username $GITHUB_USERNAME --password $GITHUB_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${GITHUB_USERNAME}/index.json"
-RUN dotnet restore "./RealEstate.Presentation/RealEstate.Presentation.csproj"
+
+RUN --mount=type=secret,id=github_username \
+    --mount=type=secret,id=github_token \
+    GITHUB_USERNAME=$(cat /run/secrets/github_username) && \
+    GITHUB_TOKEN=$(cat /run/secrets/github_token) && \
+    dotnet nuget add source --username $GITHUB_USERNAME --password $GITHUB_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${GITHUB_USERNAME}/index.json" && \
+    dotnet restore "./RealEstate.Presentation/RealEstate.Presentation.csproj" && \
+    dotnet nuget remove source github
+
 COPY . .
 WORKDIR "/src/RealEstate.Presentation"
 RUN dotnet build "./RealEstate.Presentation.csproj" -c $BUILD_CONFIGURATION -o /app/build

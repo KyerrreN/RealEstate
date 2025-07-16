@@ -3,9 +3,6 @@ services:
         build:
             context: ./ChatService
             dockerfile: ChatService.API/Dockerfile
-            # args:
-            #     GITHUB_USERNAME: ${GITHUB_USERNAME}
-            #     GITHUB_TOKEN: ${GITHUB_TOKEN}
             secrets:
                 - github_username
                 - github_token
@@ -28,10 +25,9 @@ services:
         build:
             context: ./RealEstate
             dockerfile: RealEstate.Presentation/Dockerfile
-            args:
-                GITHUB_USERNAME: ${GITHUB_USERNAME}
-                GITHUB_TOKEN: ${GITHUB_TOKEN}
-
+            secrets:
+                - github_username
+                - github_token
         ports:
             - "8090:8080"
             - "8091:8081"
@@ -53,9 +49,9 @@ services:
         build:
             context: ./NotificationService
             dockerfile: NotificationService/Dockerfile
-            args:
-                GITHUB_USERNAME: ${GITHUB_USERNAME}
-                GITHUB_TOKEN: ${GITHUB_TOKEN}
+            secrets:
+                - github_username
+                - github_token
         ports:
             - "8100:8080"
             - "8101:8081"
