@@ -21,18 +21,18 @@ RUN --mount=type=secret,id=github_username \
     --mount=type=secret,id=github_token \
     GITHUB_USERNAME=$(cat /run/secrets/github_username) && \
     GITHUB_TOKEN=$(cat /run/secrets/github_token) && \
-    dotnet nuget add source --username $GITHUB_USERNAME --password $GITHUB_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${GITHUB_USERNAME}/index.json" && \
+    dotnet nuget add source --username "$GITHUB_USERNAME" --password "$GITHUB_TOKEN" --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${GITHUB_USERNAME}/index.json" && \
     dotnet restore "./NotificationService/NotificationService.API.csproj" && \
     dotnet nuget remove source github
 
 COPY . .
 WORKDIR "/src/NotificationService"
-RUN dotnet build "./NotificationService.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./NotificationService.API.csproj" -c "$BUILD_CONFIGURATION" -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./NotificationService.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./NotificationService.API.csproj" -c "$BUILD_CONFIGURATION" -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final

@@ -14,9 +14,9 @@ ARG BUILD_CONFIGURATION=Release
 # gRPC
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
+    bash \
     libc6 \
-    libstdc++6 \
-    bash && \
+    libstdc++6 && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /src
@@ -29,18 +29,18 @@ RUN --mount=type=secret,id=github_username \
     --mount=type=secret,id=github_token \
     GITHUB_USERNAME=$(cat /run/secrets/github_username) && \
     GITHUB_TOKEN=$(cat /run/secrets/github_token) && \
-    dotnet nuget add source --username $GITHUB_USERNAME --password $GITHUB_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${GITHUB_USERNAME}/index.json" && \
+    dotnet nuget add source --username "$GITHUB_USERNAME" --password "$GITHUB_TOKEN" --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${GITHUB_USERNAME}/index.json" && \
     dotnet restore "./RealEstate.Presentation/RealEstate.Presentation.csproj" && \
     dotnet nuget remove source github
 
 COPY . .
 WORKDIR "/src/RealEstate.Presentation"
-RUN dotnet build "./RealEstate.Presentation.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./RealEstate.Presentation.csproj" -c "$BUILD_CONFIGURATION" -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./RealEstate.Presentation.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./RealEstate.Presentation.csproj" -c "$BUILD_CONFIGURATION" -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
