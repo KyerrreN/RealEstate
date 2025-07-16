@@ -11,10 +11,7 @@ EXPOSE 8081
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:9.0-noble AS build
 ARG BUILD_CONFIGURATION=Release
-ARG GITHUB_USERNAME
-ARG GITHUB_TOKEN
-ENV GITHUB_USERNAME=${GITHUB_USERNAME}
-ENV GITHUB_TOKEN=${GITHUB_TOKEN}
+
 WORKDIR /src
 COPY ["NotificationService/NotificationService.API.csproj", "NotificationService/"]
 COPY ["NotificationService.BLL/NotificationService.BLL.csproj", "NotificationService.BLL/"]
