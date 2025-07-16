@@ -72,6 +72,25 @@ services:
             smtp4dev:
                 condition: service_started
 
+    frontend:
+        build:
+            context: ./Frontend
+            dockerfile: Dockerfile
+        ports:
+            - "5173:5173"
+        environment:
+            - VITE_URL_CHAT_API=${VITE_URL_CHAT_API}
+            - VITE_URL_CHATHUB=${VITE_URL_CHATHUB}
+            - VITE_URL_REAL_ESTATE_API=${VITE_URL_REAL_ESTATE_API}
+            - VITE_AUTH_AUDIENCE=${VITE_AUTH_AUDIENCE}
+            - VITE_AUTH_DOMAIN=${VITE_AUTH_DOMAIN}
+            - VITE_AUTH_CLIENT_ID=${VITE_AUTH_CLIENT_ID}
+        depends_on:
+            chatservice:
+                condition: service_started
+            real_estate_service:
+                condition: service_started
+
     postgresql:
         image: postgres
         restart: always
