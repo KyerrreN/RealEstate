@@ -3,9 +3,12 @@ services:
         build:
             context: ./ChatService
             dockerfile: ChatService.API/Dockerfile
-            args:
-                GITHUB_USERNAME: ${GITHUB_USERNAME}
-                GITHUB_TOKEN: ${GITHUB_TOKEN}
+            # args:
+            #     GITHUB_USERNAME: ${GITHUB_USERNAME}
+            #     GITHUB_TOKEN: ${GITHUB_TOKEN}
+            secrets:
+                - github_username
+                - github_token
         ports:
             - "8080:8080"
             - "8081:8081"
@@ -147,3 +150,9 @@ volumes:
     real_estate_pgdata:
     rabbitmq_data:
     smtp4dev-data:
+
+secrets:
+    github_username:
+        environment: GITHUB_USERNAME
+    github_token:
+        environment: GITHUB_TOKEN

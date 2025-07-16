@@ -10,10 +10,6 @@ EXPOSE 8081
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:9.0-noble AS build
 ARG BUILD_CONFIGURATION=Release
-ARG GITHUB_USERNAME
-ARG GITHUB_TOKEN
-ENV GITHUB_USERNAME=${GITHUB_USERNAME}
-ENV GITHUB_TOKEN=${GITHUB_TOKEN}
 
 # gRPC
 RUN apt-get update && \
@@ -28,8 +24,17 @@ COPY ["ChatService.API/ChatService.API.csproj", "ChatService.API/"]
 COPY ["ChatService.BLL/ChatService.BLL.csproj", "ChatService.BLL/"]
 COPY ["ChatService.DAL/ChatService.DAL.csproj", "ChatService.DAL/"]
 COPY ["ChatService.Domain/ChatService.Domain.csproj", "ChatService.Domain/"]
-RUN dotnet nuget add source --username $GITHUB_USERNAME --password $GITHUB_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${GITHUB_USERNAME}/index.json"
-RUN dotnet restore "./ChatService.API/ChatService.API.csproj"
+
+RUN --mount=type=secret,id=github_username \
+    --mount=type=secret,id=github_token \
+    GITHUB_USERNAME=$(cat /run/secrets/github_username) && \
+    GITHUB_TOKEN=$(cat /run/secrets/github_token) && \
+    dotnet nuget add source --username $GITHUB_USERNAME --password $GITHUB_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${GITHUB_USERNAME}/index.json" && \
+    dotnet restore "./ChatService.API/ChatService.API.csproj" && \
+    dotnet nuget remove source github
+
+# RUN dotnet nuget add source --username $GITHUB_USERNAME --password $GITHUB_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${GITHUB_USERNAME}/index.json"
+# RUN dotnet restore "./ChatService.API/ChatService.API.csproj"
 COPY . .
 WORKDIR "/src/ChatService.API"
 RUN dotnet build "./ChatService.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
