@@ -20,6 +20,8 @@ services:
         depends_on:
             mongo:
                 condition: service_healthy
+            redis:
+                condition: service_started
 
     real_estate_service:
         build:
@@ -39,6 +41,8 @@ services:
             - Auth0__Domain=${AUTH_DOMAIN}
             - Auth0__Audience=${AUTH_AUDIENCE}
             - Auth0__ClientSecret=${AUTH_CLIENT_SECRET}
+            - Redis__ConnectionString=${REDIS_CONNECTION_STRING}
+            - Redis__InstanceName=${REDIS_INSTANCE_NAME}
         depends_on:
             postgresql:
                 condition: service_started
@@ -141,11 +145,20 @@ services:
         volumes:
             - smtp4dev-data:/smtp4dev
 
+    redis:
+        image: redis:8.0.3-alpine
+        restart: always
+        ports:
+            - "6379:6379"
+        volumes:
+            - redis-data:/redis
+
 volumes:
     mongo-data:
     real_estate_pgdata:
     rabbitmq_data:
     smtp4dev-data:
+    redis-data:
 
 secrets:
     github_username:
