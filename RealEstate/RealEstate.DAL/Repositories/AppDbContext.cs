@@ -8,7 +8,9 @@ namespace RealEstate.DAL.Repositories
     {
         public AppDbContext(DbContextOptions options) : base(options)
         {
-            if (Database.IsRelational())
+            var isTestingEnvironment = Environment.GetEnvironmentVariable("INTEGRATION_TESTS") == "true";
+
+            if (!isTestingEnvironment && Database.IsRelational())
             {
                 Database.Migrate();
             }
