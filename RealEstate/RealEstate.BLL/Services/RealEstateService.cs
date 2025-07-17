@@ -128,24 +128,21 @@ namespace RealEstate.BLL.Services
 
             RealEstateModel? model;
 
-            // cache miss
             if (string.IsNullOrEmpty(cachedValue))
             {
-                logger.LogInformation("CACHE MISS");
+                logger.LogInformation("GetById: Cache hit");
 
                 model = await FetchAndCache(id, key, ct);
 
                 return model;
             }
 
-            // cache hit
-            logger.LogInformation("CACHE HIT");
+            logger.LogInformation("GetById: Cache miss");
             model = JsonConvert.DeserializeObject<RealEstateModel>(cachedValue);
             
-            // broken cache
             if (model is null)
             {
-                logger.LogInformation("BROKEN CACHE");
+                logger.LogInformation("GetById: Cache broken");
                 model = await FetchAndCache(id, key, ct);
             }
 

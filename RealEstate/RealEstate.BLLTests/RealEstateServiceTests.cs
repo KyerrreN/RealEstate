@@ -24,7 +24,7 @@ namespace RealEstate.BLLTests
         private readonly IHistoryRepository _historyRepository;
         private readonly ITransactionManager _transactionManager;
         private readonly IPublishEndpoint _endpointMock;
-        private readonly IDistributedCache _cacheMock; // TEST
+        private readonly IDistributedCache _cacheMock;
         private readonly ILogger<RealEstateService> _serviceLogger;
 
         private readonly RealEstateService _service;
