@@ -18,6 +18,7 @@
     <PackageReference Include="MassTransit" Version="8.4.1" />
     <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.4.1" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.7" />
     <PackageReference Include="NotificationService.Contracts" Version="1.4.0" />
     <PackageReference Include="RealEstate.Proto" Version="1.0.3" GeneratePathProperty="true" />
   </ItemGroup>

@@ -1,5 +1,7 @@
 ﻿using Mapster;
 using MassTransit;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using RealEstate.BLL.Models;
 using RealEstate.BLL.Services;
@@ -22,6 +24,8 @@ namespace RealEstate.BLLTests
         private readonly IHistoryRepository _historyRepository;
         private readonly ITransactionManager _transactionManager;
         private readonly IPublishEndpoint _endpointMock;
+        private readonly IDistributedCache _cacheMock;
+        private readonly ILogger<RealEstateService> _serviceLogger;
 
         private readonly RealEstateService _service;
 
@@ -33,8 +37,18 @@ namespace RealEstate.BLLTests
             _historyRepository = Substitute.For<IHistoryRepository>();
             _transactionManager = Substitute.For<ITransactionManager>();
             _endpointMock = Substitute.For<IPublishEndpoint>();
+            _cacheMock = Substitute.For<IDistributedCache>();
+            _serviceLogger = Substitute.For<ILogger<RealEstateService>>();
 
-            _service = new RealEstateService(_baseRepository, _realEstateRepository, _userRepository, _historyRepository, _transactionManager, _endpointMock);
+            _service = new RealEstateService(
+                _baseRepository,
+                _realEstateRepository,
+                _userRepository,
+                _historyRepository,
+                _transactionManager,
+                _endpointMock,
+                _cacheMock,
+                _serviceLogger);
         }
 
         [Fact]
