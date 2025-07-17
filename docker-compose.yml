@@ -1,0 +1,154 @@
+services:
+    chatservice:
+        build:
+            context: ./ChatService
+            dockerfile: ChatService.API/Dockerfile
+            secrets:
+                - github_username
+                - github_token
+        ports:
+            - "8080:8080"
+            - "8081:8081"
+        environment:
+            - ASPNETCORE_ENVIRONMENT=DEVELOPMENT
+            - MongoDB__ConnectionString=${CHAT_MONGO_STRING}
+            - MongoDB__Collection=${CHAT_MONGO_COLLECTION}
+            - gRPC__Address=${CHAT_GRPC_ADDRESS}
+            - Auth__Domain=${AUTH_DOMAIN}
+            - Auth__Audience=${AUTH_AUDIENCE}
+            - Cors__Origins__0=${CHAT_CORS_ORIGIN}
+        depends_on:
+            mongo:
+                condition: service_healthy
+
+    real_estate_service:
+        build:
+            context: ./RealEstate
+            dockerfile: RealEstate.Presentation/Dockerfile
+            secrets:
+                - github_username
+                - github_token
+        ports:
+            - "8090:8080"
+            - "8091:8081"
+        environment:
+            - PostgreSQL__ConnectionString=${MAIN_POSTGRESQL_STRING}
+            - MassTransit__Username=${MASSTRANSIT_USERNAME}
+            - MassTransit__Password=${MASSTRANSIT_PASSWORD}
+            - MassTransit__Host=${MASSTRANSIT_HOST}
+            - Auth0__Domain=${AUTH_DOMAIN}
+            - Auth0__Audience=${AUTH_AUDIENCE}
+            - Auth0__ClientSecret=${AUTH_CLIENT_SECRET}
+        depends_on:
+            postgresql:
+                condition: service_started
+            rabbitmq:
+                condition: service_healthy
+
+    notification_service:
+        build:
+            context: ./NotificationService
+            dockerfile: NotificationService/Dockerfile
+            secrets:
+                - github_username
+                - github_token
+        ports:
+            - "8100:8080"
+            - "8101:8081"
+        environment:
+            - MassTransit__Username=${MASSTRANSIT_USERNAME}
+            - MassTransit__Password=${MASSTRANSIT_PASSWORD}
+            - MassTransit__Host=${MASSTRANSIT_HOST}
+            - MailKit__Server=${MAILKIT_SERVER}
+            - MailKit__Port=${MAILKIT_PORT}
+            - MailKit__UseSsl=${MAILKIT_USE_SSL}
+            - MailKit__RequiresAuthentication=${MAILKIT_REQUIRE_AUTH}
+            - MailKit__User=${MAILKIT_USER}
+            - MailKit__Password=${MAILKIT_PASSWORD}
+        depends_on:
+            rabbitmq:
+                condition: service_healthy
+            smtp4dev:
+                condition: service_started
+
+    frontend:
+        build:
+            context: ./Frontend
+            dockerfile: Dockerfile
+        ports:
+            - "5173:5173"
+        environment:
+            - VITE_URL_CHAT_API=${VITE_URL_CHAT_API}
+            - VITE_URL_CHATHUB=${VITE_URL_CHATHUB}
+            - VITE_URL_REAL_ESTATE_API=${VITE_URL_REAL_ESTATE_API}
+            - VITE_AUTH_AUDIENCE=${VITE_AUTH_AUDIENCE}
+            - VITE_AUTH_DOMAIN=${VITE_AUTH_DOMAIN}
+            - VITE_AUTH_CLIENT_ID=${VITE_AUTH_CLIENT_ID}
+        depends_on:
+            chatservice:
+                condition: service_started
+            real_estate_service:
+                condition: service_started
+
+    postgresql:
+        image: postgres
+        restart: always
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=1234
+        ports:
+            - "5432:5432"
+        volumes:
+            - real_estate_pgdata:/var/lib/postgresql/data
+
+    rabbitmq:
+        image: rabbitmq:4-management
+        healthcheck:
+            test: rabbitmq-diagnostics check_port_connectivity
+            interval: 5s
+            timeout: 3s
+            retries: 3
+        restart: always
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+        environment:
+            - RABBITMQ_DEFAULT_USER=guest
+            - RABBITMQ_DEFAULT_PASS=guest
+        volumes:
+            - rabbitmq_data:/var/lib/rabbitmq
+
+    mongo:
+        image: mongo:7.0
+        restart: always
+        ports:
+            - "27017:27017"
+        volumes:
+            - mongo-data:/data/db
+        healthcheck:
+            test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/real-estate --quiet
+            interval: 5s
+            timeout: 5s
+            retries: 3
+
+    smtp4dev:
+        image: rnwood/smtp4dev:v3
+        restart: always
+        ports:
+            - "5000:80"
+            - "25:25"
+            - "143:143"
+        volumes:
+            - smtp4dev-data:/smtp4dev
+
+volumes:
+    mongo-data:
+    real_estate_pgdata:
+    rabbitmq_data:
+    smtp4dev-data:
+
+secrets:
+    github_username:
+        environment: GITHUB_USERNAME
+    github_token:
+        environment: GITHUB_TOKEN

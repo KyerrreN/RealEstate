@@ -1,5 +1,8 @@
-using FluentValidation;
+﻿using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.OpenApi.Models;
 using RealEstate.BLL.DI;
 using RealEstate.BLL.Grpc.Interceptors;
@@ -22,6 +25,12 @@ namespace RealEstate.Presentation
 
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
+
+            builder.WebHost.ConfigureKestrel(options =>
+            {
+                options.ListenAnyIP(8080, o => o.Protocols = HttpProtocols.Http1);
+                options.ListenAnyIP(8081, o => o.Protocols = HttpProtocols.Http2);
+            });
 
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(builder.Configuration)

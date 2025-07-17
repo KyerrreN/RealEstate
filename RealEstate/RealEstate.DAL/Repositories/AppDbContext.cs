@@ -8,10 +8,10 @@ namespace RealEstate.DAL.Repositories
     {
         public AppDbContext(DbContextOptions options) : base(options)
         {
-            //if (Database.IsRelational())
-            //{
-            //    Database.Migrate();
-            //}
+            if (Database.IsRelational())
+            {
+                Database.Migrate();
+            }
         }
 
         public DbSet<BookingEntity> Bookings { get; set; }

@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\СhatService.DAL\СhatService.DAL.csproj" />
+    <ProjectReference Include="..\ChatService.DAL\ChatService.DAL.csproj" />
   </ItemGroup>
 
 	<ItemGroup>
