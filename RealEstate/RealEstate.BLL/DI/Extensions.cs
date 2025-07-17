@@ -16,6 +16,8 @@ namespace RealEstate.BLL.DI
     {
         public static void RegisterBLL(this IServiceCollection services, IConfiguration configuration)
         {
+            var isTestingEnvironment = Environment.GetEnvironmentVariable("INTEGRATION_TESTS") == "true";
+
             services.RegisterDataAccess(configuration);
             services.AddMapster();
 
@@ -30,11 +32,14 @@ namespace RealEstate.BLL.DI
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IUserService, UserService>();
 
-            services.AddStackExchangeRedisCache(opt =>
+            if (!isTestingEnvironment)
             {
-                opt.Configuration = redisOptions.ConnectionString;
-                opt.InstanceName = redisOptions.InstanceName;
-            });
+                services.AddStackExchangeRedisCache(opt =>
+                {
+                    opt.Configuration = redisOptions.ConnectionString;
+                    opt.InstanceName = redisOptions.InstanceName;
+                });
+            }
 
             services.Configure<MassTransitOptions>(
                 configuration.GetSection(MassTransitOptions.Option).Bind);
