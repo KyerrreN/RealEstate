@@ -24,7 +24,6 @@ namespace RealEstate.DAL.Repositories
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new ReviewEntityConfiguration());
-            //modelBuilder.ApplyConfiguration(new HistoryEntityConfiguration());
         }
     }
 }
