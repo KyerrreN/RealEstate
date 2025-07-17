@@ -19,11 +19,22 @@ namespace RealEstate.BLL.DI
             services.RegisterDataAccess(configuration);
             services.AddMapster();
 
+            var redisOptions = configuration
+                .GetRequiredSection(RedisOptions.Position)
+                .Get<RedisOptions>()
+                ?? throw new InvalidOperationException($"Failed to bind {nameof(RedisOptions)} from settings");
+
             services.AddScoped<IBookingService, BookingService>();
             services.AddScoped<IHistoryService, HistoryService>();
             services.AddScoped<IRealEstateService, RealEstateService>();
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IUserService, UserService>();
+
+            services.AddStackExchangeRedisCache(opt =>
+            {
+                opt.Configuration = redisOptions.ConnectionString;
+                opt.InstanceName = redisOptions.InstanceName;
+            });
 
             services.Configure<MassTransitOptions>(
                 configuration.GetSection(MassTransitOptions.Option).Bind);

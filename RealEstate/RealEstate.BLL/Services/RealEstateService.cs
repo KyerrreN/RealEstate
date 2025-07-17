@@ -1,16 +1,19 @@
 ﻿using Mapster;
+using MassTransit;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using NotificationService.Contracts;
+using NotificationService.Contracts.Constants;
 using RealEstate.BLL.Interfaces;
 using RealEstate.BLL.Models;
 using RealEstate.DAL.Entities;
-using RealEstate.Domain.Enums;
 using RealEstate.DAL.Interfaces;
+using RealEstate.DAL.Transactions;
+using RealEstate.Domain.Enums;
 using RealEstate.Domain.Exceptions;
 using RealEstate.Domain.Models;
 using RealEstate.Domain.QueryParameters;
-using RealEstate.DAL.Transactions;
-using NotificationService.Contracts;
-using MassTransit;
-using NotificationService.Contracts.Constants;
 
 namespace RealEstate.BLL.Services
 {
@@ -20,7 +23,9 @@ namespace RealEstate.BLL.Services
         IUserRepository _userRepository, 
         IHistoryRepository _historyRepository,
         ITransactionManager transactionManager,
-        IPublishEndpoint publishEndpoint)
+        IPublishEndpoint publishEndpoint,
+        IDistributedCache redis,
+        ILogger<RealEstateService> logger)
         : GenericService<RealEstateEntity, RealEstateModel>(_repository), IRealEstateService
     {
         public override async Task<RealEstateModel> CreateAsync(RealEstateModel model, CancellationToken ct)
@@ -114,6 +119,38 @@ namespace RealEstate.BLL.Services
                 context.SetRoutingKey(NotificationConstants.RealEstateDeletedRoutingKey);
             }, ct);
         }
+
+        public override async Task<RealEstateModel> GetByIdAsync(Guid id, CancellationToken ct)
+        {
+            string key = $"re-{id}";
+
+            var cachedValue = await redis.GetStringAsync(key, ct);
+
+            RealEstateModel? model;
+
+            // cache miss
+            if (string.IsNullOrEmpty(cachedValue))
+            {
+                logger.LogInformation("CACHE MISS");
+
+                model = await FetchAndCache(id, key, ct);
+
+                return model;
+            }
+
+            // cache hit
+            logger.LogInformation("CACHE HIT");
+            model = JsonConvert.DeserializeObject<RealEstateModel>(cachedValue);
+            
+            // broken cache
+            if (model is null)
+            {
+                logger.LogInformation("BROKEN CACHE");
+                model = await FetchAndCache(id, key, ct);
+            }
+
+            return model;
+        }
         private static void CheckRealEstateRequestParameters(RealEstateFilterParameters filters)
         {
             if (filters.MinPrice < 0)
@@ -127,6 +164,18 @@ namespace RealEstate.BLL.Services
         {
             if (ownerModelId != ownerEntityId)
                 throw new BadRequestException("Owner id in model and entity are not equal");
+        }
+
+        private async Task<RealEstateModel> FetchAndCache(Guid id, string key, CancellationToken ct)
+        {
+            var entity = await _realEstateRepository.FindByIdAsync(id, ct)
+                ?? throw new NotFoundException(id);
+
+            var model = entity.Adapt<RealEstateModel>();
+
+            await redis.SetStringAsync(key, JsonConvert.SerializeObject(model), ct);
+
+            return model;
         }
     }
 }
