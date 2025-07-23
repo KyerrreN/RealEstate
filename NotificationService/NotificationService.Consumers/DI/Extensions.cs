@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using NotificationService.Consumers.Options;
-using NotificationService.Contracts;
 using NotificationService.Contracts.Constants;
 
 namespace NotificationService.Consumers.DI

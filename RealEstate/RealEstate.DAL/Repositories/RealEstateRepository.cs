@@ -1,13 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
-using Newtonsoft.Json;
 using RealEstate.DAL.Builders;
 using RealEstate.DAL.Entities;
 using RealEstate.DAL.Interfaces;
 using RealEstate.DAL.Repositories.Extensions;
 using RealEstate.Domain.Models;
 using RealEstate.Domain.QueryParameters;
-using System.Text.Json;
 
 namespace RealEstate.DAL.Repositories
 {
