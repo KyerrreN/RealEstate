@@ -8,7 +8,8 @@ namespace RealEstate.DAL.Repositories
     {
         public AppDbContext(DbContextOptions options) : base(options)
         {
-            var isTestingEnvironment = Environment.GetEnvironmentVariable("INTEGRATION_TESTS") == "true";
+            var isTestingEnvironment =
+                string.Equals(Environment.GetEnvironmentVariable("INTEGRATION_TESTS"), "true", StringComparison.OrdinalIgnoreCase);
 
             if (!isTestingEnvironment && Database.IsRelational())
             {

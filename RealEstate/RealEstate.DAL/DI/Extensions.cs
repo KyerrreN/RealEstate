@@ -18,7 +18,8 @@ namespace RealEstate.DAL.DI
     {
         public static void RegisterDataAccess(this IServiceCollection services, IConfiguration configuration)
         {
-            var isTestingEnvironment = Environment.GetEnvironmentVariable("INTEGRATION_TESTS") == "true";
+            var isTestingEnvironment =
+                string.Equals(Environment.GetEnvironmentVariable("INTEGRATION_TESTS"), "true", StringComparison.OrdinalIgnoreCase);
 
             if (!isTestingEnvironment)
             {
