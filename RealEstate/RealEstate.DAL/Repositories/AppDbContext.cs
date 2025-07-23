@@ -8,7 +8,10 @@ namespace RealEstate.DAL.Repositories
     {
         public AppDbContext(DbContextOptions options) : base(options)
         {
-            if (Database.IsRelational())
+            var isTestingEnvironment =
+                string.Equals(Environment.GetEnvironmentVariable("INTEGRATION_TESTS"), "true", StringComparison.OrdinalIgnoreCase);
+
+            if (!isTestingEnvironment && Database.IsRelational())
             {
                 Database.Migrate();
             }
@@ -24,7 +27,6 @@ namespace RealEstate.DAL.Repositories
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new ReviewEntityConfiguration());
-            //modelBuilder.ApplyConfiguration(new HistoryEntityConfiguration());
         }
     }
 }

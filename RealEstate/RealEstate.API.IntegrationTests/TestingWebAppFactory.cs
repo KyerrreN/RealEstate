@@ -26,6 +26,8 @@ namespace RealEstate.API.IntegrationTests
                 ConfigureInMemoryDatabase(services);
                 ConfigureRabbitMQConnection(services);
 
+                services.AddDistributedMemoryCache();
+
                 var sp = services.BuildServiceProvider();
 
                 using var scope = sp.CreateScope();

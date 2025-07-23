@@ -16,14 +16,30 @@ namespace RealEstate.BLL.DI
     {
         public static void RegisterBLL(this IServiceCollection services, IConfiguration configuration)
         {
+            var isTestingEnvironment = Environment.GetEnvironmentVariable("INTEGRATION_TESTS") == "true";
+
             services.RegisterDataAccess(configuration);
             services.AddMapster();
+
+            var redisOptions = configuration
+                .GetRequiredSection(RedisOptions.Position)
+                .Get<RedisOptions>()
+                ?? throw new InvalidOperationException($"Failed to bind {nameof(RedisOptions)} from settings");
 
             services.AddScoped<IBookingService, BookingService>();
             services.AddScoped<IHistoryService, HistoryService>();
             services.AddScoped<IRealEstateService, RealEstateService>();
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IUserService, UserService>();
+
+            if (!isTestingEnvironment)
+            {
+                services.AddStackExchangeRedisCache(opt =>
+                {
+                    opt.Configuration = redisOptions.ConnectionString;
+                    opt.InstanceName = redisOptions.InstanceName;
+                });
+            }
 
             services.Configure<MassTransitOptions>(
                 configuration.GetSection(MassTransitOptions.Option).Bind);
