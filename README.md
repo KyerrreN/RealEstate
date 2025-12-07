@@ -1,23 +1,44 @@
-# RealEstate
+# Описание структуры проекта.
 
-## Overview
-This web application server a purpose of managing real estate and communicating regarding selling or renting estates
+Проект написан используя микросервисную архитектуру, состоящая из 3 микросервисов, 1 клиентской части и 4 инфраструктурных зависимостей: 2 базы данных (PostgreSQL, MongoDB), 1 брокер сообщений (RabbitMQ) и 1 сервис кеширования (Redis). <br>
+Также, для локальной работы передачи сообщнений по электронной почте, используется сервис Smtp4Dev, развернутый локально в Docker.
+Взаимодействие выглядит следующим образом:
+- Frontend → RealEstateService: HTTP-запросы по адресу http://localhost:8090;
+- Frontend → ChatService: HTTP-запросы по адресу http://localhost:8080;
+- RealEstateService → ChatService, и наоборот: HTTP-запросы через систему удаленного вызова процедур gRPC, использующий HTTP/2 протокол;
+- RealEstateService → NotificationService: запросы происходят через брокер сообщений RabbotMQ через запросы по протоколу AMQP;
+- NotificationService → MongoDB: подключение через mongodb://mongo:27017/real-estate;
+- RealEstateService → PostgreSQL: подключение через Host=postgresql; Database=RealEstate; Username=postgres; Password=1234;
+- RealEstateService → Redis: подключение через redis:6379.
+- Smtp4Dev → NotificationService: запросы идут по протоколу HTTP по адресу localhost:143.
 
-## Components
+# Пошаговая инструкция по запуску.
 
-- DB: PostgreSQL, MongoDB, Redis (for caching)
-- backend: 3 microservices - RealEstateService, ChatService, NotificationService
-- frotnend: SPA application written using React
+1) Склонировать репозиторий
+2) В репозитории приложен файл .env.example. Его необходимо переименовать в .env
+3) В новом .env уже прописаны все переменные окружения, которые необходимы для работы. Необходимо проставить каждой переменной значений, комментарии-подсказки приложены каждой переменной
+4) Открыть в командной строке/PowerShell папку, в которой находится репозиторий
+5) Прописать команду ```docker compose up --build```. Подождать, пока она выполнится.
+6) Как только все контейнеры соберутся, приложение будет готово по адресу ```http://localhost:5173```
 
-## Directories
-- ChatService: directory for ChatService
-- Frontend: folder with SPA
-- RealEstate: directory for RealEstateService
-- NotificationService: self-explanatory
+# Пример заполнения .env.
 
-## Usage
-1) Inside a root folder, there is docker-compose.yml and .env.example. You must create .env file and fill in all the properties for an application to work properly.
-2) If you wish to backup or restore a database, use restore.ps1 or backup.ps1 files, execute them inside PowerShell
-3) To boot up an application, simply go to a root folder and run ```docker compose up --build```
+В файле .env.example приложены все переменные, необходимые для заполнения, с комментариями. Пример:
+<br>
+<br>MASSTRANSIT_USERNAME="" # RabbitMQ Username
+<br>MASSTRANSIT_PASSWORD="" # RabbitMQ Password
+<br>MASSTRANSIT_HOST="" # RabbitMQ Host
+<br>
+<br>После заполнения должно превратиться в:
+<br>MASSTRANSIT_USERNAME="guest"
+<br>MASSTRANSIT_PASSWORD="guest"
+<br>MASSTRANSIT_HOST="rabbitmq"
 
-Your application will be ready at http://localhost:5173
+# Команды для резервного копирования и восстановления.
+
+Для резервного копирования необходимо выполнить скрипты ```backup.ps1``` или ```restore.ps1``` соответственно
+
+# Возможные ошибки и способы их устранения.
+<br>
+В случае, если сервис выдает 500 статус код после запроса, необходимо проверить, все ли контейнеры работают и все ли переменные окружения верны.
+<br>
